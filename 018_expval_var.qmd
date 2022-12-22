@@ -1,0 +1,533 @@
+# Indici di posizione, di varianza e di associazione di variabili casuali {#ch-expval-var-rv}
+
+```{r c020, include = FALSE}
+source("_common.R")
+```
+
+Spesso risulta utile fornire una rappresentazione sintetica della distribuzione di una variabile casuale attraverso degli indicatori caratteristici piuttosto che fare riferimento ad una sua rappresentazione completa mediante la funzione di ripartizione, o la funzione di massa o di densità di probabilità. Una descrizione più sintetica di una variabile casuale, tramite pochi valori, ci consente di cogliere le caratteristiche essenziali della distribuzione, quali: la posizione, cioè il baricentro della distribuzione di probabilità; la variabilità, cioè la dispersione della distribuzione di probabilità attorno ad un centro; la forma della distribuzione di probabilità, considerando la simmetria e la curtosi (pesantezza delle code). In questo Capitolo introdurremo quegli indici sintetici che descrivono il centro di una distribuzione di probabilità e la sua variabilità.
+
+## Valore atteso
+
+Quando vogliamo conoscere il comportamento tipico di una variabile casuale spesso vogliamo sapere qual è il suo "valore tipico". La nozione di "valore tipico", tuttavia, è ambigua. Infatti, essa può essere definita in almeno tre modi diversi:
+
+-   la *media* (somma dei valori divisa per il numero dei valori),
+-   la *mediana* (il valore centrale della distribuzione, quando la variabile è ordinata in senso crescente o decrescente),
+-   la *moda* (il valore che ricorre più spesso).
+
+Per esempio, la media di $\{3, 1, 4, 1, 5\}$ è $\frac{3+1+4+1+5}{5} = 2.8$, la mediana è $3$ e la moda è $1$. Tuttavia, la teoria delle probabilità si occupa di variabili casuali piuttosto che di sequenze di numeri. Diventa dunque necessario precisare che cosa intendiamo per "valore tipico" quando facciamo riferimento alle variabili casuali. Giungiamo così alla seguente definizione. <!-- Supponiamo di ripetere un esperimento casuale molte volte in modo tale che ciascun valore $Y$ si presenti con una frequenza approssimativamente uguale alla sua probabilità. Per esempio, possiamo lanciare una coppia di dadi e osservare i valori di $S$ = "somma dei punti" e di $P$ = "prodotto dei punti". Ci poniamo il problema di definire il "risultato tipico" di questo esperimento in modo tale che esso corrisponda al valore medio dei valori della variabile casuale, quando l'esperimento casuale viene ripetuto tante volte.  -->
+
+::: {#def-exp-val-discr}
+Sia $Y$ è una variabile casuale discreta che assume i valori $y_1, \dots, y_n$ con distribuzione $P(Y = y_i) = p(y_i)$. Per definizione il *valore atteso* di $Y$, $\mathbb{E}(Y)$, è
+
+$$
+\mathbb{E}(Y) = \sum_{i=1}^n y_i \cdot p(y_i).
+$$ {#eq-expval-discr}
+:::
+
+A parole: il valore atteso (o speranza matematica, o aspettazione, o valor medio) di una variabile casuale è definito come la somma di tutti i valori che la variabile casuale può prendere, ciascuno pesato dalla probabilità con cui il valore è preso.
+
+::: {#exr-exp-val-discr}
+Si calcoli il valore atteso della variabile casuale $Y$ corrispondente al lancio di una moneta equilibrata (testa: *Y* = 1; croce: *Y* = 0).
+:::
+
+::: solution
+$$
+\mathbb{E}(Y) = \sum_{i=1}^{2} y_i \cdot P(y_i) = 0 \cdot \frac{1}{5} + 1 \cdot \frac{1}{5} = 0.5.
+$$
+:::
+
+::: {#exr-exp-val-discr-2}
+Si calcoli il valore atteso della variabile casuale $Y$ corrispondente ai punti ottenuti dal lancio di un dado equilibrato.
+:::
+
+::: solution
+$$
+\mathbb{E}(Y) = \sum_{i=1}^{6} y_i \cdot P(y_i) = 1 \cdot \frac{1}{6} + 2 \cdot \frac{1}{6} + \dots + 6 \cdot \frac{1}{6} = \frac{21}{6} = 3.5.
+$$
+:::
+
+### Interpretazione
+
+Che interpretazione può essere assegnata alla nozione di valore atteso? Bruno de Finetti adottò lo stesso termine di *previsione* (e lo stesso simbolo) tanto per la probabilità che per il valore atteso. Si può pertanto dire che, dal punto di vista bayesiano, il valore atteso è l'estensione naturale della nozione di probabilità soggettiva.
+
+### Proprietà del valore atteso
+
+La proprietà più importante del valore atteso è la linearità: il valore atteso di una somma di variabili casuali è uguale alla somma dei lori rispettivi valori attesi:
+
+$$
+\mathbb{E}(X + Y) = \mathbb{E}(X) + \mathbb{E}(Y).
+$$ {#eq-prop-expval-linearity}
+
+L'@eq-prop-expval-linearity sembra ragionevole quando $X$ e $Y$ sono indipendenti, ma è anche vera quando $X$ e $Y$ sono associati. Abbiamo anche che
+
+$$
+\mathbb{E}(cY) = c \mathbb{E}(Y).
+$$ {#eq-prop-expval-const}
+
+L'@eq-prop-expval-const ci dice che possiamo estrarre una costante dall'operatore di valore atteso. Tale proprietà si estende a qualunque numero di variabili casuali. Infine, se due variabili casuali $X$ e $Y$ sono indipendenti, abbiamo che
+
+$$
+\mathbb{E}(X Y) = \mathbb{E}(X) \mathbb{E}(Y). 
+$$ {#eq-expval-prod-ind-rv}
+
+::: {#exr-exp-val-discr-3}
+Si considerino le seguenti variabili casuali: $Y$, ovvero il numero che si ottiene dal lancio di un dado equilibrato, e $Y$, il numero di teste prodotto dal lancio di una moneta equilibrata. Si trovi il valore atteso di $X+Y$.
+:::
+
+::: solution
+Per risolvere il problema iniziamo a costruire lo spazio campionario dell'esperimento casuale consistente nel lancio di un dado e di una moneta.
+
+| $x \textbackslash y$ |   1    |   2    |   3    |   4    |   5    |   6    |
+|:--------------------:|:------:|:------:|:------:|:------:|:------:|:------:|
+|          0           | (0, 1) | (0, 2) | (0, 3) | (0, 4) | (0, 5) | (0, 6) |
+|          1           | (1, 1) | (1, 2) | (1, 3) | (1, 4) | (1, 5) | (1, 6) |
+
+ovvero
+
+| $x \textbackslash y$ |  1  |  2  |  3  |  4  |  5  |  6  |
+|:--------------------:|:---:|:---:|:---:|:---:|:---:|:---:|
+|          0           |  1  |  2  |  3  |  4  |  5  |  6  |
+|          1           |  2  |  3  |  4  |  5  |  6  |  7  |
+
+Il risultato del lancio del dado è indipendente dal risultato del lancio della moneta. Pertanto, ciascun evento elementare dello spazio campionario avrà la stessa probabilità di verificarsi, ovvero $P(\omega) = \frac{1}{12}$. Il valore atteso di $X+Y$ è dunque uguale a:
+
+$$
+\mathbb{E}(X+Y) = 1 \cdot \frac{1}{12} + 2 \cdot \frac{1}{12} + \dots + 7 \cdot \frac{1}{12} = 4.0.
+$$
+
+Possiamo ottenere lo stesso risultato usanlo l'@eq-prop-expval-linearity:
+
+$$
+\mathbb{E}(X+Y) = \mathbb{E}(X) + E(Y) = 3.5 + 0.5 = 4.0.
+$$
+:::
+
+::: {#exr-exp-val-discr-4}
+Si considerino le variabili casuali $X$ e $Y$ definite nel caso del lancio di tre monete equilibrate, dove $X$ conta il numero delle teste nei tre lanci e $Y$ conta il numero delle teste al primo lancio. Si calcoli il valore atteso del prodotto delle variabili casuali $X$ e $Y$.
+:::
+
+::: solution
+La distribuzione di probabilità congiunta $P(X, Y)$ è fornita nella tabella seguente.
+
+| $x \textbackslash y$ |  0  |  1  | $p(Y)$ |
+|:--------------------:|:---:|:---:|:------:|
+|          0           | 1/8 |  0  |  1/8   |
+|          1           | 2/8 | 1/8 |  3/8   |
+|          2           | 1/8 | 2/8 |  3/8   |
+|          3           |  0  | 1/8 |  1/8   |
+|        $p(y)$        | 4/8 | 4/8 |  1.0   |
+
+Il calcolo del valore atteso di $XY$ si riduce a
+
+$$
+\mathbb{E}(XY) = 1 \cdot \frac{1}{8} + 2 \cdot \frac{2}{8} + 3 \cdot \frac{1}{8} = 1.0.
+$$
+
+Si noti che le variabili casuali $Y$ e $Y$ non sono indipendenti. Dunque non possiamo usare l'@eq-expval-prod-ind-rv. Infatti, il valore atteso di $X$ è
+
+$$
+\mathbb{E}(X) = 1 \cdot \frac{3}{8} + 2 \cdot \frac{3}{8} + 3 \cdot \frac{1}{8} = 1.5
+$$
+
+e il valore atteso di $Y$ è
+
+$$
+\mathbb{E}(Y) = 0 \cdot \frac{4}{8} + 1 \cdot \frac{4}{8} = 0.5.
+$$
+
+Perciò
+
+$$
+1.5 \cdot 0.5 \neq 1.0.
+$$
+
+In altri termini, se $\mathbb{E}(X Y) \neq \mathbb{E}(X) \mathbb{E}(Y)$, allora le variabili causuali $X$ e $Y$ non sono indipendenti (cioè sono associate).
+:::
+
+### Variabili casuali continue
+
+Nel caso di una variabile casuale continua $Y$ il valore atteso diventa:
+
+$$
+\mathbb{E}(Y) = \int_{-\infty}^{+\infty} y p(y) \,\operatorname{d}\!y.
+$$ {#eq-def-ev-rv-cont}
+
+Anche in questo caso il valore atteso è una media ponderata della $y$, nella quale ciascun possibile valore $y$ è ponderato per il corrispondente valore della densità $p(y)$. Possiamo leggere l'integrale pensando che $y$ rappresenti l'ampiezza delle barre infinitamente strette di un istogramma, con la densità $p(y)$ che corrisponde all'altezza di tali barre e la notazione $\int_{-\infty}^{+\infty}$ che corrisponde ad una somma.[^018_expval_var-1]
+
+[^018_expval_var-1]: Per il significato della notazione di integrale, si veda la @sec-calculus.
+
+#### Moda
+
+Un'altra misura di tendenza centrale delle variabili casuali continue è la moda. La moda di $Y$ individua il valore $y$ più plausibile, ovvero il valore $y$ che massimizza la funzione di densità $p(y)$:
+
+$$
+\mbox{Mo}(Y) = \mbox{argmax}_y p(y).
+$$ {#eq-def-mode}
+
+::: callout-note
+La notazione $\mbox{argmax}_y p(y)$ significa: il valore $y$ tale per cui la funzione $p(y)$ assume il suo valore massimo.
+:::
+
+## Varianza
+
+La seconda più importante proprietà di una variabile casuale, dopo che conosciamo il suo valore atteso, è la *varianza*.
+
+::: {#def-var-rv-definition}
+Se $Y$ è una variabile casuale discreta con distribuzione $p(y)$, per definizione la varianza di $Y$, $\mathbb{V}(Y)$, è
+
+$$
+\mathbb{V}(Y) = \mathbb{E}\Big[\big(Y - \mathbb{E}(Y)\big)^2\Big].
+$$ {#eq-def-var-rv}
+:::
+
+A parole: la varianza è la deviazione media quadratica della variabile dalla sua media.[^018_expval_var-2] Se denotiamo $\mathbb{E}(Y) = \mu$, la varianza $\mathbb{V}(Y)$ diventa il valore atteso di $(Y - \mu)^2$.
+
+[^018_expval_var-2]: Data una variabile casuale $Y$ con valore atteso $\mathbb{E}(Y)$, le "distanze" tra i valori di $Y$ e il valore atteso $\mathbb{E}(Y)$ definiscono la variabile casuale $Y - \mathbb{E}(Y)$ chiamata *scarto*, oppure *deviazione* oppure *variabile casuale centrata*. La variabile $Y - \mathbb{E}(Y)$ equivale ad una traslazione di sistema di riferimento che porta il valore atteso nell'origine degli assi. Si può dimostrare facilmente che il valore atteso della variabile scarto $Y - \mathbb{E}(Y)$ vale zero, dunque la media di tale variabile non può essere usata per quantificare la "dispersione" dei valori di $Y$ relativamente al suo valore medio. Occorre rendere sempre positivi i valori di $Y - \mathbb{E}(Y)$ e tale risultato viene ottenuto considerando la variabile casuale $\left(Y - \mathbb{E}(Y)\right)^2$.
+
+::: {#exr-var-discr-1}
+Posta $S$ uguale alla somma dei punti ottenuti nel lancio di due dadi equilibrati, si calcoli la varianza di $S$.
+:::
+
+::: solution
+La variabile casuale $S$ ha la seguente distribuzione di probabilità:
+
+|    $s$     |       2        |       3        |       4        |       5        |       6        |       7        |       8        |       9        |       10       |       11       |       12       |
+|:----------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|
+| $P(S = s)$ | $\frac{1}{36}$ | $\frac{2}{36}$ | $\frac{3}{36}$ | $\frac{4}{36}$ | $\frac{5}{36}$ | $\frac{6}{36}$ | $\frac{5}{36}$ | $\frac{4}{36}$ | $\frac{3}{36}$ | $\frac{2}{36}$ | $\frac{1}{36}$ |
+
+Essendo $\mathbb{E}(S) = 7$, la varianza diventa
+
+$$
+\begin{align}
+\mathbb{V}(S) &= \sum \left(s - \mathbb{E}(S)\right)^2 \cdot P(s) \notag\\
+&= (2 - 7)^2 \cdot 0.0278 + (3-7)^2 \cdot 0.0556 + \dots + (12 - 7)^2 \cdot 0.0278 \notag\\
+&= 5.8333.\notag
+\end{align}
+$$
+:::
+
+### Formula alternativa per la varianza
+
+C'è un modo più semplice per calcolare la varianza:
+
+$$
+\begin{align}
+\mathbb{E}\Big[\big(Y - \mathbb{E}(Y)\big)^2\Big] &= \mathbb{E}\big(Y^2 - 2Y\mathbb{E}(Y) + \mathbb{E}(Y)^2\big)\notag\\
+&= \mathbb{E}(Y^2) - 2\mathbb{E}(Y)\mathbb{E}(Y) + \mathbb{E}(Y)^2,
+\end{align}
+$$
+
+dato che $\mathbb{E}(Y)$ è una costante. Pertanto
+
+$$
+\mathbb{V}(Y) = \mathbb{E}(Y^2) - \big(\mathbb{E}(Y) \big)^2.
+$$ {#eq-def-alt-var-rv}
+
+A parole: la varianza è la media dei quadrati meno il quadrato della media della variabile.
+
+::: {#exr-var-discr-2}
+Consideriamo la variabile casuale $Y$ che corrisponde al numero di teste che si osservano nel lancio di una moneta truccata con probabilità di testa uguale a 0.8. Si trovi la varianza di $Y$.
+:::
+
+::: solution
+Il valore atteso di $Y$ è
+
+$$
+\mathbb{E}(Y) = 0 \cdot 0.2 + 1 \cdot 0.8 = 0.8.
+$$
+
+Usando la formula tradizionale della varianza otteniamo:
+
+$$
+\mathbb{V}(Y) = (0 - 0.8)^2 \cdot 0.2 + (1 - 0.8)^2 \cdot 0.8 = 0.16.
+$$
+
+Lo stesso risultato si trova con la formula alternativa della varianza. Il valore atteso di $Y^2$ è
+
+$$
+\mathbb{E}(Y^2) = 0^2 \cdot 0.2 + 1^2 \cdot 0.8 = 0.8.
+$$
+
+e la varianza diventa
+
+$$
+\mathbb{V}(Y) = \mathbb{E}(Y^2) - \big(\mathbb{E}(Y) \big)^2 = 0.8 - 0.8^2 = 0.16.
+$$
+:::
+
+### Variabili casuali continue
+
+Nel caso di una variabile casuale continua $Y$, la varianza diventa:
+
+$$
+\mathbb{V}(Y) = \int_{-\infty}^{+\infty} \large[y - \mathbb{E}(Y)\large]^2 p(y) \,\operatorname {d}\!y.
+$$ {#eq-def-var-rv-cont}
+
+Come nel caso discreto, la varianza di una v.c. continua $Y$ misura approssimativamente la distanza al quadrato tipica o prevista dei possibili valori $y$ dalla loro media.
+
+## Deviazione standard
+
+Quando lavoriamo con le varianze, i termini sono innalzati al quadrato e quindi i numeri possono diventare molto grandi (o molto piccoli). Per trasformare nuovamente i valori nell'unità di misura della scala originaria si prende la radice quadrata. Il valore risultante viene chiamato *deviazione standard* e solitamente è denotato dalla lettera greca $\sigma$.
+
+::: {#def-sd-vc}
+Si definisce scarto quadratico medio (o deviazione standard o scarto tipo) la radice quadrata della varianza:
+
+$$
+\sigma_Y = \sqrt{\mathbb{V}(Y)}.
+$$ {#eq-def-sd}
+:::
+
+Come nella statistica descrittiva, la deviazione standard di una variabile casuale misura approssimativamente la distanza tipica o prevista dei possibili valori $y$ dalla loro media.
+
+::: {#exr-sd-discr-1}
+Per i dadi equilibrati dell'@exr-var-discr-1, la deviazione standard della variabile casuale $S$ è uguale a $\sqrt{5.833} = 2.415$.
+:::
+
+## Standardizzazione
+
+::: {#def-standardization}
+Data una variabile casuale $Y$, si dice *variabile standardizzata* di $Y$ l'espressione
+
+$$
+Z = \frac{Y - \mathbb{E}(Y)}{\sigma_Y}.
+$$ {#eq-standardization}
+:::
+
+Solitamente, una variabile standardizzata viene denotata con la lettera $Z$.
+
+## Momenti di variabili casuali
+
+::: definition
+Si chiama *momento* di ordine $q$ di una v.c. $X$, dotata di densità $p(x)$, la quantità
+
+$$
+\mathbb{E}(X^q) = \int_{-\infty}^{+\infty} x^q p(x) \; dx.
+$$ {#eq-moments-cont}
+
+Se $X$ è una v.c. discreta, i suoi momenti valgono:
+
+$$
+\mathbb{E}(X^q) = \sum_i x_i^q P(x_i).
+$$ {#eq-moments-discr}
+:::
+
+I momenti sono importanti parametri indicatori di certe proprietà di $X$. I più noti sono senza dubbio quelli per $q = 1$ e $q = 2$. Il momento del primo ordine corrisponde al valore atteso di $X$. Spesso i momenti di ordine superiore al primo vengono calcolati rispetto al valor medio di $X$, operando una traslazione $x_0 = x − \mathbb{E}(X)$ che individua lo scarto dalla media. Ne deriva che il momento centrale di ordine 2 corrisponde alla varianza.
+
+## Covarianza
+
+La covarianza quantifica la tendenza delle variabili casuali $X$ e $Y$ a "variare assieme". Per esempio, l'altezza e il peso delle giraffe producono una covarianza positiva perché all'aumentare di una di queste due quantità tende ad aumentare anche l'altra. La covarianza misura la forza e la direzione del legame lineare tra due variabili casuali $X$ ed $Y$. Si utilizza la notazione $\mbox{Cov}(X,Y)=\sigma_{xy}$.
+
+::: {#def-covariance-rv}
+Date due variabili casuali $X$, $Y$, chiamiamo covarianza tra $X$ ed $Y$ il numero
+
+$$
+\mbox{Cov}(X,Y) = \mathbb{E}\Bigl(\bigl(X - \mathbb{E}(X)\bigr) \bigl(Y - \mathbb{E}(Y)\bigr)\Bigr),
+$$ {#eq-cov-def-rv}
+
+dove $\mathbb{E}(X)$ e $\mathbb{E}(Y)$ sono i valori attesi di $X$ ed $Y$.
+:::
+
+In maniera esplicita,
+
+$$
+\mbox{Cov}(X,Y) = \sum_{(x,y) \in \Omega} (x - \mu_X) (y - \mu_Y) f(x, y).
+$$ {#eq-cov_def}
+
+La definizione è analoga, algebricamente, a quella di varianza e risulta infatti
+
+$$
+\mathbb{V}(x) = \mbox{Cov}(X, X)
+$$
+
+e
+
+$$
+\mbox{Cov}(X,Y) = \mathbb{E}(XY) - \mathbb{E}(Y)\mathbb{E}(X).
+$$ {#eq-cov_vc_alt}
+
+::: proof
+L'@eq-cov_vc_alt si ricava nel modo seguente:
+
+$$
+\begin{align}
+\mbox{Cov}(X,Y) &= \mathbb{E}\Bigl(\bigl(X-\mathbb{E}(X)\bigr) \bigl(Y-\mathbb{E}(Y)\bigr)\Bigr)\notag\\
+          %&= \mathbb{E}(XY) - \mathbb{E}(Y)X -\mathbb{E}(X)Y + \mathbb{E}(X)\mathbb{E}(Y) )\notag\\
+          &= \mathbb{E}(XY) - \mathbb{E}(Y)\mathbb{E}(X) - \mathbb{E}(X)\mathbb{E}(Y) + \mathbb{E}(X)\mathbb{E}(Y)\notag\\
+          &= \mathbb{E}(XY) - \mathbb{E}(Y)\mathbb{E}(X)\notag.
+\end{align}
+$$
+:::
+
+::: {#exr-cov-rv-1}
+Consideriamo le variabili casuali definite nell'@exr-exp-val-discr-4. Si calcoli la covarianza di $X$ e $Y$.
+:::
+
+::: solution
+Abbiamo che $\mu_X = 1.5$ e $\mu_Y = 0.5$. Ne segue che la covarianza di $X$ e $Y$ è:
+
+$$
+\begin{align}
+\mbox{Cov}(X,Y) &= \sum_{(x,y) \in \Omega} (x - \mu_X) (y - \mu_Y) f(x, y)\notag\\
+&= (0-1.5)(0-0.5)\cdot \frac{1}{8} + (0-1.5)(1-0.5) \cdot 0 \\
+   &\qquad + (1-1.5)(0-0.5)\cdot \frac{2}{8} + (1-1.5)(1-0.5) \cdot \frac{1}{8} \notag\\
+    &\qquad+ (2-1.5)(0-0.5) \cdot \frac{1}{8} + (2-1.5)(1-0.5) \cdot \frac{2}{8} \\
+   &\qquad+ (3-1.5)(0-0.5) \cdot 0 +  (3-1.5)(1-0.5)\cdot\frac{1}{8} \notag\\
+   &= \frac{1}{4}. \notag
+ \end{align}
+$$
+
+Lo stesso risultato può essere trovato usando l'@eq-cov_vc_alt. Iniziamo a calcolare il valore atteso del prodotto $XY$:
+
+$$
+\mathbb{E}(XY) = 0 \cdot\frac{4}{8} + 1 \cdot\frac{1}{8} + 2 \cdot\frac{2}{8} + 3 \cdot\frac{1}{8} = 1.0.
+$$
+
+Dunque, la covarianza tra $X$ e $Y$ diventa
+
+$$
+\begin{align}
+\mbox{Cov}(X,Y) &= \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y)\notag\\
+ &= 1 -  1.5\cdot 0.5 \notag\\
+ &= 0.25.\notag
+\end{align}
+$$
+:::
+
+## Correlazione
+
+La covarianza dipende dall'unità di misura delle due variabili e quindi non consente di stabilire l'intensità della relazione. Una misura standardizzata della relazione che intercorre fra due variabili è invece rappresentata dalla correlazione. La correlazione si ottiene dividendo la covarianza per le deviazioni standard delle due variabili aleatorie.
+
+::: {#def-cor-rv-def}
+Il coefficiente di correlazione tra $X$ ed $Y$ è il numero definito da
+
+$$
+\rho(X,Y) =\frac{\mbox{Cov}(X,Y)}{\sqrt{\mathbb{V}(X)\mathbb{V}(Y)}}.
+$$ {#eq-cor-rv-def}
+:::
+
+Si può anche scrivere $\rho_{X,Y}$ al posto di $\rho(X,Y)$.
+
+Il coefficiente di correlazione $\rho_{xy}$ è un numero puro, cioè non dipende dall'unità di misura delle variabili, e assume valori compresi tra -1 e +1.
+
+## Proprietà
+
+-   La covarianza tra una variabile aleatoria $X$ e una costante $c$ è nulla: $\mbox{Cov}(c,X) = 0;$
+-   la covarianza è simmetrica: $\mbox{Cov}(X,Y) = \mbox{Cov}(Y,X);$
+-   vale $-1 \leq \rho(X,Y) \leq 1;$
+-   la correlazione non dipende dall'unità di misura: $\rho(aX, bY) = \rho(X,Y), \quad \forall a, b > 0;$
+-   se $Y = a + bX$ è una funzione lineare di $X$ con costanti $a$ e $b$, allora $\rho(X,Y) = \pm 1$, a seconda del segno di $b$;
+-   la covarianza tra $X$ e $Y$, ciascuna moltiplicata per una costante, è uguale al prodotto delle costanti per la covarianza tra $X$ e $Y$: $\mbox{Cov}(aX,bY) = ab \;\mbox{Cov}(X,Y)$;
+-   vale $\mathbb{V}(X \pm Y) = \mathbb{V}(X) + \mathbb{V}(Y) \pm 2 \cdot \mbox{Cov}(X,Y)$;
+-   vale $\mbox{Cov}(X + Y, Z) = \mbox{Cov}(X,Z) + \mbox{Cov}(Y,Z);$
+-   per una sequenza di variabili aleatorie $X_1, \dots, X_n$, si ha $$\mathbb{V}\left( \sum_{i=1}^n X_i\right) = \sum_{i=1}^n \mathbb{V}(X_i) + 2\sum_{i,j: i<j}cov(X_i, X_j);$$
+-   vale $\mbox{Cov}\left(\sum_{i=1}^n a_i X_i, \sum_{j=1}^m b_jY_j\right) = \sum_{i=1}^n \sum_{j=1}^m a_j b_j\mbox{Cov}(X_j, Y_j);$
+-   se $X_1, X_2, \dots, X_n$ sono indipendenti, allora $$\mbox{Cov}\left(\sum_{i=1}^n a_i X_i, \sum_{j=1}^n b_jX_j\right) = \sum_{i=1}^n a_i b_i \mathbb{V}(X_i).$$
+
+### Incorrelazione
+
+::: {#def-incorrelation-def}
+Si dice che $X$ ed $Y$ sono incorrelate, o linermente indipendenti, se la loro covarianza è nulla,
+
+$$
+\sigma_{XY} = \mathbb{E} \big[(X - \mu_X) (y-\mu_u) \big] = 0,
+$$ {#eq-incorrelation-def}
+
+che si può anche scrivere come
+
+$$
+\rho_{XY} = 0, \quad \mathbb{E}(XY) = \mathbb{E}(X) \mathbb{E}(Y).
+$$
+:::
+
+Si introduce così un secondo tipo di indipendenza, più debole, dopo quello di indipendenza stocastica. Viceversa, però, se $\mbox{Cov}(X, Y) = 0$, non è detto che $X$ ed $Y$ siano indipendenti.
+
+::: {#exr-incorrelation-1}
+Siano $X$ e $Y$ due variabili aleatorie discrete avente una distribuzione di massa di probabilità congiunta pari a
+
+$$
+f_{XY}(x,y) = \frac{1}{4} \quad (x,y) \in \{(0,0), (1,1), (1, -1), (2,0) \}
+$$
+
+e zero altrimenti. Le due variabili aleatorie $X$ e $Y$ sono mutuamente indipendenti?
+:::
+
+::: solution
+La distribuzione marginale della $X$ è
+
+$$
+\begin{cases}
+X = 0, \quad  P_X = 1/4, \\
+X = 1, \quad P_X = 2/4, \\
+X = 2, \quad P_X = 1/4.
+\end{cases}
+$$
+
+$$
+\mathbb{E}(X) = 0 \frac{1}{4} + 1 \frac{2}{4} + 2 \frac{1}{4} = 1.
+$$
+
+$$
+\mathbb{E}(X^2) = 0^2 \frac{1}{4} + 1^2 \frac{2}{4} + 2^2 \frac{1}{4} = \frac{3}{2}.
+$$
+
+$$
+\mathbb{V}(X) = \frac{3}{2} - 1^2 = \frac{1}{2}.
+$$
+
+La distribuzione marginale della $Y$ è
+
+$$
+\begin{cases}
+Y = -1, \quad  P_Y = 1/4, \\
+Y = 0, \quad P_Y = 2/4, \\
+Y = 1, \quad P_Y = 1/4.
+\end{cases}
+$$
+
+$$
+\mathbb{E}(Y) = 0 \frac{2}{4} + 1 \frac{1}{4} + (-1) \frac{1}{4} = 0.
+$$
+
+$$
+\mathbb{E}(Y^2) = 0^2 \frac{2}{4} + 1^2 \frac{1}{4} + (-1)^2 \frac{1}{4} = \frac{1}{2}.
+$$
+
+$$
+\mathbb{V}(X) = \frac{1}{2} - 0^2 = \frac{1}{2}.
+$$
+
+Calcoliamo ora la covarianza tra $X$ e $Y$:
+
+$$
+\mathbb{E}(XY) = \sum_x\sum_y xy f_{XY} (x,y) =
+(0\cdot 0)\frac{1}{4} +
+(1\cdot 1)\frac{1}{4} +
+(1\cdot -1)\frac{1}{4} +
+(2\cdot 0)\frac{1}{4} = 0.
+$$
+
+$$
+\mbox{Cov}(X,Y) = \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y) = 0 - 1\cdot0 = 0.
+$$
+
+Quindi le due variabili aleatorie hanno covarianza pari a zero. Tuttavia, esse non sono indipendenti, in quanto non è vero che
+
+$$
+f_{XY} (x,y) = f_X(x) f_Y(y)
+$$
+
+per tutti gli $x$ e $y$.
+:::
+
+In conclusione, anche se la condizione di indipendenza implica una covarianza nulla, l'esempio precedente mostra come l'inverso non sia necessariamente vero: la covarianza può essere zero anche se due variabili casuali non sono indipendenti.
+
+## Conclusioni {.unnumbered}
+
+La densità di probabilità congiunta bivariata tiene simultaneamente conto del comportamento di due variabili casuali $X$ e $Y$ e di come esse si influenzano. Se $X$ e $Y$ sono legate linearmente, allora il coefficiente di correlazione
+
+```{=tex}
+\begin{equation}
+\rho = \frac{\mbox{Cov}(X, Y)}{\sigma_X \sigma_Y}\notag
+\end{equation}
+```
+fornisce l'indice maggiormente utilizzato per descrivere l'intensità e il segno dell'associazione lineare. Nel caso di un'associazione lineare perfetta, $Y = a + bX$, avremo $\rho = 1$ con $b$ positivo ed $\rho = -1$ con $b$ negativo. Se il coefficiente di correlazione è pari a 0 le variabili si dicono incorrelate. Condizione sufficiente (ma non necessaria) affinché $\rho = 0$ è che le due variabili siano tra loro indipendenti.

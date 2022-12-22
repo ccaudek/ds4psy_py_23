@@ -1,0 +1,4 @@
+### Riferimenti bibliografici {.unnumbered}
+
+::: {#refs}
+:::

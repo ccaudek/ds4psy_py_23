@@ -1,0 +1,282 @@
+# Distribuzione delle statistiche campionarie {#sec-hypot-test}
+
+```{r, include = FALSE}
+source("_common.R")
+```
+
+# TLC {#sec-stimatori}
+
+Come possiamo stimare la media della popolazione $\mu$ usando una campione di osservazioni? La media della popolazione è rappresentata dal valore atteso $\mathbb{E} (X) = \mu$ e il valore atteso di una variabile aleatoria è la media di tutti i suoi valori nella popolazione. Per analogia, sembra ragionevole stimare il valore atteso di una variabile aleatoria con la media dei valori di un campione, ovvero con la media campionaria. Se indichiamo con $x_1, x_2, \dots, x_n$ un campione di $n$ osservazioni, la media campionaria è definita da: $$\bar{X} = n^{-1} \sum x_i.$$ Data la media $\bar{X}$ osservata in uno specifico campione, potremmo chiederci quanto sia precisa tale stima di $\mu$. In pratica ci stiamo chiedendo quanto sia vicino il valore osservato della media $\bar{X}$ di un particolare campione alla vera media della popolazione, $\mu$. Sfortunatamente questa domanda è mal posta, nel senso che non può avere una risposta. Per averla dovremmo conoscere $\mu$, ma in questo caso non ci sarebbe alcun bisogno di trovare una stima di $\mu$!
+
+Invece di chiederci quanto sia precisa una particolare stima, dobbiamo invece chiederci quanto sia precisa la *procedura di stima*, ovvero quello che in termini statistici viene chiamato uno *stimatore*. Ci dobbiamo dunque chiedere quali siano le proprietà della media campionaria $\bar{X}$ utilizzata quale stimatore della media di una popolazione, $\mu$. A questa domanda è possibile fornire una risposta.
+
+Le stime della media della popolazione sono diverse da campione a campione perché $\bar{X}$ è una variabile aleatoria. Questa variabilità, dovuta al fatto che sono stati raccolti campioni casuali diversi, è detta *variabilità campionaria*. Una caratteristica cruciale delle analisi statistiche è che lo stimatore $\bar{X}$ di $\mu$ presenta un certo grado di variabilità. Chiamiamo *distribuzione campionaria* la funzione di densità o di probabilità di uno stimatore. Poniamoci ora il problema di ricavare le proprietà della distribuzione campionaria di $\bar{X}$.
+
+## Parametri e statistiche {#sec:pars_and_sample_stats}
+
+In statistica, per *popolazione* si intende un insieme di elementi che presenta caratteristiche aleatorie, mentre per *campione* si intende un sottoinsieme della popolazione. Ma a cosa corrisponde in pratica la popolazione? Per uno psicologo la popolazione è un gruppo di individui. Per un biologo marino la popolazione è un gruppo di delfini, ad esempio. Nella maggior parte dei casi, le popolazioni oggetto di interesse per i ricercatori sono insiemi di entità concrete che esistono nel mondo reale. Dal punto di vista della statistica, invece, le popolazioni sono delle entità astratte. Infatti, gli statistici operazionalizzano il concetto di "popolazione" nei termini di un oggetto matematico che consente di essere manipolato con facilità. In realtà, in precedenza noi abbiamo già incontrato questi oggetti matematici: sono le distribuzioni di probabilità.
+
+L'idea è semplice. Supponiamo di occuparci del quoziente di intelligenza, QI. Per uno psicologo, la popolazione di interesse è un gruppo di individui, ciascuno dei quali dotato di uno specifico punteggio del QI. Uno statistico "semplifica" tale situazione definendo in maniera operativa la popolazione come la distribuzione di densità rappresentata nella figura [1.1](#fig:qi_distribution){reference-type="ref" reference="fig:qi_distribution"}.
+
+![Grafico della distribuzione dei punteggi del QI nella popolazione.](iq_distribution){#fig:qi_distribution width="100%"}
+
+I test di intelligenza sono progettati in modo che il QI medio sia pari a 100, la deviazione standard dei punteggi QI sia uguale a 15 e la distribuzione dei punteggi del QI sia normale. I valori riportati sopra sono detti *parametri* in quanto descrivono le proprietà dell'intera popolazione. Cioè, diciamo che la media della popolazione è $\mu = 100$ e la deviazione standard della popolazione è $\sigma = 15$. Dal punto di vista statistico, dunque, la popolazione dei valori QI è $QI \sim \mathcal{N}(\mu = 100, \sigma = 15).$
+
+Supponiamo ora di eseguire un esperimento nel quale il test di intelligenza viene somministrato a 100 persone selezionate a caso. Tale campione casuale semplice consiste nel seguente insieme di 100 numeri:
+
+::: mdframed
+    97 90 65 107 109 112 109 91 96 ... 68
+:::
+
+Ciascuno di questi punteggi QI è stato estratto a caso da una distribuzione normale con media 100 e deviazione standard 15. Se costruiamo un istogramma con i dati di un tale campione otteniamo il grafico mostrato nella figura [1.2](#fig:qi_hist_1){reference-type="ref" reference="fig:qi_hist_1"}.
+
+![Istogramma della distribuzione dei punteggi del QI in un campione di 100 osservazioni.](iq_histogram){#fig:qi_hist_1 width="100%"}
+
+Come possiamo vedere, l'istogramma ha approssimativamente la forma corretta, ma è un'approssimazione molto cruda della distribuzione della popolazione mostrata nella figura [1.1](#fig:qi_distribution){reference-type="ref" reference="fig:qi_distribution"}. Se calcoliamo la media del campione, otteniamo un numero abbastanza vicino alla media della popolazione di 100, ma non identico: nel campione considerato il QI medio è 98.5 con una deviazione standard pari a 15.9. Queste *statistiche campionarie* descrivono le proprietà di uno specifico campione che è stato osservato e, sebbene siano abbastanza simili ai parametri della popolazione, non sono uguali ad essi. In generale, le statistiche campionarie sono ciò che è possibile calcolare a partire dai dati osservati sul campione mentre i parametri della popolazione sono ciò che vorremmo conoscere.
+
+## La legge dei grandi numeri
+
+Nella sezione [1.1](#sec:pars_and_sample_stats){reference-type="ref" reference="sec:pars_and_sample_stats"} abbiamo considerato i risultati di un esperimento casuale nel quale sono stati osservati i valori fittizi del QI di un campione di ampiezza $n = 100$. I risultati sono stati incoraggianti: la media campionaria di 98.5 ci fornisce un'approssimazione abbastanza ragionevole della media della popolazione $\mu = 100$. In molti studi un tale livello di precisione è accettabile, ma in altre situazioni è necessario essere più precisi.
+
+Cosa dobbiamo fare se vogliamo ottenere statistiche campionarie più simili ai parametri della popolazione? La risposta è ovvia: raccogliere più dati. Supponiamo dunque di condurre un nuovo esperimento nel quale misuriamo il QI di 10000 persone. Possiamo simulare i risultati di questo esperimento usando . A questo fine usiamo la funzione `rnorm()` che genera numeri casuali estratti da una distribuzione normale. Se vogliamo eseguire una simulazione nella quale le dimensioni del campione sono $n =$ 10000, la popolazione è normale con media $\mu = 100$ e deviazione standard $\sigma = 15$, possiamo usare le seguenti istruzioni :
+
+::: mdframed
+    # generiamo i punteggi QI
+    QI <- rnorm(n = 10000, mean = 100, sd = 15) 
+    # i valori QI sono numeri interi!
+    QI <- round(IQ) 
+    head(QI)
+    #> [1] 100 106  88 100  62 114
+:::
+
+Possiamo ora calcolare il QI medio con l'istruzione `mean(QI)` e la deviazione standard con l'istruzione `sd(QI)`. Nella figura [1.3](#fig:qi_hist_2){reference-type="ref" reference="fig:qi_hist_2"} è riportato l'istogramma dei valori del QI di questo campione più numeroso. È chiaro che, in questo secondo caso, otteniamo un'approssimazione migliore rispetto al precedente campione più piccolo. Ciò si riflette anche nelle statistiche del campione: per il campione più grande il QI medio è pari a 99.9 con una deviazione standard di 15.1. Questi valori sono molto vicini ai parametri della popolazione.
+
+![Istogramma della distribuzione dei punteggi del QI in un campione di 10000 osservazioni.](iq_histogram_2){#fig:qi_hist_2 width="100%"}
+
+Il messaggio, un po' banale, che ricaviamo a questa simulazione è che, generalmente, i campioni di dimensioni maggiori forniscono informazioni migliori. Ho definito come "banali" i risultati di questa simulazione perché dovrebbe essere evidente a tutti che le cose stanno così. Infatti, questo punto è talmente ovvio che, quando Jacob Bernoulli -- uno dei fondatori della teoria della probabilità -- formalizzò questa idea nel 1713, commentò il risultato nel modo seguente:
+
+> Perché anche il più stupido degli uomini, basandosi soltanto sul suo istinto, da solo e senza alcuna istruzione (il che è notevole), è convinto che maggiore è il numero di osservazioni, minore è il pericolo di sbagliare.
+
+In statistica questa intuizione va sotto il nome di *Legge dei grandi numeri*. La Legge dei grandi numeri dice che la media aritmetica di un campione di $n$ variabili aleatorie $X_i$, indipendenti e identicamente distribuite, ovvero $\frac{1}{n}\sum_{i=1}^nX_i$, per $n$ crescente tende o converge al valore atteso teorico $\mu$.[^204_sampl_distr-1] In maniera più formale, la Legge dei grandi numeri può essere espressa nel modo seguente.
+
+[^204_sampl_distr-1]: La Legge dei grandi numeri non può dirci se lo strumento o l'esperimento considerati stiano producendo dei dati utili o dei dati che è sensato riassumere tramite la media. Ad esempio, se il dispositivo di misurazione è difettoso, la media di molte misurazioni sarà una stima molto accurata della cosa sbagliata! Questo è un esempio di errore sistematico, o errore di campionamento, che sono qualcosa di molto diverso dal fenomeno di fluttuazione casuale che viene descritto dalla Legge dei grandi numeri.
+
+::: teorema
+Si consideri un insieme $X_1, X_2, \dots$ di variabili aleatorie i.i.d., tutte con valore atteso $\Ev(X_i) = \mu$ e varianza $\var(X_i) = \sigma^2$. Si definisca la variabile aleatoria media campionaria come $\bar{X}_n = n^{-1} \sum_{i=1}^{n}X_i$. Mentre il valore atteso di $\bar{X}$ è indipendente dall'ampiezza del campione, la varianza di $\bar{X}$ tende a $0$ per $n \rightarrow \infty$. Ovvero, $$\lim_{n \rightarrow \infty} P\left(\{|\bar{X}_n - \mu | < \epsilon \}\right) = 0, \qquad \forall \epsilon > 0.
+\label{eq:legge_gr_num}$$
+:::
+
+In altre parole, quando la dimensione del campione tende ad infinito, la media campionaria $\bar{X}$ si avvicina sempre di più alla media $\mu$ della popolazione. La Legge dei grandi numeri è uno degli strumenti più importanti della statistica.
+
+## Distribuzione campionaria della media
+
+La Legge dei grandi numeri è uno strumento molto potente, ma non sufficiente per rispondere a tutte le nostre domande. Tutto ciò che ci offre è una "garanzia a lungo termine". La Legge dei grandi numeri ci garantisce che, a lungo termine, le statistiche campionarie saranno corrette -- ovvero, forniranno la risposta esatta se verrà raccolta una quantità infinita di dati. Ma come ha affermato John Maynard Keynes (1923) in economia, una garanzia a lungo termine è di scarsa utilità nella vita reale:
+
+> \[The\] long run is a misleading guide to current affairs. In the long run we are all dead. Economists set themselves too easy, too useless a task, if in tempestuous seasons they can only tell us, that when the storm is long past, the ocean is flat again.
+
+Come in economia, così anche in psicologia e nella statistica. Non è sufficiente sapere che, a lungo termine, arriveremo alla risposta giusta. È di scarso conforto sapere che un campione di dati infinitamente grande ci fornisce il valore esatto della media della popolazione, quando il campione che possiamo ottenere in qualsiasi situazione pratica non può che avere una numerosità modesta. Nell'attività pratica della ricerca psicologica, quindi, è necessario sapere qualcosa di più del comportamento della media campionaria quando essa viene calcolata a partire da un campione di dati molto più piccolo di quello ipotizzato dalla Legge dei grandi numeri.
+
+### Simulazione
+
+Tenendo a mente quanto detto nella sezione precedente, abbandoniamo l'idea che i nostri campioni siano in grado di raggiungere numerosità dell'ordine di grandezza delle decine o delle centinaia di migliaia di osservazioni. Prendiamo invece in esame una situazione più vicina a quella in cui gli psicologi si trovano ad operare. Consideriamo, quale esempio, un'ampiezza campionaria di $n = 5$. Come in precedenza, possiamo simulare questo esperimento casuale in   usando la funzione `rnorm()`:
+
+::: mdframed
+    qi_1 <- round(rnorm(n = 5, mean = 100, sd = 15))
+    qi_1
+    #> [1]  76 110  90  96  95
+:::
+
+Il QI medio in questo campione risulta pari a 93.4. Non sorprende che questo risultato sia molto meno accurato rispetto all'esperimento precedente.
+
+Immaginiamo ora di replicare l'esperimento; immaginiamo cioè di ripetere nuovamente la procedura descritta sopra: estraiamo un nuovo campione casuale e misuriamo il QI di 5 persone. Ancora una volta, utilizziamo   per effettuare la simulazione:
+
+::: mdframed
+    qi_2 <- round(rnorm(n = 5, mean = 100, sd = 15))
+    qi_2
+    #> [1]  99  98  94 120 106
+:::
+
+In questo secondo campione casuale il QI medio è 103.4. Procediamo in questo modo e simuliamo l'esperimento casuale dieci volte in maniera tale da ottenere i risultati riportati nella tabella [1.1](#tab:samples_5obs){reference-type="ref" reference="tab:samples_5obs"}.
+
+::: center
+::: {#tab:samples_5obs}
+|            | Individuo 1 | Individuo 2 | Individuo 3 | Individuo 4 | Individuo 5 | Media |
+|------------|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----:|
+| Replica 1  |     76      |     110     |     90      |     96      |     95      | 93.4  |
+| Replica 2  |     99      |     98      |     94      |     120     |     106     | 103.4 |
+| Replica 3  |     127     |     94      |     92      |     121     |     86      |  104  |
+| Replica 4  |     108     |     120     |     100     |     81      |     104     | 102.6 |
+| Replica 5  |     95      |     93      |     97      |     122     |     92      | 99.8  |
+| Replica 6  |     83      |     143     |     101     |     107     |     95      | 105.8 |
+| Replica 7  |     89      |     86      |     107     |     105     |     102     | 97.8  |
+| Replica 8  |     96      |     110     |     112     |     76      |     87      | 96.2  |
+| Replica 9  |     89      |     99      |     111     |     114     |     106     | 103.8 |
+| Replica 10 |     101     |     104     |     109     |     77      |     137     | 105.6 |
+
+: Dieci campioni casuali tratti dalla distribuzione $\mathcal{N}(\mu = 100, \sigma = 15$).
+:::
+:::
+
+Supponiamo ora di replicare tante volte la procedura che ci porta a calcolare la media dei valori del QI di cinque persone prese a caso. Ogni volta che replichiamo l'esperimento, salviamo il valore della media campionaria. Così facendo, generiamo un insieme di valori, ciascuno dei quali corrisponde alla media di un campione casuale di 5 osservazioni. I primi 10 valori di tale insieme sono dati dalle 10 medie elencate nella tabella [1.1](#tab:samples_5obs){reference-type="ref" reference="tab:samples_5obs"}:
+
+::: mdframed
+    #> 93.4 103.4 104 102.6 99.8 105.8 97.8 96.2 103.8 105.6 ...
+:::
+
+Supponiamo di raccogliere le medie di 10000 campioni di 5 osservazioni ciascuno e di disegnare un istogramma di tali valori. Usando i poteri magici di , possiamo eseguire un tale simulazione mediante le istruzioni riportate di seguito:
+
+::: mdframed
+    nrep <- 10000
+    nobs <- 5
+    mu <- 100
+    sigma <- 15
+    qi <- rep(NA, nrep)
+    get_mean <- function(nobs, mu, sigma) {
+      x <- round(rnorm(n = nobs, mean = mu, sd = sigma))
+      mean(x)
+    }
+    qi <- replicate(nrep, get_mean(nobs, mu, sigma))
+:::
+
+Riportiamo nella figura [1.4](#fig:qi_hist_3){reference-type="ref" reference="fig:qi_hist_3"} i risultati della simulazione. Come illustrato nella figura, la media dei 5 punteggi del QI è in genere compresa tra i valori 80 e 120. Ma il risultato più importante di questa simulazione è quello che ci fa capire che, se ripetiamo l'esperimento casuale più e più volte, otteniamo una distribuzione di medie campionarie. Un tale distribuzione ha un nome speciale in statistica: si chiama *distribuzione campionaria della media*.
+
+![Istogramma della distribuzione delle medie dei punteggi del QI calcolate su 10000 campioni casuali di ampiezza $n=5$.](iq_histogram_3){#fig:qi_hist_3 width="100%"}
+
+Il concetto di "distribuzione campionaria" è un'altra importante idea teorica della statistica ed è fondamentale per comprendere il comportamento dei piccoli campioni.
+
+Quando abbiamo eseguito per la prima volta l'esperimento casuale relativo all'estrazione di cinque punteggi IQ dalla popolazione, abbiamo trovato una media campionaria pari a 93.4. Quello che impariamo dalla distribuzione campionaria delle medie di campioni di ampiezza $n = 5$ (figura [1.4](#fig:qi_hist_3){reference-type="ref" reference="fig:qi_hist_3"}) è che un tale esperimento casuale è poco accurato. Infatti, la distribuzione campionaria della media dei campioni di ampiezza $n=5$ ci fa capire che, ripetendo un tale esperimento casuale tante volte, otteniamo delle medie campionarie con valori compresi nell'intervallo tra 80 e 120. In altre parole, la distribuzione campionaria della media di campioni di ampiezza 5 ci dice che il risultato dell'esperimento casuale (ovvero, la media osservata in un campione) varia di molto tra i diversi campioni che possono essere estratti dalla popolazione. Di conseguenza, se il nostro obiettivo è quello di stimare la media della popolazione, allora non dobbiamo fidarci troppo del risultato ottenuto *per caso* da un singolo campione, ovvero, dal campione di dati che abbiamo raccolto.
+
+### Valore atteso della media campionaria
+
+Poniamoci ora il problema di trovare la media (valore atteso) della distribuzione delle medie campionarie. È facile mostrare che $\mu_{\bar{X}_n}$ coincide con il valore medio $\mu$ della popolazione da cui i campioni di ampiezza $n$ sono stati estratti.
+
+::: proof
+*Proof.* Ponendo $\bar{X}_n = S_n/n$, dove $S_n = X_1 + X_2 + \dots + X_n$ è la somma di $n$ variabili aleatorie iid, ne segue che: $$\Ev(\bar{X}_n) = \frac{1}{n}  \Ev(S_n) = \frac{1}{n} \Ev(X_1 + X_2 + \dots + X_n ) =  \frac{1}{n} n \mu = \mu.$$ ◻
+:::
+
+### Varianza della media campionaria
+
+Il secondo problema che ci poniamo è quello di trovare la varianza della distribuzione campionaria della media dei campioni. Si può facilmente mostrare come la varianza della distribuzione delle medie campionarie è legata alla varianza $\sigma^2$ della popolazione da cui i campioni sono stati estratti dalla seguente relazione: $$\var(\bar{X}_n) =  \frac{\sigma^2}{n},
+\label{eq:var_media}$$ dove $n$ è la numerosità dei campioni casuali.
+
+Prima di presentare la dimostrazione dell'eq. [\[eq:var_media\]](#eq:var_media){reference-type="eqref" reference="eq:var_media"} è necessario ricordare la seguente proprietà della varianza.
+
+::: teorema
+Se una variabile aleatoria $X$ viene moltiplicata per una costante $a$, la varianza della variabile aleatoria $aX$ diventa $$\var(a X) = a^2 \var(X).$$
+:::
+
+::: proof
+*Proof.* $$\var(\bar{X}_n) = \frac{1}{n^2} \var(S_n) = \frac{1}{n^2} n \sigma^2 
+= \frac{\sigma^2}{n}.$$ ◻
+:::
+
+I due risultati che abbiamo ottenuto sopra sono molto importanti. Il primo ci dice che la media campionaria è uno stimatore corretto (ovvero, non distorto) della media della popolazione. Il secondo quantifica l'errore medio che compiamo usando la media del campione quale stima della media della popolazione.
+
+#### Simulazione
+
+Per chiarire le due conclusioni precedenti, utilizziamo nuovamente la simulazione che abbiamo eseguito in precedenza, quando abbiamo generato 10000 medie campionarie per campioni di ampiezza $n = 5$ estratti dalla popolazione $\mathcal{N}(\mu = 100, \sigma = 15$). La distribuzione di tali medie è fornita graficamente nella figura [1.4](#fig:qi_hist_3){reference-type="ref" reference="fig:qi_hist_3"}. In realtà, quella fornita dalla figura [1.4](#fig:qi_hist_3){reference-type="ref" reference="fig:qi_hist_3"} *non è* la distribuzione campionaria delle medie di campioni casuali di ampiezza $n=5$ estratti dalla popolazione $\mathcal{N}(\mu = 100, \sigma = 15$): la vera distribuzione campionaria della media si otterrebbe estraendo *infiniti* campioni di ampiezza $n$ dalla popolazione. Tuttavia, avendo a disposizione le medie di 10000 campioni, ci possiamo aspettare un risultato empirico non troppo diverso da quello teorico. Verifichiamo dunque le due conclusioni a cui siamo giunti sopra.
+
+Sappiamo che la media delle 10000 medie di campioni di ampiezza $n=5$ dovrà essere molto simile (anche se non identica, dato che il numero dei campioni è grande, ma non infinito) alla media della popolazione. Infatti, in questa simulazione, abbiamo che $\hat{\mu}_{\bar{X}_n} = 99.92$ (contro un valore teorico $\mu=100$). All'aumentare del numero di campioni estratti $\mu_{\bar{X}_n}$ diventa sempre più simile a $\mu$.
+
+Calcoliamo ora la deviazione standard (detta *errore standard*) delle 10000 medie campionarie. Nella simulazione, tale valore è pari a 6.715. Il valore teorico è $\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}} = \frac{15}{\sqrt{5}} = 6.708$: di nuovo, con 10000 medie campionarie le proprietà della distribuzione campionaria della media vengono approssimate molto bene.
+
+Si noti che possiamo attribuire a $\sigma_{\bar{X}}$ la stessa interpretazione che è possibile fornire, in generale, alla deviazione standard. Nel caso di un campione, la deviazione standard $\sigma$ ci dice di quanto, in media, variano tra di loro i valori osservati. Nel caso della distribuzione campionaria delle medie dei campioni, $\sigma_{\bar{X}}$ ci dice di quanto ci possiamo aspettare che vari, in media, la media del campione se l'esperimento casuale venisse ripetuto più volte. La quantità $\sigma_{\bar{X}}$ ci fornisce dunque una misura dell'errore che compiamo se vogliamo stimare $\mu$ con $\bar{X}$.
+
+### Distribuzioni delle statistiche campionarie
+
+Qualunque statistica campionaria ha una sua distribuzione teorica. Consideriamo, ad esempio, il massimo del campione quale statistica campionaria di interesse. Ripetiamo la simulazione che abbiamo descritto sopra calcolando, questa volta, il valore massimo del campione. I risultati di questa simulazione sono riportati nella figura [1.5](#fig:qi_hist_4){reference-type="ref" reference="fig:qi_hist_4"}.
+
+![Istogramma della distribuzione del QI massimo osservato in ciascuno di 10000 campioni casuali di ampiezza $n=5$.](iq_histogram_4){#fig:qi_hist_4 width="100%"}
+
+Non dovrebbe sorprenderci che, prendendo 5 persone a caso per poi selezionare la persona con il punteggio QI più alto, otteniamo una distribuzione che, rispetto alla distribuzione della figura [1.4](#fig:qi_hist_3){reference-type="ref" reference="fig:qi_hist_3"}, è traslata verso destra. Nella presente simulazione, la distribuzione del QI massimo di un campione casuale di ampiezza $n = 5$ si situa approssimativamente nell'intervallo da 90 a 150.
+
+## Teorema del limite centrale {#sec:tlc}
+
+Chiediamoci ora quale sia la relazione che intercorre tra la distribuzione campionaria della media e l'ampiezza $n$ dei campioni. In ciascun pannello della figura [1.6](#fig_tlc_iq){reference-type="ref" reference="fig_tlc_iq"} sono riportati i risultati della seguente simulazione. Nella simulazione sono stati generati 10000 campioni di ampiezza $n$ ed è stato calcolato il QI medio in ciascun campione. Gli istogrammi mostrano la distribuzione delle medie così ottenute, cioè ci forniscono una rappresentazione grafica della distribuzione campionaria della media al variare dell'ampiezza campionaria $n$. I punteggi del QI sono stati ricavati da una distribuzione normale con media 100 e deviazione standard 15 e tale distribuzione viene visualizzata con una linea nera continua in ciascun pannello della figura [1.6](#fig_tlc_iq){reference-type="ref" reference="fig_tlc_iq"}.
+
+![Nel primo pannello in alto a sinistra ciascun campione contiene una sola osservazione, per cui la media del campione è identica al valore del QI di una persona. Di conseguenza, la distribuzione campionaria della media è identica alla distribuzione dei valori del QI nella popolazione. Quando $n=2$, la media di ciascun campione tende ad essere più simile alla media della popolazione di quanto lo sia ciascuna singola osservazione della popolazione. Quindi anche l'ampiezza dell'istogramma (ovvero, la distribuzione campionaria della media) diminuisce, se confrontata con la dispersione della popolazione. Quando giungiamo ad una numerosità campionaria pari a $n=30$ vediamo che la maggior parte delle medie campionarie tende ad addensarsi intorno alla media della popolazione $\mu$.](tlc_iq.pdf){#fig_tlc_iq width="\\textwidth"}
+
+Quello che ci chiediamo è come varia la distribuzione campionaria della media in funzione dell'ampiezza del campione. Intuitivamente, conosciamo già parte della risposta. Se abbiamo a disposizione solo poche osservazioni, è probabile che la media campionaria sia abbastanza imprecisa: se ripetiamo l'esperimento casuale del campionamento e ricalcoliamo la media del campione, otteniamo una risposta molto diversa ad ogni ripetizione dell'esperimento casuale. Di conseguenza, la distribuzione campionaria della media comprenderà una gamma di valori molto grande. Invece, si ottengono risultati molto simili tra loro se ripetiamo l'esperimento del campionamento utilizzando campioni di grandi dimensioni. In questo secondo caso, la distribuzione campionaria includerà una gamma di valori delle medie molto minore che in precedenza. Questo andamento si può notare nei pannelli della figura [1.6](#fig_tlc_iq){reference-type="ref" reference="fig_tlc_iq"}: l'errore standard della media campionaria diminuisce all'aumentare dell'ampiezza del campione.
+
+Ciò che abbiamo descritto finora, tuttavia, riguarda solo un aspetto di quello che accade alla distribuzione campionaria di $\bar{X}$ all'aumentare di $n$. Gli esempi discussi finora erano relativi al caso di campioni casuali del QI. Poiché i punteggi del QI seguono approssimativamente una distribuzione normale, abbiamo assunto che anche la popolazione abbia una distribuzione normale. Tuttavia, si presentano spesso casi in cui la distribuzione della popolazione non è normale. In queste circostanze, cosa succede alla distribuzione campionaria della media? La cosa straordinaria è questa: non importa quale sia la forma della distribuzione della popolazione, all'aumentare della dimensione campionaria $n$, la distribuzione di frequenza delle medie campionarie si approssima sempre più alla tipica forma a campana di una distribuzione normale.
+
+Per farci un'idea di quello che succede, eseguiamo alcune simulazioni usando . Consideriamo la distribuzione della popolazione rappresentata dall'istogramma riportato nella figura [1.7](#fig:tlc_1){reference-type="ref" reference="fig:tlc_1"}. Confrontando l'istogramma triangolare con la curva a campana tracciata dalla linea nera risulta chiaro che la distribuzione della popolazione non assomiglia affatto a una distribuzione normale.
+
+![Dimostrazione del Teorema del limite centrale. Consideriamo qui una popolazione che non segue la distribuzione normale. La distribuzione di tale popolazione è rappresentata dall'istogramma grigio.](tlc_1){#fig:tlc_1 width="100%"}
+
+In una prima simulazione, ho estratto 50000 campioni di ampiezza $n=2$ da questa distribuzione e, per ciascuno di essi ho calcolato la media campionaria. Come si può vedere nella figura [1.8](#fig:tlc_2){reference-type="ref" reference="fig:tlc_2"}, la distribuzione campionaria non è triangolare. Certamente non è Normale, ma assomiglia di più ad una distribuzione campanulare di quanto assomigli alla distribuzione della popolazione raffigurata nella figura [1.7](#fig:tlc_1){reference-type="ref" reference="fig:tlc_1"}.
+
+![Dimostrazione del Teorema del limite centrale. Per la popolazione raffigurata nella figura [1.7](#fig:tlc_1){reference-type="ref" reference="fig:tlc_1"} è qui rappresentata la distribuzione campionaria di $\bar{X}$ per campioni di ampiezza $n=2$.](tlc_2){#fig:tlc_2 width="100%"}
+
+Quando aumento la numerosità del campione a $n=4$ la distribuzione campionaria della media si approssima abbastanza bene alla normale (figura [1.9](#fig:tlc_3){reference-type="ref" reference="fig:tlc_3"}) e già con $n=8$ l'approssimazione diventa molto buona (figura [1.10](#fig:tlc_4){reference-type="ref" reference="fig:tlc_4"}). In altre parole, se la dimensione del campione non è piccola, allora la distribuzione campionaria della media sarà approssimativamente normale indipendentemente dalla distribuzione della popolazione!
+
+![Dimostrazione del Teorema del limite centrale. Per la popolazione raffigurata nella figura [1.7](#fig:tlc_1){reference-type="ref" reference="fig:tlc_1"} è qui rappresentata la distribuzione campionaria di $\bar{X}$ per campioni di ampiezza $n=4$.](tlc_3){#fig:tlc_3 width="100%"}
+
+![Dimostrazione del Teorema del limite centrale. Per la popolazione raffigurata nella figura [1.7](#fig:tlc_1){reference-type="ref" reference="fig:tlc_1"} è qui rappresentata la distribuzione campionaria di $\bar{X}$ per campioni di ampiezza $n=8$.](tlc_4){#fig:tlc_4 width="100%"}
+
+Questo comportamento della distribuzione campionaria di $\bar{X}$ al variare di $n$ viene descritto in maniera formale dal Teorema del limite centrale.
+
+::: teorema
+Siano $X_1, X_2, \dots$ variabili aleatorie i.i.d., tutte con lo stesso valore atteso $\mu$ e la stessa varianza $\sigma^2$. Allora, $$\lim_{n \rightarrow +\infty} P\left(a \leq \bar{X}_n \leq b \right) = P(a \leq Y \leq b),
+\label{theo:tlc}$$ dove $Y \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$.
+:::
+
+Il Teorema del limite centrale ci dice che, se vengono selezionati campioni sufficientemente grandi (tipicamente è sufficiente che $n > 30$ purché il carattere osservato non sia troppo asimmetrico), allora la media campionaria $\bar{X}$ di $n$ variabili aleatorie indipendenti $X_1, X_2, \dots$ converge in distribuzione ad una variabile aleatoria normale di media $\mu$ e varianza $\sigma^2/n$.
+
+È altresì molto importante notare che, se le variabili di partenza $X_1$, $X_2$, ...$X_n$ sono esse stesse Normali, tutte con lo stesso valore atteso $\mu$ e la stessa varianza $\sigma^2$, allora il Teorema del limite centrale è *esatto*. Ovvero per ogni $n$,
+
+$$\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right).\notag$$
+
+Questa proprietà discende dal seguente teorema.
+
+::: teorema
+Se $X_1, X_2, \dots, X_n$ sono $n$ variabili aleatorie Normali tra di loro indipendenti, ciascuna con valore atteso $\mu$ e varianza $\sigma^2$, allora la variabile aleatoria $X_1 + X_2 + \dots + X_n$ è a sua volta una variabile aleatoria Normale con valore atteso $n \mu$ e varianza $n \sigma^2$.
+:::
+
+In conclusione, il Teorema del limite centrale ci consente di specificare completamente le proprietà della distribuzione campionaria di $\bar{X}_n$.
+
+(a) Se la popolazione è normale, allora $\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ indipendentemente da $n$.
+
+(b) Se invece la popolazione *non* è normale, allora la distribuzione di $\bar{X}_n$ tende a $\mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ al crescere di $n$.
+
+::: exmp
+Supponiamo di misurare un oggetto con una bilancia non molto precisa. Supponiamo inoltre che l'errore di misura $E$ della bilancia si distribuisca in maniera Normale con media $0$ e deviazione standard $\sigma = 2$ grammi. Se l'oggetto considerato ha un peso uguale a $w$, il peso osservato $X$ sarà dato dalla somma del suo peso vero e l'errore di misurazione: $X = w + E$. Dato che $w$ è una costante, $X$ seguirà la distribuzione normale con media $\Ev(X) = \Ev(w + E) = w + \Ev(E) = w$ e varianza $\var(X) = \var(w + E) = \var(E) = 4$. Qual è la probabilità di ottenere una misurazione che non differisce di più di un grammo dal peso vero?
+:::
+
+::: solu
+Dobbiamo trovare la probabilità $$\begin{aligned}
+P(-1 \leq X - w \leq 1)  &= P\bigg(-\frac{1}{2} \leq \frac{X - w}{\sigma} \leq \frac{1}{2}\bigg)\notag\\ &= P\bigg(-\frac{1}{2} \leq Z \leq \frac{1}{2}\bigg)\notag
+\end{aligned}$$ ovvero
+
+::: mdframed
+    pnorm(0.5, 0, 1) - pnorm(-0.5, 0, 1) = 0.3829
+:::
+
+Considerando l'evento complementare, possiamo dunque dire che c'è una probabilità maggiore di $0.6$ che la bilancia produca un valore che differisce di almeno un grammo dal peso vero.
+:::
+
+::: exmp
+Con riferimento all'Esempio [\[exmp:balance_meas\]](#exmp:balance_meas){reference-type="ref" reference="exmp:balance_meas"}, chiediamoci ora cosa succede se, invece di accontentarci di una singola misurazione, calcoliamo la media di $n = 10$ misurazioni.
+:::
+
+::: solu
+In questo secondo caso, $$\begin{aligned}
+P\left(-1 \leq \frac{S_{10}}{10} - w \leq 1\right) 
+&= P\bigg(-\frac{1}{\sqrt{4/10}} \leq \frac{\frac{S_{10}}{10} - w}{\sigma/\sqrt{10}} \leq \frac{1}{\sqrt{4/10}}\bigg)\notag\\ 
+&= P\bigg(-\frac{\sqrt{10}}{2} \leq Z \leq \frac{\sqrt{10}}{2}\bigg)\notag
+\end{aligned}$$ ovvero
+
+::: mdframed
+    pnorm(sqrt(10)/2, 0, 1) - pnorm(-sqrt(10)/2, 0, 1) = 0.8861
+:::
+
+Considerando l'evento complementare, possiamo concludere che c'è una probabilità pari a solo 0.114 che la media di 10 misurazioni assuma un valore che differisce di più di un grammo dal peso vero. È dunque ovvio che le medie di misurazioni ripetute sono migliori delle singole misure.
+:::
+
+## Conclusioni {#conclusioni .unnumbered}
+
+I risultati precedenti consentono le seguenti conclusioni. Se $X_1, \dots, X_n$ è un insieme di variabili aleatorie i.i.d., tutte con media $\mu$ e varianza $\sigma^2$, allora $$\Ev(\bar{X}) = \mu, \quad \var(\bar{X}) = \frac{\sigma^2}{n}.\notag$$ Se le $X_i$ seguono la distribuzione normale, ne segue che $\bar{X} \sim \mathcal{N}(\mu, \sigma/\sqrt{n})$, in quanto qualunque combinazione lineare di variabili aleatorie Normali è ancora una variabile aleatoria Normale. Invece, se le $X_i$ non seguono la distribuzione normale, il Teorema del limite centrale ci consente comunque di dire che $\bar{X}$ tende a $\mathcal{N}(\mu, \sigma/\sqrt{n})$ al crescere di $n$. I risultati precedenti sono estremamente importanti perché specificano completamente la distribuzione della media campionaria e vengono utilizzati dall'approccio frequentista per l'inferenza sulla media di una popolazione.
+
+## Commenti e considerazioni finali {.unnumbered}
+
+In altre parole, una conclusione sintetica a questa discussione potrebbe essere formulata dicendo che il valore-$p$ fornisce una risposta molto precisa ad una domanda che nessuno ha mai voluto chiedere.

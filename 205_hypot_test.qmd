@@ -1,0 +1,380 @@
+# Test di significatività {#sec-hypot-test}
+
+```{r, include = FALSE}
+source("_common.R")
+```
+
+In precedenza abbiamo discusso i principi della stima, in quanto il problema della stima dei parametri della popolazione rappresenta uno dei metodi principali dell'inferenza statistica. Ai metodi di stima dei parametri si affianca un altro metodo che consente l'inferenza statistica, ovvero quello che la statistica frequentista chiama "test di significatività dell'ipotesi nulla" (*null hypothesis significance testing*, NHST). L'idea è semplice: il ricercatore possiede una qualche teoria del mondo e vuole stabilire se i dati empirici sono o meno coerenti con la sua teoria. Tuttavia, i dettagli di questa procedura sono complicati e molti ritengono che la teoria del test delle ipotesi sia la parte più frustrante di tutta la statistica.
+
+## Un esempio motivante
+
+Per introdurre le procedure di test di ipotesi statistiche consideriamo una ricerca svolta da @mehr20165. La ricerca di @mehr20165 riguarda la musica. L'ascolto musicale è presente in tutte le fasi della vita e anche nell'infanzia. Tra le altre cose, la musica può trasmettere informazioni relative all'appartenenza sociale -- pensiamo alle canzoni popolari, ad esempio. @mehr20165 si sono chiesti se la musica sia capace di trasmettere messaggi di tipo sociale anche in bambini molto piccoli. Nello specifico, @mehr20165 si sono chiesti se i bambini di 5 mesi mostrino una preferenza per individui sconosciuti che cantano una canzone a loro familiare, rispetto ad altri individui sconosciuti che cantano una canzone simile, con le stesse parole e lo stesso ritmo, ma con una diversa melodia. @mehr20165 hanno scoperto che, in effetti, le cose stanno veramente così, ma solo quando, nella fase di familiarizzazione, la canzone test veniva cantata dai genitori, ma non quando nella fase di familiarizzazione la stessa canzone veniva cantata da un estraneo. Secondo gli autori, questo mostra che il significato sociale è l'elemento cruciale della preferenza dei bambini, non semplicemente la familiarità con la canzone.
+
+### La domanda della ricerca
+
+La domanda che @mehr20165 si sono posti si chiama *domanda della ricerca*. In psicologia, le domande della ricerca sono delle ipotesi che riguardano i costrutti psicologici. L'ascolto della musica certamente ha a che fare con la psicologia e il significato che attribuiamo all'ascolto della musica è certamente un fenomeno psicologico. Per cui la domanda che @mehr20165 si sono posti è certamente una domanda legittima nel contesto della ricerca psicologica.
+
+In psicologia, le ipotesi della ricerca sono delle proposizioni che descrivono le proprietà dei fenomeni psicologici. Tali proposizioni possono essere vere oppure false. Alcune volte le ipotesi della ricerca sono espresse in termini po' vaghi -- nel caso presente, per esempio, ci possono essere idee diverse a proposito di ciò che è musicale e di ciò che non lo è -- in ultima analisi le ipotesi della ricerca vengono valutate in base alla loro utilità: si dimostrano utili solo se contribuiscono ad aggiungere qualcosa di importante rispetto a ciò che già sappiamo rispetto al fenomeno psicologico considerato.
+
+### Le ipotesi statistiche
+
+Quello che dobbiamo notare è che non è possibile verificare direttamente le ipotesi della ricerca. Le ipotesi della ricerca sono delle proposizioni relative alle caratteristiche o al funzionamento dei fenomeni psicologici. Tuttavia, in generale, le ipotesi psicologiche non sono abbastanza precise da poter essere valutate direttamente. Quello che i ricercatori possono fare, invece, è valutare delle *ipotesi statistiche*. Le ipotesi statistiche non coincidono con l'ipotesi della ricerca ma hanno il vantaggio di potere essere espresse in termini probabilistici e corrispondono a delle proposizioni relative al modello generativo dei dati (*data generating process*).
+
+::: callout-note
+Per modello generativo dei dati si intende uno specifico modello statistico che viene usato per rappresentare la variazione delle osservazioni. Spesso tale modello statistico descrive le relazioni tra una o più variabili dipendenti e un insieme di variabili esplicative. Nel caso più semplice le variabili esplicative non vengono considerate e il problema si riduce alla rappresentazione della distribuzione di una sola variabile. Ricordiamo che la descrizione della distribuzione di una variabile aleatoria è altro che una descrizione idealizzata della distribuzione della variabile di interesse nella popolazione da cui lo psicologo ha estratto un campione di dati.
+:::
+
+Nell'esperimento di @mehr20165, due settimane dopo la fase di familiarizzazione con la canzone test, i bambini che facevano parte dell'esperimento venivano esaminati in laboratorio. Ad essi venivano mostrate due video-registrazioni. Una registrazione presentava un estraneo che cantava la canzone test; l'altra registrazione presentava un secondo individuo non conosciuto dai bambini che cantava una canzone simile alla prima, ma non familiare ai bambini. I ricercatori hanno misurato i tempi di fissazione dello sguardo dei bambini nei confronti di ciascuna delle due video-registrazioni. Nel primo esperimento, la variabile dipendente era uguale alla media, calcolata su 32 casi, della proporzione del tempo di fissazione rivolta al video 'familiare' rispetto al tempo di fissazione totale (ovvero la somma del tempo di fissazione del video 'familiare' e del tempo di fissazione del video 'non familiare').
+
+Dato che non è possibile valutare direttamente la domanda della ricerca è necessario stabilire una connessione tra l'ipotesi della ricerca e l'ipotesi statistica. Nel caso presente possiamo pensare a tre possibilità.
+
+-   Se i bambini non hanno alcuna preferenza nei confronti di uno dei due tipi di video-registrazione, allora la media delle proporzioni dei tempi di fissazione di tutti i bambini possibili (ovvero, nella popolazione) sarà uguale a $\mu = 0.5$, perché, in media, i tempi di fissazione per le due video-registazioni saranno uguali.
+-   Se @mehr20165 hanno ragione, allora i bambini preferiranno guardare il video con la canzone familiare piuttosto che il video con la canzone non familiare. Questa situazione si traduce nell'ipotesi statistica $\mu > 0.5$ (con $\mu = 0.5$ che rappresenta il livello del caso).
+-   Una terza possibilità è che i bambini siano maggiormente attratti da una melodia non familiare -- questo è il contrario di ciò che propongono gli autori della ricerca. Tale possibilità si traduce nell'ipotesi statistica $\mu < 0.5$.
+
+Le tre ipotesi precedenti sono esempi di ipotesi statistiche. Sono infatti delle proposizioni a proposito dei valori di un parametro di un modello statistico. Nel caso presente, il modello statistico è la distribuzione della proporzione dei tempi di fissazione in una popolazione virtuale di infiniti bambini di sei mesi d'età, come nell'esperiment di @mehr20165. Se consideriamo uno specifico bambino, la proporzione dei tempi di fissazione avrà un certo valore, mentre per un'altro bambino avrà un valore diverso. Il modello statistico considerato descrive la distribuzione dei possibili valori della proporzione del tempo di fissazione nei confronti del video familiare. Un tale modello statistico può essere messo in relazione con i dati raccolti dagli sperimentatori perché @mehr20165 hanno misurato proprio questo aspetto, ovvero la media della proporzione del tempo di fissazione rivolto al video familiare.
+
+### Domanda della ricerca e ipotesi statistiche
+
+Ciò che la discussione precedente dovrebbe mettere in chiaro è che, nella procedura di test di ipotesi, possiamo distinguere tra due tipi di ipotesi molto diverse tra loro: da una parte abbiamo l'ipotesi della ricerca che è un'affermazione sulla natura dei fenomeni psicologici; dall'altra parte abbiamo un'ipotesi statistica che è una proposizione che riguarda il modello generativo dei dati, ovvero le caratteristiche della popolazione. Nell'esempio presente, l'ipotesi della ricerca è "le preferenze sociali dei bambini sono influenzate dalla musica; in particolare, sono favorite dalla familiarità con i materiali musicali". L'ipotesi statistica, invece, è: $\mu > 0.5$.
+
+Ciò che dobbiamo avere ben chiaro è che i test vengono applicati alle ipotesi statistiche, non alle ipotesi della ricerca. Ciò significa che, se l'esperimento non viene condotto nella maniera appropriata, allora si spezza il collegamento tra l'ipotesi statistica e la domanda della ricerca. Per esempio, se l'attore che canta la melodia familiare assomiglia ad uno dei genitori del bambino, mentre l'altro attore ha un aspetto molto diverso da quello dei genitori, allora sarebbe molto facile trovare evidenze in supporto dell'ipotesi statistica secondo cui $\mu > 0.5$; ma questo non avrebbe nulla a che fare con la domanda della ricerca.
+
+## Ipotesi nulla e ipotesi alternativa
+
+Fino a qui il ragionamento è stato semplice: il ricercatore ha un'ipotesi a proposito dei fenomeni psicologici e a tale ipotesi di ricerca corrisponde un'ipotesi statistica che riguarda il meccanismo generativo dei dati. Se il fenomeno psicologico possiede le proprietà suggerite dall'ipotesi della ricerca, allora il ricercatore può aspettarsi che i dati osservati abbiano alcune specifiche caratteristiche. A questo punto, però, il ragionamento diventa contro-intuitivo perché non è possibile verificare direttamente l'ipotesi statistica che corrisponde alla domanda della ricerca.
+
+### Apagogia
+
+In linea di principio non è mai possibile dimostrare direttamente la verità d'una proposizione. Quello che possiamo fare, invece, è dimostrare la verità d'una proposizione in maniera indiretta, ovvero provando la falsità della proposizione contraddittoria.
+
+L'esempio classico è il seguente. Consideriamo la seguente proposizione: "Tutti i cigni sono bianchi" (questo è l'esempio ornitologico preferito da Popper). L'osservazione di un numero qualsiasi di cigni bianchi non è sufficiente a dimostrare la verità di questa proposizione -- infatti, ci potrebbe essere da qualche parte un cigno non bianco che non abbiamo osservato (infatti, c'è). D'altra parte, invece, l'osservazione di un solo cigno che non sia bianco (ovvero, per esempio, l'osservazione di un cigno nero proveniente dall'Australia) può falsificare la proposizione considerata. Questa è la logica del falsificazionismo di Popper.
+
+Questo modo di pensare è stato trasferito nella procedura di test di ipotesi di stampo frequentista (ovvero, quello che stiamo discutendo ora). Dato che non possiamo dimostrare vera l'ipotesi statistica associata alla domanda della ricerca, seguiamo il percorso opposto. Ovvero, ci poniamo l'obiettivo di dimostrare falso l'evento complementare a quello specificato dall'ipotesi statistica associata alla domanda della ricerca. L'ipotesi statistica che vorremmo falsificare si chiama *ipotesi nulla* e viene denotata con $H_0$. Nel caso dell'esempio che stiamo discutendo, l'ipotesi nulla è: $\mu \leq 0.5$. Si noti che l'ipotesi nulla include tutte le possibili ipotesi statistiche che si possono formulare (ovvero, $\mu = 0.5$ e $\mu < 0.5$), ad eccezione di quella che è associata all'ipotesi della ricerca (ovvero, $\mu > 0.5$).
+
+In pratica, ciò che stiamo facendo qui è dividere tutti i possibili valori di $\pi$ in due gruppi: quei valori che sono coerenti con l'ipotesi della ricerca (ovvero, i valori che specificano l'ipotesi alternativa, denotata con $H_1$) e quei valori che non sono coerenti con l'ipotesi della ricerca (ovvero, i valori che specificano l'ipotesi nulla).
+
+Avendo detto questo, la cosa importante da riconoscere è che l'obiettivo di un test di ipotesi non è quello di dimostrare che l'ipotesi alternativa è (probabilmente) vera; l'obiettivo è mostrare che l'ipotesi nulla è (probabilmente) falsa. La maggior parte delle persone ritiene che questo modo di ragionare sia piuttosto strano.
+
+### La similitudine del processo penale
+
+Un test di ipotesi è stato paragonato ad un processo penale, ovvero al processo nei confronti dell'ipotesi nulla. Possiamo immaginare che l'ipotesi nulla sia l'imputato, il ricercatore sia il pubblico ministero e il test statistico sia il giudice. Proprio come in un processo penale, c'è una presunzione di innocenza: l'ipotesi nulla si ritiene vera a meno che il ricercatore non dimostri, oltre ogni ragionevole dubbio, che è falsa. Il ricercatore progetta l'esperimento in modo da massimizzare la possibilità che i dati producano una condanna. Il test statistico (ovvero il giudice in questa similitudine) stabilisce le regole che devono essere seguite per giungere al verdetto e queste regole sono pensate per proteggere l'ipotesi nulla -- in particolare, per garantire che sia piccola la probabilità di una condanna se l'ipotesi nulla è effettivamente vera. Questo aspetto è importante: all'ipotesi nulla deve essere fornita una qualche forma di protezione, dato che il ricercatore sta cercando disperatamente di dimostrare che è essa è falsa.
+
+## Due tipi di errori
+
+Prima di entrare nei dettagli su come viene costruito un test statistico è utile capire la logica su cui esso è basato. In precedenza abbiamo paragonato il test di ipotesi nulla ad un processo penale, ma ora dobbiamo essere più espliciti. Idealmente, vorremmo costruire il nostro test in modo da non commettere errori. Sfortunatamente, però, questo non è possibile: a volte il ricercatore è sfortunato e finisce per prendere la decisione sbagliata, anche se adotta un processo decisionale razionale. Ad esempio, può succedere che una moneta venga lanciata 10 volte di fila e produca testa tutte le 10 volte. Ciò sembra fornire una prova molto forte del fatto che la moneta è sbilanciata, ma ovviamente c'è una possibilità su 1024 che ciò accada anche se la moneta è equilibrata. In altre parole, nella vita reale dobbiamo sempre accettare la possibilità che le nostre scelte siano sbagliate, anche quando sembrano ragionevoli. Di conseguenza, l'obiettivo dei test delle ipotesi statistiche non è quello di eliminare completamente gli errori (questo è impossibile), ma ridurre gli errori al minimo. Questo è il punto cruciale della discussione: le procedure messe a punto dall'approccio frequentista riescono a raggiungere l'obiettivo proposto o, in realtà, producono il risultato opposto? Una possibile risposta a questa domanda è fornita nel @sec-testipotesi-media.
+
+A questo punto, dobbiamo essere un po' più precisi su cosa intendiamo per "errori". Iniziamo con il rendere esplicito quello che è ovvio: l'ipotesi nulla può essere vera o falsa, e il nostro test ci può condurre a rifiutare l'ipotesi nulla o a non rifiutarla. La decisione di rigettare o non rigettare l'ipotesi nulla ci espone dunque al rischio di commettere uno di due tipi di errore, come indicato nella tabella fornita qui sotto. L'errore di I tipo, denotato con $\alpha$, è quello che commettiamo se rigettiamo l'ipotesi nulla quando essa è vera. L'errore di II tipo, denotato con $\beta$, è quello che commettiamo se accettiamo l'ipotesi nulla mentre invece è vera l'ipotesi alternativa.
+
+::: {#tab-two_kinds-of-errors}
+|             |             |       Realtà       |                    |
+|-------------|-------------|:------------------:|--------------------|
+|             |             |     $H_0$ vera     | $H_0$ falsa        |
+| Conclusione | $H_0$ vera  | Decisione corretta | Errore di II tipo  |
+| del test    | $H_0$ falsa |  Errore di I tipo  | Decisione corretta |
+
+: Tipi di errori nel test di ipotesi statistiche.
+:::
+
+## Errore di I tipo: la protezione dei diritti dell'imputato
+
+In precedenza abbiamo paragonato il test statistico ad un processo penale. Infatti, un processo penale richiede che si stabilisca la colpevolezza dell'imputato "oltre ogni ragionevole dubbio". Le regole del processo penale sono state progettate per garantire che non ci sia (quasi) nessuna possibilità di condannare ingiustamente un imputato innocente: il processo penale è progettato (almeno in teoria) per proteggere i diritti dell'imputato. Detto in altri termini, il processo penale non mette sullo stesso piano i due tipi di errore che si possono commettere: punire un innocente o assolvere un colpevole. L'errore che consiste nel punire un innocente viene considerato assai più grave di quello che porta ad assolvere un colpevole.
+
+Un test statistico fa praticamente la stessa cosa: i test di ipotesi statistiche sono costruiti in modo tale da controllare la probabilità di un errore di I tipo, con l'obiettivo di mantenerla al di sotto di una certa soglia prefissata. Questa probabilità, denotata con $\alpha$, viene chiamata "livello di significatività del test". Usando parole diverse, possiamo dire che un test di ipotesi ha un livello di significatività $\alpha$ se il tasso di errore di I tipo non è più grande di $\alpha$. Per convenzione, i ricercatori fanno uso di tre diversi livelli $\alpha$: 0.05, 0.01 e 0.001.
+
+### Errore di II tipo: l'asimmetria del giudizio
+
+Che dire del tasso di errore di II tipo? In realtà, vorremmo tenere anche quello sotto controllo e denotiamo la probabilità di un errore di II tipo con $\beta$. Il livello d'errore $\beta$ viene raramente discusso ed è molto più comune fare riferimento alla potenza del test, che è la probabilità dell'evento complementare, ovvero la probabilità con cui rifiutiamo l'ipotesi nulla quando è realmente falsa, ovvero $1-\beta$. Un test viene detto "potente" quando è caratterizzato da un piccolo valore $\beta$ pur mantenendo il livello $\alpha$ sotto una piccola soglia di probabilità prefissata.
+
+Si noti l'asimmetria qui rivelata: i test di ipotesi sono progettati per garantire che il livello $\alpha$ sia mantenuto sotto la soglia prefissata, ma non esiste alcuna corrispondente garanzia a proposito di $\beta$. Sicuramente è preferibile che il tasso di errore di II tipo sia piccolo, e in generale i ricercatori cercano di progettare i loro esperimenti in maniera tale da avere una ragionevole potenza del test ($1 - \beta$) -- questo si ottiene utilizzando un campione sufficientemente grande -- ma nella logica della costruzione del test di ipotesi questo aspetto è secondario rispetto alla necessità di controllare il tasso di errore di I tipo.
+
+## Come si costruisce un test di ipotesi?
+
+Ritorniamo all'esempio relativo allo studio di @mehr20165. In questo caso, sulla base all'ipotesi della ricerca, l'ipotesi nulla può essere formulata come $H_0: \mu \leq 0.5$. Esaminando un campione di 32 bambini di età media pari a 5.6 mesi, @mehr20165 hanno scoperto che, in media, i bambini dirigevano lo sguardo verso il video \enquote{familiare} nel 59% del tempo totale di fissazione. Dunque, la media campionaria è $\bar{X} = 0.59$ Questo è il valore campionario rilevante per il test dell'ipotesi nulla.
+
+Ingenuamente, potremmo pensare che, per decidere se $H_0$ sia falsa o meno, sia sufficiente confrontare la proporzione calcolata nel campione con il valore $\pi$ specificato dall'ipotesi nulla. Nel caso presente, l'ipotesi nulla non specifica un unico valore $\mu$ ma bensì un intervallo di valori: $[0, 0.5]$. I dati campionari specificano un valore $\bar{X} = 0.56$, ovvero un valore che non è incluso nell'intervallo specificato da $H_0$. Questo è incoraggiante. Se invece avessimo osservato $\bar{X} = 0.41$, per esempio, allora non ci sarebbe stato nient'altro da dire: se i dati osservati sono compatibili con $H_0$ non c'è bisogno di eseguire alcun test statistico -- abbiamo già trovato la risposta alla domanda della ricerca.
+
+### La variabilità campionaria
+
+Nel caso dell'esperimento @mehr20165 che stiamo discutendo, $\bar{X}$ non cade nell'intervallo specificato da $H_0$. Sulla base del valore osservato $\bar{X} = 0.59$ possiamo dunque concludere che $H_0$ è falsa? Non così presto. Non è sufficiente trovare una differenza $\bar{X} - \mu$ nella direzione giusta (cioè positiva, nel nostro caso). È anche necessario tenere in considerazione il fenomeno della \emph{variabilità campionaria}.
+
+Infatti, la media $\bar{X}$ osservata in ogni singolo campione di ampiezza $n=32$ è una variabile aleatoria: in ciascun possibile campione di ampiezza 32 i bambini si comportano in maniera diversa e, di conseguenza, $\bar{X}$ assumerà un valore diverso da campione a campione. Le statistiche campionarie -- nel nostro caso la media $\bar{X}$ -- sono di necessità diverse dai parametri. Ciò a cui noi siamo interessati è la media della popolazione, ovvero $\mu$, ma sfortunatamente conosciamo solo una sua realizzazione campionaria, ovvero $\bar{X}$.
+
+Risulta dunque chiaro che la nostra decisione rispetto ad $H_0$ non può essere unicamente basata sulla differenza tra $\bar{X} - \mu$. Infatti, è ragionevole pensare che, indipendentemente dal fatto che l'ipotesi nulla sia vera o meno, in alcuni campioni la differenza $\bar{X} - \mu$ sarà positive mentre in altri campioni sarà negativa. Dobbiamo dunque trovare una procedura che riduca la possibilità di rifiutare $H_0$ \emph{per effetto del caso soltanto}. Possiamo (e dobbiamo) fare di meglio che considerare unicamente la differenza $\bar{X} - \mu$.
+
+### Le distribuzioni delle statistiche test
+
+Il metodo seguito dall'approccio frequentista per affrontare questo problema è quello di costruire la distribuzione della statistica test $\mathcal{G}_n$, rilevante per il test di $H_0$, *assumendo come vera l'ipotesi nulla*. Questo è il concetto più contro-intuitivo di tutta la procedura di test di ipotesi dell'approccio frequentista. Esaminiamolo più in dettaglio.
+
+È ovvio come calcolare la media delle proporzioni del tempo di fissazione in un singolo campione. Il problema è che tale media varia da campione a campione (fenomeno detto della *variabilità campionaria*). L'approccio frequentista affronta il problema di giungere ad una decisione rispetto ad $H_0$ *tenendo in considerazione* la variabilità campionaria nel modo seguente. Il punto di partenza è quello di descrivere le caratteristiche della distribuzione di tutti i possibili valori che la statistica test in esame (nel nostro caso, la media del campione, ovvero $\bar{X}$) in tutti i infiniti possibili campioni di ampiezza $n$ (nel nostro caso $n$ = 32).
+
+È facile capire che, espresso in questi termini, il problema di stabilire quali sono le caratteristiche di tale distribuzione di medie campionarie non è risolvibile. Senza sapere nient'altro, non possiamo sapere come si distribuisce $\bar{X}$ nell'universo dei campioni. Ricordiamo però che lo scopo della procedura di test statistici dell'approccio frequentista non è quello di verificare l'ipotesi alternativa: questo non è logicamente possibile. Invece, come suggerito dalla similitudine del processo penale all'ipotesi nulla, l'approccio frequentista si pone l'obiettivo di determinare se ci siano indizi sufficienti per *condannare* l'ipotesi nulla, ovvero, per rigettarla.
+
+In questa *reductio ad absurdum*, la \enquote{presunzione di innocenza} di $H_0$ corrisponde all'idea che dobbiamo assumere come vera l'ipotesi nulla, *fino a prova contraria*. Nell'esempio che stiamo discutendo, assumere come vera l'ipotesi nulla significa assumere che il parametro $\mu$ (la media della popolazione) sia uguale a 0.5. Sulla base di questa assunzione è possibile costruire la distribuzione delle medie dei campioni di ampiezza 32.
+
+Per fare questo, @mehr20165 utilizzano (implicitamente) ad un famoso teorema della teoria della probabilità che possiamo descrivere nel modo seguente. Se estraiamo infiniti campioni di ampiezza 32 da una popolazione gaussiana di media $\mu = 0.5$, allora le medie standardizzate di tali campioni seguiranno la distribuzione teorica di probabilità chiamata distribuzione $t$ di Student con 32 - 1 = 31 gradi di libertà. Ricordiamo che standardizzare una variabile significa sottrarre dai valori della variabile il suo valore atteso e dividere per la deviazione standard. Si può dimostrare che il valore atteso delle medie dei campioni è uguale alla media della popolazione. Nel caso presente, avremo che
+
+```{=tex}
+\begin{equation}
+\Ev(\bar{X}) = \mu_{\bar{X}} = \mu 
+\end{equation}
+```
+e la standardizzazione si effettua mediante il rapporto
+
+```{=tex}
+\begin{equation}
+T = \frac{\bar{X} - \mu}{\frac{s}{\sqrt{n}}},
+\end{equation}
+```
+dove $\bar{X}$ è la media del campione (nel nostro caso, 0.56), $s$ è la deviazione standard del campione (gli autori riportano $s$ = 0.179) e $n$ è l'ampiezza del campione (ovvero, $n$ = 32). In altre parole, la teoria della probabilità ci dice che la statistica $T$ si distribuisce come $t$ di Student con $\nu = 31$ gradi di libertà. Il punto cruciale è che, se assumiamo come vera l'ipotesi nulla che fissa $\mu = 0.5$, allora la distribuzione della statistica test $T$ risulta completamente determinata.
+
+L'approccio frequentista fa uso di un insieme teoremi della teoria della probabilità che descrivono la distribuzione di varie statistiche test. Abbiamo visto sopra la descrizione di un teorema che specifica la distribuzione della statistica test $T$. Un altro teorema specifica la distribuzione della statistica test che corrisponde alla differenze tra le medie di due campioni indipendenti; tale teorema viene utilizzato nella procedura statistica frequentista chiamata test sulla differenza tra le medie di due campioni indipendenti. Un altro teorema riguarda la distribuzione del rapporto tra la stima di una varianza $\sigma^2$ basata sulla variabilità delle medie di diversi campioni e la stima della stessa varianza basata sulla variabilità entro i campioni; tale teorema sta alla base del test statistico chiamato ANOVA, o Analisi della varianza. Un altro teorema ancora specifica la distribuzione di una proporzione campionaria; tale teorema sta alla base del test statistico frequentista chiamato test di ipotesi per la proporzione. E così via.
+
+### Regioni di rifiuto e regioni di non rifiuto
+
+Conoscendo la distribuzione dei valori della statistica test (distribuzione che viene determinata *assumendo come vera* $H_0$) diventa poi possibile dividere l'insieme dei valori possibili di $\mathcal{G}_n$ (il nome che abbiamo assegnato ad una generica statistica test) in due regioni: i valori che ci portano a rigettare $H_0$ (regione di rifiuto) e quelli che non ci consentono di rigettare $H_0$ (regione di non rifiuto). Come facciamo a decidere quanto è grande la regione di rifiuto di $H_0$? È semplice, basta collocare nella regione di rifiuto i valori estremi della statistica test $\mathcal{G}_n$, ovvero quelli che sarebbe molto improbabile osservare se $H_0$ fosse vera. Questo è l'aspetto cruciale della procedura di test di ipotesi, perché così facendo possiamo definire la regione di rifiuto di $H_0$ come quell'intervallo di valori $\mathcal{G}_n$ a cui è associata la probabilità $\alpha$, ovvero la probabilità di commettere un errore di I tipo.
+
+Prima di esaminare come @mehr20165 hanno verificato l'ipotesi nulla, facciamo un ripasso di quello che abbiamo detto finora. Elenchiamo qui sotto in forma succinta i concetti discussi sopra.
+
+### Concetti chiave
+
+Il test di ipotesi fa uso dei seguenti strumenti.
+
+-   La *statistica test* $\mathcal{G}_n$ è un valore numerico che si ottiene dai dati.
+-   L'*ipotesi nulla*, usualmente indicata con $H_0$, specifica la legge di distribuzione della statistica test. Se l'ipotesi nulla specifica completamente la legge di distribuzione della statistica test, si dice *semplice*, nel caso opposto l'ipotesi nulla viene detta *composita* o *composta*. Un tipico esempio di ipotesi semplice è quella che afferma che il parametro di interesse assume un particolare valore; un esempio di ipotesi composta è quello che afferma che il parametro di interesse è contenuto in un intervallo di valori.
+
+::: callout-note
+È stato proposto di tradurre *null* con "non esistente" o "non attuale" per mettere in risalto il fatto che si sta trattando con un'ipotesi che viene avanzata al solo scopo di essere confutata. Non è un'ipotesi nel senso che può essere dimostrata vera: non è possibile fare questo seguendo la procedura della NHST. È un punto di vista che viene presentato solo per fare "l'avvocato del diavolo", come diceva Fisher.
+:::
+
+-   L'*ipotesi alternativa*, usualmente indicata con $H_1$, rappresenta la negazione dell'ipotesi nulla nel senso che, nella situazione sotto esame, o è vera l'ipotesi nulla $H_0$ o è vera l'ipotesi alternativa.
+-   Il *test statistico* è la procedura che ci consente di accettare o respingere l'ipotesi nulla esaminando la statistica test.
+-   La *distribuzione della statistica test campionaria* è la distribuzione dei possibili valori $\mathcal{G}_n$ assumendo vera $H_0$.
+-   La *regione di rifiuto* $\mathcal{R}$ descrive un intervallo di valori della statistica test: se $\mathcal{G}_n$ cade nella regione di rifiuto l'ipotesi nulla $H_0$ viene rifiutata a favore di $H_1$.
+-   La *regione di non rifiuto* $\mathcal{R}^\complement$ è il complemento della regione di rifiuto: se $\mathcal{G}_n$ cade nella regione di non rifiuto $H_0$ non può essere rifiutata; si è soliti dire che l'ipotesi nulla "non viene rifiutata" anziché dire che "l'ipotesi nulla viene accettata" perché i dati ci consentono unicamente di concludere è che non vi è sufficiente evidenza empirica contraria ad $H_0$.
+
+::: callout-note
+A volte, per comodità, alcuni chiamano la regione di non rifiuto "la regione di accettazione". Questo è tecnicamente scorretto perché non è mai possibile accettare l'ipotesi nulla. Possiamo solo rifiutare $H_0$ o affermare che i dati non supportano il rifiuto di $H_0$: il mancato rifiuto dell'ipotesi nulla non prova che essa sia vera. Fisher (1960) afferma:
+
+> si deve notare che l'ipotesi nulla non è mai verificata (*proved*) o confermata (*established*), ma può essere confutata (*disproved*), nel corso della sperimentazione. (p. 16)
+:::
+
+## Quando rifiutare $H_0$
+
+Supponiamo che la @fig-rejection-region-under-h0 rappresenti la distribuzione campionaria della statistica test $\mathcal{G}_n$. Se i dati producono la statistica test $\mathcal{G}_n^1$, non possiamo rifiutare l'ipotesi nulla $H_0$. Se invece i dati producono $\mathcal{G}_n^2$ allora possiamo rifiutare l'ipotesi nulla in favore dell'ipotesi alternativa. Ci sono varie cose da notare.
+
+-   La regione di rifiuto è costituita da valori lontani dal centro della distribuzione campionaria della statistica test, la quale è stata costruita assumendo come vera $H_0$.
+-   La regione di rifiuto è situata nelle code della distribuzione. Vedremo in seguito anche degli esempi di regioni di rifiuto unilaterali.
+-   In questa discussione, l'ipotesi alternativa non è menzionata. Rifiutiamo o non rifiutiamo $H_0$ basandoci unicamente sulla distribuzione campionaria $f(\mathcal{G}_n \mid H_0)$, cioè sulla probabilità della statistica test condizionata all'ipotesi nulla $H_0$. L'ipotesi alternativa $H_1$ viene presa in considerazione quando si sceglie dove posizionare la regione di rifiuto di $H_0$, ma formalmente non gioca alcun ruolo nel rigettare o meno $H_0$.
+
+::: {#fig-rejection-region-under-h0}
+![](images/test-ipotesi-1.png){width="80%"}
+
+Distribuzione della statistica test condizionata all'ipotesi nulla $H_0$.
+:::
+
+### Specificazione delle regioni di rifiuto
+
+L'ipotesi alternativa $H_1$ può assumere forme diverse e ciò conduce a specificazioni diverse della regione di rifiuto $\mathcal{R}$ di $H_0$. La regione di rifiuto $\mathcal{R}$ dell'ipotesi nulla corrisponde ai valori collocati agli estremi della distribuzione secondo la direzione dell'ipotesi alternativa $H_1$.
+
+-   Se l'ipotesi alternativa è $H_1: \theta \neq \theta_0$ (dove $\theta$ è un generico parametro e $\theta_0$ è uno specifico valore del parametro), allora le evidenze coerenti con l'ipotesi alternativa (e che portano al rigetto di $H_0$) sono contenute negli intervalli \[$-\infty$, $\theta_0$\] e \[$\theta_0$, $+\infty$\].
+-   Se l'ipotesi alternativa è $H_1: \theta < \theta_0$, allora le evidenze coerenti con l'ipotesi alternativa (e che portano al rigetto di $H_0$) sono contenute nell'intervallo \[$-\infty$, $\theta_0$\] e l'intera regione di rifiuto $\mathcal{R}$ è collocata nella coda di sinistra della distribuzione.
+-   Se l'ipotesi alternativa è $H_1: \theta > \theta_0$, allora le evidenze coerenti con l'ipotesi alternativa (e che portano al rigetto di $H_0$) sono contenute nell'intervallo \[$\theta_0$, $\infty$\] e l'intera regione di rifiuto $\mathcal{R}$ è collocata nella coda di destra della distribuzione.
+
+Si chiamano *valori critici* i valori che delimitano la regione di rifiuto $\mathcal{R}$ in un test unilaterale e i valori che delimitano le regioni di rifiuto $\mathcal{R}$ in un test bilaterale. In un test bidirezionale, i valori critici lasciano in ciascuna delle due code della distribuzione della statistica test una probabilità pari a $\alpha/2$; in un test unidirezionale lasciano una probabilità pari ad $\alpha$ in una sola coda. Il risultato di un test si dice *statisticamente significativo* quando il valore della statistica test ricade nella regione di rifiuto $\mathcal{R}$.
+
+::: {#exm-1}
+Supponiamo che $f(\mathcal{G}_n \mid H_0) = \mathcal{N}(100, 15^2)$ descriva la distribuzione della statistica test $x$. Supponiamo inoltre che la regione di rifiuto sia posta nella coda di destra e che il livello di significatività sia $\alpha = 0.05$. Si trovi il valore critico che delimita la regione di rifiuto di $H_0$.
+:::
+
+::: solution
+Usando $\mathcal{R}$, la risposta è: `qnorm(0.95, 100, 15) = 124.7`. La distribuzione $\mathcal{N}(100, 15^2)$ è mostrata nella figura seguente. La regione di rifiuto è indicata dall'area evidenziata.
+:::
+
+::: {#fig-rejection-region-under-h0-2}
+![](images/test-ipotesi-2.png){width="80%"}
+
+Distribuzione campionaria $f(\mathcal{G}_n \mid H_0) = \mathcal{N}(100, 15^2)$.
+:::
+
+::: {#exm-2}
+Supponiamo che $f(\mathcal{G}_n \mid H_0) = \mathcal{N}(100, 15^2)$ descriva la distribuzione della statistica test $\mathcal{G}_n$. Supponiamo inoltre che la regione di rifiuto sia bilaterale e che il livello di significatività sia $\alpha = 0.05$. Si trovino i valori critici che delimitano la regione di rifiuto di $H_0$.
+:::
+
+::: solution
+Con la seguente istruzione `qnorm(c(0.025, 0.975), 100, 15)` troviamo i valori $70.6$ e $129.4$.
+:::
+
+::: {#fig-rejection-region-under-h0-3}
+![](images/test-ipotesi-3.png){width="80%"}
+
+Distribuzione campionaria $f(\mathcal{G}_n \mid H_0) = \mathcal{N}(100, 15^2)$.
+:::
+
+::: callout-note
+Facciamo una breve digressione a proposito del termine "significativo". Il concetto di significatività statistica è in realtà molto semplice, ma ha un nome molto sfortunato. Se i dati ci consentono di rifiutare l'ipotesi nulla, diciamo che "il risultato è statisticamente significativo", che viene spesso abbreviato in "il risultato è significativo". Questa terminologia risale a un periodo in cui (in inglese) il termine *significant* era sinonimo di *indicated*, qualcosa di molto diverso dal suo significato odierno, per cui *significant* è molto prossimo ad *important*. Di conseguenza, molti studenti (e molti ricercatori) si confondono quando incontrano la locuzione *risultato significativo*, perché credono che significhi *risultato importante*. Ma non è affatto così. Il significato dell'espressione *statisticamente significativo* è che i dati ci hanno permesso di rifiutare un'ipotesi nulla. Il fatto che tale risultato sia effettivamente importante nel mondo reale è qualcosa di completamente diverso e non ha nulla a che fare con la procedura di test di ipotesi statistiche.
+:::
+
+## Il processo di decisione statistica
+
+Il processo di decisione statistica viene descritto da von Mises (1964) nel modo seguente:
+
+> Controllare (*checking*) o saggiare (*testing*) ha la forma generale seguente: se il "risultato osservato" ha una 'piccola' probabilità subordinatamente all'ipotesi assunta, respingiamo l'ipotesi. (p. 441)
+
+Ovviamente l'ipotesi a cui von Mises fa riferimento, la cui validità è quindi ipotetica, è l'ipotesi nulla.
+
+In pratica, possiamo decidere se rigettare o meno l'ipotesi nulla in due modi: determinando se la statistica test $\mathcal{G}_n$ cade o meno nella regione di rifiuto (come abbiamo descritto sopra) o confrontando il valore-$p$ con $\alpha$ -- i due metodi sono equivalenti.
+
+Il valore-*p* rappresenta la probabilità di osservare un valore della statistica test $\mathcal{G}_n$ pari a quello effettivamente osservato, o maggiore, quanto l'ipotesi nulla è vera. Se il valore-$p$ è *minore* del livello di significatività $\alpha$, allora la statistica test cade nella regione di rifiuto di $H_0$ e ciò conduce al rifiuto dell'ipotesi nulla. Tali concetti sono riassunti nella tabella seguente.
+
+::: {#tab-p-val-alpha}
+| *Valore-p*           | Decisione         | Motivazione                                                     |
+|:---------------------|:------------------|:----------------------------------------------------------------|
+| Minore di $\alpha$   | Rifiuto $H_0$     | Se $H_0$ fosse vera, sarebbe improbabile                        |
+|                      |                   | osservare un valore $\mathcal{G}_n$ grande come quello          |
+|                      |                   | osservato nel campione, o maggiore. Ma tale                     |
+|                      |                   | valore è stato osservato; perciò rifiuto $H_0$.                 |
+| Maggiore di $\alpha$ | Non rifiuto $H_0$ | Il valore osservato di $\mathcal{G}_n$ è compatibile con $H_0$. |
+|                      |                   | Non c'è motivo di rifiutare $H_0$.                              |
+
+: Relazione tra il valore-$p$ e il livello di significatività $\alpha$.
+:::
+
+### Decisione e valore-$p$
+
+Un problema con la procedura di test di ipotesi che è stata presentata in sopra è che non consente di distinguere tra un risultato "poco significativo" e uno "fortemente significativo". Ad esempio, nello studio di @mehr20165 la media osservata nel campione, ovvero 0.56, cade nella regione di rifiuto di $H_0$, ma con un piccolo margine. Il risultato viene comunque considerato "statisticamente significativo". Al contrario, supponiamo che l'esperimento produca una media campionaria di 0.91. Anche in questo secondo caso il risultato sarebbe "statisticamente significativo", ma la statistica test si collocherebbe nella regione di rifiuto in una posizione molto più lontana dal valore critico di quanto sia avvenuto in precedenza. La procedura che abbiamo descritto sopra non fa alcuna distinzione tra queste due situazioni.
+
+Se adottiamo la convenzione che pone $\alpha = 0.05$ quale tasso accettabile di errore di tipo I, allora entrambi i risultati descritti devono essere considerati come egualmente "statisticamente significativi". Secondo Jerzy Neyman, invece, è importante distinguere tra le due situazioni discusse sopra. Infatti, secondo Neyman, il concetto di valore-$p$ ha il seguente significato:
+
+> il valore-$p$ viene definito come il minore tasso d'errore di I tipo che il ricercatore è disposto a tollerare quando rigetta l'ipotesi nulla.
+
+In altri termini, Neyman suggerisce che il ricercatore può rigettare $H_0$ con maggiore confidenza se osserva un valore-$p$ uguale a 0.000001 piuttosto che pari a 0.049999.
+
+Un diverso punto di vista è stato invece proposto da Sir Ronald Fisher, come illustrato dal seguente passaggio del suo classico manuale *Statistical Methods for Research Workers* del 1925:
+
+> If \[$p$\] is below .02 it is strongly indicated that the \[null\] hypothesis fails to account for the whole of the facts. We shall not often be astray if we draw a conventional line at .05 and consider that \[smaller values of $p$\] indicate a real discrepancy.
+
+Questo passaggio è stato interpretato nel modo seguente: l'unica cosa importante è se il valore-$p$ è o non è minore di $\alpha$. Tutto il resto non importa: di quanto il valore-$p$ sia minore di $\alpha$ non ha nessuna importanza. L'approccio frequentista adottato dalla psicologia utilizza questa seconda interpretazione, quella appunto proposta da Fisher.
+
+### Un errore comune
+
+Abbiamo descritto sopra due modi piuttosto diversi, ma egualmente legittimi, per interpretare il valore-$p$, uno basato sull'approccio di Neyman e l'altro sull'approccio di Fisher. Sfortunatamente, c'è una terza interpretazione che talvolta viene fornita al valore-$p$, specialmente da coloro che sono poco familiari con la statistica, ed è del tutto sbagliata. In base a tale modo sbagliato di pensare, il valore-$p$ corrisponde alla "probabilità che l'ipotesi nulla sia vera". È un modo intuitivo di pensare, ma è sbagliato per due motivi:
+
+-   il test di ipotesi nulla è un metodo frequentista, e l'approccio frequentista alla probabilità non ci consente mai di assegnare una probabilità all'ipotesi nulla. Secondo l'interpretazione frequentista, l'ipotesi nulla è vera o non lo è; non può avere una "probabilità del 5% di essere vera".
+-   Anche all'interno dell'approccio bayesiano, che consente di assegnare le probabilità alle ipotesi, il valore-$p$ non corrisponderebbe alla probabilità che $H_0$ sia vera; questa interpretazione è del tutto incoerente con la procedura matematica che conduce al calcolo del valore-$p$: ricordiamoci che abbiamo costruito la distribuzione campionaria di $\mathcal{G}_n$ \emph{assumendo come vera} l'ipotesi nulla.
+
+Quindi non ha alcun senso usare la distribuzione campionaria così costruita per chiedersi quale sia la probabilità che $H_0$ sia vera!
+
+## Distribuzione campionaria binomiale
+
+Consideriamo un altro esempio relativo, in questo caso, alla distribuzione campionaria binomiale della statistica test. Ipotizziamo che una moneta sia bilanciata, cioè ipotizziamo che $P(\text{``testa''}) = 0.5$, e, per verificare tale ipotesi, lanciamo la moneta $10$ volte. Se il numero di volte in cui esce testa è \enquote{troppo grande} o \enquote{troppo piccolo} allora sospettiamo che la moneta sia disonesta. Chiamiamo $\theta$ la probabilità di osservare testa. Utilizzando il linguaggio del test di ipotesi statistiche abbiamo quanto segue.
+
+-   *Ipotesi nulla*: \$H_0 = \$ "la moneta è bilanciata", ovvero $\theta = 0.5$.
+-   *Ipotesi alternativa*: \$H_1 = \$ "la moneta è disonesta", ovvero $\theta \neq 0.5$.
+-   *Statistica test*: La statistica test è numero di successi (evento "testa") in 10 prove.
+-   *La distribuzione della statistica test assumendo come vera l'ipotesi nulla*: dato che, in questo esempio, la statistica test è discreta (0 successi, 1 successo, \dots, 10 successi), dobbiamo trovare la probabilità associata a ciascuno dei possibili valori di tale statistica test. Abbiamo visto in precedenza che tale insieme di valori definisce la distribuzione di massa di probabilità binomiale. La distribuzine binomiale dipende da un parametro, ovvero la probabilità di successo. Costruire la distribuzione binomiale assumendo come vera l'ipotesi nulla significa scegliere la distribuzione binomiale per la quale la probabilità di successo è il valore specificato da $H_0$, ovvero, in questo caso, $\theta = 0.5$: $$p(\mathcal{G}\_n \mid H_0) \sim Binom(n = 10, \theta = 0.5).$$
+-   *Regione di rifiuto*: l'insieme dei valori della statistica test situati nelle due code della distribuzione (il test è bilaterale) della statistica test, per i quali la probabilità complessiva è uguale al livello di significatività $\alpha$. Si noti che, per una statistica test discreta, tale probabilità complessiva non può mai essere identica ad $\alpha$.
+
+Nel caso presente, individuiamo la regione di rifiuto di $H_0$ nell'insieme dei valori evidenziati nella tabella seguente.
+
+| $\mathcal{G}_n$ | $p(x \mid H_0)$ |
+|:---------------:|:---------------:|
+|        0        |      0.001      |
+|        1        |      0.010      |
+|        2        |      0.044      |
+|        3        |      0.117      |
+|        4        |      0.205      |
+|        5        |      0.246      |
+|        6        |      0.205      |
+|        7        |      0.117      |
+|        8        |      0.044      |
+|        9        |      0.010      |
+|       10        |      0.001      |
+
+Prima di eseguire l'esperimento decidiamo di rigettare $H_0$ se l'evento "testa" verrà osservato in un numero troppo piccolo di casi: se non esce mai testa, se esce testa una volta o se esce testa due volte; oppure se l'evento "testa" verrà osservato in un numero troppo grande di casi: 8, 9 o 10 volte in 10 lanci. Riteniamo infatti che questi eventi siano eccessivamente rari, se $H_0$ è vera.\
+Pertanto decidiamo di procedere nel modo seguente: se nell'esperimento che verrà eseguito la statistica test $\mathcal{G}_n$ assumerà uno di questi valori, allora rigetteremo $H_0$.
+
+Possiamo commentare questo esempio nel modo seguente.
+
+-   L'ipotesi nulla esprime un atteggiamento di cautela verso la \enquote{novità}: non affermiamo che la moneta sia sbilanciata a meno che le evidenze non siano molto forti.
+-   La regione di rifiuto corrisponde a quei risultati dell'esperimento casuale (lanciare la moneta $10$ volte) che sono molto improbabili sotto l'ipotesi nulla. Ovvero, la regione di rifiuto include quell'insieme dei risultati che si trovano nelle code della distribuzione della statistica test, lontani dal centro della distribuzione a cui è associata la probabilità maggiore. È il livello di significatività $\alpha$ che determina quanto lontani dal centro devono essere i risultati dell'esperimento casuale affinché possano cadere nella regione di rifiuto di $H_0$.
+-   Se otteniamo $3$ teste in $10$ lanci, ad esempio, allora la statistica test (ovvero il numero di volte in cui abbiamo osservato "testa") non cade nella regione di rifiuto. In questo caso diciamo che "i dati non conducono al rifiuto dell'ipotesi nulla".
+-   Si noti bene: la procedura di test di ipotesi è *il test dell'ipotesi nulla*. Nulla può essere detto a proposito dell'ipotesi alternativa. - I risultati empirici possono solo falsificare l'ipotesi nulla, non possono mai provare che sia vera. Anche se otteniamo $5$ teste in $10$ lanci non possiamo dire che i dati provano che l'ipotesi nulla sia "vera" -- non è mai possibile provare come vera una qualunque proposizione sulla base dei dati dell'esperienza.
+
+Ora chiediamoci: qual è la probabilità di concludere incorrettamente che la moneta sia sbilanciata? Per rispondere a questa domanda notiamo che $H_0$ assume che la moneta sia bilanciata. Possiamo dunque riformulare la domanda chiedendoci: qual è la probabilità che una moneta bilanciata produca un risultato che cade nella regione di rifiuto di $H_0$? In altre parole, ci chiediamo qual è la probabilità complessiva di osservare $0$, $1$, $2$, $8$, $9$ o $10$ teste in $10$ lanci all'interno della distribuzione Binomiale che abbiamo costruito. Le probabilità degli eventi $0$, $1$, $2$, $8$, $9$ o $10$ teste in $10$ lanci sono indicate nella tabella precedente. Sommando tali probabilità, troviamo: $$ P(\text{rifiutare } H_0 \mid H_0,\text{è vera}) = 0.11. $$
+
+In questo esempio, l'ipotesi nulla è $\theta = 0.5$, quindi in base a $H_0$, la distribuzione della statistica test è binomiale di parametri $n = 10$ e probabilità di successo (testa) 0.5. Se usiamo la terminologia frequentista, possiamo dire quanto segue. Poiché la distribuzione della statistica test è completamente specificata, $H_0$ è un'\emph{ipotesi semplice}. L'ipotesi alternativa è $\theta \neq 0.5$. Pertanto l'ipotesi alternativa specifica infiniti valori possibili per $\theta$: il valore di $\theta$ potrebbe essere $0.51$, $0.7$, $0.99$, ecc. Dal momento che la distribuzione $\text{Binom}(10, \theta)$ non è completamente specificata, $H_1$ è un'*ipotesi composta*.
+
+## I passi di un test di ipotesi
+
+Alla luce dell'esempio precedente, sintetizziamo qui sotto la procedura per verificare la validità dell'ipotesi nulla.
+
+-   Si specifica l'ipotesi nulla $H_0$ da sottoporre a verifica. Le ipotesi nulle che si usano più spesso sono: \begin{equation}
+    1)\, H_0: \theta = \theta_0 \quad 2)\, H_0: \theta < \theta_0 \quad 3)\, H_0: \theta > \theta_0.\notag
+    \end{equation} La scelta di $H_0$ non ha nulla a che fare con le procedure statistiche: convenzionalmente è l'ipotesi che fornisce la spiegazione più semplice ai dati -- per esempio: nessun effetto della manipolazione sperimentale; la moneta è bilanciata; ecc.
+-   Si definisce l'ipotesi alternativa $H_1$, ovvero l'ipotesi da considerarsi valida se $H_0$ viene rifiutata. Parallelamente con quanto detto sopra, le ipotesi alternative usate più spesso sono: \begin{equation}
+    1)\, H_1: \theta \neq \theta_0 \quad 2)\, H_1: \theta > \theta_0 \quad 3)\, H_1: \theta < \theta_0. \notag
+    \end{equation} $H_1$ stabilisce la direzionalità o meno di un test: nel caso 1) l'ipotesi si dice *non direzionale*; nel caso 2) è *unidirezionale superiore* (o unilaterale destro) e nel caso 3) è *unidirezionale inferiore* (o unilaterale sinistro). Se vogliamo sottoporre a verifica l'efficacia di una psicoterapia, per esempio, allora il test sarà solitamente unidirezionale: evidenze a favore dell'efficacia del trattamento vengono unicamente dal miglioramento dei pazienti.
+-   Si definisce una statistica test $\mathcal{G}_n(X_1, \dots, X_n)$ avente una distribuzione conosciuta quando l'ipotesi nulla $H_0$ è vera. Se il test statistico riguarda la media di una distribuzione, allora vengono solitamente usate statistiche test che dipendono dalla media del campione, come ad esempio le statistiche $z$ e $t$; se vengono confrontate più di due medie, spesso viene usata la statistica $F$ nell'ambito di quella procedura di analisi dei dati che va sotto il nome di "analisi della varianza". Per altri tipi di test, ad esempio il confronto tra una distribuzione osservata e una distribuzione teorica, si usano altre statistiche test (ad esempio, la statistica test $\chi^2$). È importante ricordare che le statistiche test vengono valutate con riferimento ad una distribuzione costruita assumendo come vera l'ipotesi nulla.
+-   Si suddivide l'insieme $\mathcal{G}$ delle possibili realizzazioni della statistica $\mathcal{G}_n$ in due insiemi disgiunti: l'insieme $\mathcal{A}$, detto \emph{regione di non rifiuto} di $H_0$, e l'insieme complementare $\mathcal{R} = \mathcal{G} \setminus \mathcal{A}$, detto *regione di rifiuto*. La regione di rifiuto viene posta in una coda (test unidirezionale) o nelle due code (test bidirezionale) della distribuzione della statistica test. La grandezza della regione di rifiuto dipende dal livello di significatività.
+-   Il livello $\alpha$ deve essere scelto prima di eseguire il test. Valori tipici sono $0.05$ o $0.01$. Ricordiamo che il livello di significatività è la probabilità di un errore di I tipo, cioè l'errore che consiste nel rigettare erroneamente l'ipotesi nulla quando essa è vera. Una volta scelto il livello di significatività, possiamo determinare la regione di rifiuto nella/e coda/e della distribuzione della statistica test.
+
+## Riportare i risultati
+
+Quando si scrive una relazione con i risultati di un test di ipotesi ci sono parecchie informazioni che è necessario riportare, ma variano a seconda degli specifici test statistici che vengono eseguiti. Indipendentemente dal particolare test che viene svolto, devono essere sempre riportate due cose: il valore-$p$ e la conclusione del test, ovvero se il risultato del test è "statisticamente significativo" oppure no. Questo non dovrebbe sorprenderci: la giustificazione del test è proprio quella di stabilire se il risultato è "statisticamente significativo" oppure no.
+
+In passato, in psicologia si tendeva a seguire in maniera rigida l'approccio proposto da Fisher: il valore-$p$ veniva riportato nella forma $p < 0.05$ o $p < 0.01$, a seconda dei casi, perché il focus era quello di stabilire se la statistica test cadeva o meno nella regione di rifiuto. In quest'ottica, se il valore-$p$ è 0.050001 o 0.049999 è irrilevante. Come è stato messo in evidenza anche dall'American Statistical Association, questo modo di pensare, però, è ridicolo. Per cui, in anni recenti, la raccomandazione dell'American Psychological Association va nella direzione dell'approccio di Neyman, ovvero viene raccomandato di riportare il valore-$p$ con esattezza, senza arrotondamenti (solitamente con 4 cifre decimali).
+
+### Alcuni aspetti da considerare
+
+Questo capitolo presenta il metodo "tradizionale" per il test di significatività dell'ipotesi nulla (NHST). Capire la logica alla base dell'approccio NHST è necessario, poiché è stato l'approccio dominante alla statistica inferenziale sin da quando il metodo NHST è stato proposto all'inizio del XX secolo. È su tale procedura che la maggioranza dei ricercatori fa ancora affidamento per l'analisi dei dati. Quindi è necessario conoscere tale procedura inferenziale anche se, in tempi recenti, essa è stata aspramente criticata. Il fatto è che molti ricercatori hanno iniziato a pensare che l'approccio NHST crei più problemi di quanti ne risolva. Esaminiamo qui sotto alcuni dei dubbi che sono sorti nella comunità scientifica a proposito dell'approccio NHST.
+
+### L'uso del valore-$p$ nel mondo della ricerca
+
+Un recente articolo di @nuzzo2014statistical descrive i limiti dell'approccio NHST nella pratica scientifica. @nuzzo2014statistical ci ricorda che Ronald Fisher ha introdotto il valore-$p$ negli anni '20, ma non ha mai pensato ad esso come ad un test formale. Per Fisher, il valore-$p$ era uno strumento per giudicare *informalmente* se l'evidenza empirica fosse *significativa*, laddove il termine *significativo* veniva inteso in un senso colloquiale, ovvero come qualcosa che meritava di essere considerata con attenzione. Secondo Fisher, lo sperimentatore propone un'ipotesi nulla che spera di dimostrare falsa (per esempio, l'assenza di differenza tra due gruppi). Poi gioca a fare l'avvocato del diavolo e assume che l'ipotesi nulla sia vera. Questo gli consente di calcolare la probabilità di osservare un risultato altrettanto estremo o più estremo di quello trovato, se il risultato trovato è interamente dovuto alla sola variabilità campionaria. Anche se il metodo frequentista dell'apagogia che abbiamo presentato in precedenza consente di calcolare il valore-$p$ mediante una procedura matematica, per Fisher tale valore è solo uno strumento da usare all'interno di un processo non numerico capace di combinare le evidenze empiriche correnti con le conoscenze precedenti del ricercatore: è uno strumento da usare all'interno del processo decisionale, non la conclusione del processo decisionale stesso.
+
+Le procedure di decisione statistica vennero formalizzate alla fine degli anni '20 da due rivali di Fisher, il matematico Jerzy Neyman e lo statistico Egon Pearson, i quali si posero lo scopo di rendere il processo di decisione "rigoroso e obiettivo". A tal fine, Neyman e Pearson introdussero, tra l'altro, i concetti di potere statistico e di falso positivo (concetti che abbiamo descritto nei paragrafi precedenti). Non usarono invece la nozione di valore-$p$.
+
+Questi due approcci contrapposti portarono ad un dibattito molto acceso tra di due gruppi. Neyman descrisse il lavoro di Fisher come matematicamente "worse than useless". Fisher chiamò l'approccio di Neyman "childish" e "horrifying \[for\] intellectual freedom in the west".
+
+Mentre questo dibattito si sviluppava, altri autori iniziarono a scrivere dei manuali di statistica allo scopo di fornire uno strumento di lavoro ai ricercatori. Dato che molti di questi autori non erano statistici, ma avevano solo una comprensione superficiale della distinzione tra l'approccio di Fisher, da una parte, e l'approccio di Neyman e Pearson, dall'altra, finirono per creare un sistema ibrido che utilizzava il valore-$p$ proposto da Fisher (che era un numero facile da calcolare) all'interno del "sistema rigoroso" proposto da Neyman e Pearson. È in questo contesto che la soglia di un valore-$p$ pari a 0.05 venne definita "statisticamente significativa". Dal punto di vista storico si può dunque dire che il valore-$p$ proposto da Fisher ha un significato ben diverso dal significato che viene attribuito al valore-$p$ al giorno d'oggi nel mondo della ricerca. Come abbiamo visto sopra, il valore-$p$, con il significato che gli attribuiamo oggi, è frutto di un "incidente storico" privo di qualunque giustificazione e fondamento.
+
+Nel 2016 l'American Statistical Association ha pubblicato un articolo di @wasserstein2016asa nel quale si esprime una grande preoccupazione per l'uso inappropriato che viene fatto del valore-$p$ nella pratica scientifica odierna:
+
+> $P$-values do not measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone. Researchers often wish to turn a $p$-value into a statement about the truth of a null hypothesis, or about the probability that random chance produced the observed data. The $p$-value is neither. It is a statement about data in relation to a specified hypothetical explanation, and is not a statement about the explanation itself.
+
+L'articolo prosegue affermando che:
+
+> Scientific conclusions and business or policy decisions should not be based only on whether a $p$-value passes a specific threshold. Practices that reduce data analysis or scientific inference to mechanical "bright-line" rules (such as "$p < 0.05$") for justifying scientific claims or conclusions can lead to erroneous beliefs and poor decision making. A conclusion does not immediately become 'true' on one side of the divide and 'false' on the other. Researchers should bring many contextual factors into play to derive scientific inferences, including the design of a study, the quality of the measurements, the external evidence for the phenomenon under study, and the validity of assumptions that underlie the data analysis. Pragmatic considerations often require binary, 'yes-no' decisions, but this does not mean that $p$-values alone can ensure that a decision is correct or incorrect. The widespread use of "statistical significance" (generally interpreted as \enquote{$p \leq 0.05$}) as a license for making a claim of a scientific finding (or implied truth) leads to considerable distortion of the scientific process.
+
+### $P$-hacking
+
+La fallacia maggiore associata all'uso del valore-$p$ è chiamata "$P$-hacking" (o anche *data-dredging*, *snooping*, *fishing*, *significance-chasing*, *double-dipping*). Secondo Uri Simonsohn della Università della Pennsylvania, $P$-hacking is trying multiple things until you get the desired result. Esempi di $P$-hacking sono: *That finding seems to have been obtained through* $p$-hacking, the authors dropped one of the conditions so that the overall $p$-value would be less than .05, oppure *She is a* $p$-hacker, she always monitors data while it is being collected.
+
+La pratica del $P$-hacking ha l'effetto di trasformare uno studio esplorativo (che dovrebbe essere sempre considerato con cautela) in uno studio (apparentemente) confermativo, con la conseguenza di proporre al lettore risultati solo in apparenza "robusti" ma che, in realtà, hanno una probabilità pressoché nulla di essere replicati in studi successivi. Le simulazioni di Simonsohn hanno mostrato come il cambiamento di poche decisioni all'interno del processo di analisi dei dati possa aumentare fino al 60% il tasso di falsi positivi in un singolo studio.
+
+La pratica del $P$-hacking emerge soprattutto negli studi che si pongono il problema di dimostrare piccoli effetti usando dati molto rumorosi. In un'analisi della letteratura psicologica, Simonsohn ha trovato che i valori-$p$ riportati dagli psicologi tendono a concentrarsi su valori appena superiori alla soglia "minima" dello 0.05 (@fig-around-05). Questo risultato può essere interpretato come conseguenza della pratica del $P$-hacking: infatti, i ricercatori possono eseguire molteplici test statistici fino a trovarne uno che risulta "statisticamente significativo" e poi riportano solo quello. Come mostra la @fig-around-05, questa pratica non riguarda solo la psicologia ma è diffusa in tutti i campi della ricerca scientifica.
+
+::: {#fig-around-05}
+![](images/around_05.png){width="100%"}
+
+Distribuzione dei valori-$p$ nelle pubblicazioni scientifiche di economia, psicologia e biologia.
+:::
+
+### Critiche al valore-$p$
+
+Il valore-$p$ è stato paragonato alle zanzare (creature noiose e impossibili da mandare via), ai vestiti nuovi dell'imperatore (ovvero, il fatto per cui la maggioranza delle persone sceglie di non riconoscere i problemi che sono ovvi a tutti, ma preferisce fingere di non vederli), o ad un *sterile intellectual rake* che non produce nulla. È stato ironizzato che l'unica ragione di chiamare questa procedura *statistical hypothesis inference testing* è per l'acronimo che tale espressione produce.
+
+Il fatto che valore-$p$ incoraggia un modo di pensare sbagliato, in quanto sposta l'attenzione dal problema centrale della ricerca, ovvero il problema di stabilire qual è la forza della manipolazione sperimentale (ovvero, la dimensione dell'effetto), ad un problema irrilevante, ovvero quello di dimostrare falsa un'ipotesi fantoccio che sappiamo essere falsa a priori (l'ipotesi nulla). L'esempio che @nuzzo2014statistical propone è quello di uno studio su più di 19,000 individui che ha mostrato come coloro che incontrano il loro partner online hanno una probabilità minore di divorziare ($p <$ 0.002) e mostrano livelli maggiori di soddisfazione maritale ($p <$ 0.001) rispetto alle coppie che non si sono conosciute online (si veda Nature \url{http://doi.org/rcg}; 2013). Questo può sembrare un risultato interessante fino a quando non consideriamo la dimensione dell'effetto: per coloro che si sono conosciuti online il tasso di divorzi diminuisce dal 7.67% al 5.96%, mentre l'indice di soddisfazione maritale aumenta solo da 5.48 a 5.64 su una scala a sette passi. In generale, la domanda giusta da porsi non è "c'è un effetto oppure no?" ma bensì "quanto è grande l'effetto?".
+
+### L'effetto sperimentale è esattamente nullo?
+
+Una delle critiche più ovvie che sono state rivolte alla logica della verifica delle ipotesi statistiche riguarda il fatto che non è ragionevole supporre che l'effetto della manipolazione sperimentale sia "esattamente" nullo. Un esempio preso dalla fisica illustra questo punto. @borel1914introduction ha dimostrato che lo spostamento di un centimetro di un grammo di massa in una stella a qualche *anno luce* da noi modifica il movimento delle molecole di un gas sulla terra. Se, come sembra, tutto è collegato con tutto, allora è ragionevole supporre che la manipolazione sperimentale, quale essa sia, un qualche effetto lo produca sempre. Come Andrew Gelman ha ripetuto molte volte, il punto non è dimostrare falsa l'affermazione secondo cui la manipolazione sperimentale produce un effetto esattamente nullo. Importante invece è stabilire se la dimensione dell'effetto sia sufficientemente grande da avere una qualche importanza dal punto di vista pratico, e stabilire se l'effetto sia riproducibile. Se questi sono gli obiettivi, allora la logica della verifica dell'ipotesi nulla si dimostra problematica. Infatti, come abbiamo visto sopra, nel caso di piccoli campioni e di piccoli effetti (caso, questo, che descrive la quasi la totalità delle ricerche in psicologia), essa conduce ad una notevole sovrastima della dimensione dell'effetto. Inoltre, tende a favorire un pensiero binario basato sulla dicotomia vero/falso, mentre quello che è importante non è rifiutare un'ipotesi (nulla) che sicuramente è falsa, ma piuttosto riuscire ad ottenere una stima non distorta della vera dimensione dell'effetto.
+
+## Commenti e considerazioni finali {.unnumbered}
+
+Non possiamo concludere senza ribadire sia quanto controversa la nozione di valore-$p$. Il valore-$p$, che continua ad essere ampiamente utilizzato e interpretato in maniera erronea, fornisce una patina di legittimità a risultati di studi dubbiosi, incoraggia cattive pratiche di ricerca e promuove la produzione di falsi positivi. Un aspetto sul quale tutti i ricercatori sono d'accordo è che è difficile capire esattamente quale sia il significato di tale nozione. Anche ricercatori esperti, quando devono fornire una definizione del valore-$p$, molto spesso "e con grande confidenza" forniscono la risposta sbagliata. Ciò che veramente interessa ai ricercatori è di sapere se i risultati della ricerca "sono giusti oppure no", ma il valore-$p$ non ci dice questo. Nè ci dice nulla sulla dimensione dell'effetto, né sulla forza dell'evidenza, né sulla probabilità che il risultato sia stato ottenuto in base al caso soltanto. Ma allora che cosa ci dice? A tale domanda, Stuart Buck ha risposto nel modo seguente:
+
+> Imagine that you have a coin that you suspect is weighted toward heads. (Your null hypothesis is then that the coin is fair.) You flip it 100 times and get more heads than tails. The $p$-value won't tell you whether the coin is fair, but it will tell you the probability that you'd get at least as many heads as you did if the coin was fair. That's it -- nothing more.
+
+In altre parole, una conclusione sintetica a questa discussione potrebbe essere formulata dicendo che il valore-$p$ fornisce una risposta molto precisa ad una domanda che nessuno ha mai voluto chiedere.

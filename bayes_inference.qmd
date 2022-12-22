@@ -1,0 +1,12 @@
+# Parte 4: Inferenza bayesiana {#sec-bayes-inference}
+
+In questa sezione della dispensa verrà discusso l'argomento più difficile, quello dell'inferenza bayesiana.
+
+-   Nel @sec-bayes-workflow verrà introdotto il flusso di lavoro bayesiano.
+-   Il @sec-subj-think-prop spiega cosa significa, in termini bayesiani, fare un'inferenza. Sarà considerato qui il caso più semplice, ovvero quello di una proporzione.
+-   Il @sec-distr-coniugate mostra come la distribuzione a posteriori possa essere derivata per via analitica nel caso delle famiglie coniugate di distribuzioni. Verrà qui esaminato lo schema beta-binomiale.
+-   Il @sec-prior-influence discute l'influenza della distribuzione a priori sulla distribuzione a posteriori.
+-   Il @sec-grid-metropolis mostra come la distribuzione a posteriori possa essere approssimata per via numerica, quando una derivazione formale non è possibile. Verranno descritto il metodo basato su griglia e l'algoritmo di Metropolis.
+-   Il @sec-stan-beta-binom fornisce un'introduzione al linguaggio di programmazione probabilistico Stan. L'algoritmo di Metropolis fornisce sempre una buona approssimazione alla distribuzione a posteriori. Ma ha lo svantaggio di essere poco efficiente -- ovvero di richiedere un numero molto grande di iterazioni per produrre un'approssimazione accettabile. Nel caso di modelli statistici complessi, le simulazioni MCMC richiedono un tempo molto lungo (si parla di ore, giorni, settimane...). In tali circostanze è ovvio che l'efficienza del campionamento diventa importante. L'algoritmo di Metropolis è molto semplice ma è poco efficiente. Recentemente sono stati sviluppati algoritmi molto più efficienti. Il linguaggio probabilistico Stan implementa il campionamento hamiltoniano che, correntemente, è il campionamento MCMC più efficiente. Tale metodo di campionamento è anche implementato in software che sono più semplici da usare di Stan (si veda, ad esempio, la funzione `brm()` del pacchetto $\mathsf{R}$ `brms`). Tuttavia, per scopi didattici, nel testo presente useremo Stan.
+
+<!-- Prima di affrontare il secondo tema, l'analisi descrittiva dei dati, sarà necessario introdurre il linguaggio di programmazione statistica R (un'introduzione a R è fornita in Appendice). Inoltre, prima di potere discutere l'inferenza, dovranno essere introdotti i concetti di base della teoria delle probabilità, in quanto l'inferenza non è che l'applicazione della teoria delle probabilità all'analisi dei dati.  -->

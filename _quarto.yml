@@ -1,0 +1,102 @@
+project:
+  type: book
+  output-dir: docs
+  
+book:
+  title: "Data Science per psicologi"
+  author: "Corrado Caudek"
+  # cover-image: images/cover.png
+  site-url: https://ccaudek.github.io/data_science/
+  repo-url: https://github.com/ccaudek/data_science/
+  repo-branch: master
+  # repo-actions: [edit]
+  language: _language.yml
+  chapters:
+    - index.qmd
+    - preface.qmd
+    - part: basics.qmd
+      chapters:
+      - 001_key_notions.qmd
+      - 005_measurement.qmd
+      - 007_freq_distr.qmd
+      - 011_loc_scale.qmd
+      - 012_correlation.qmd
+      - 013_penguins.qmd
+    - part: prob.qmd
+      chapters:
+      - 015_prob_intro.qmd
+      - 016_conditional_prob.qmd
+      - 017_bayes_theorem.qmd
+      - 018_expval_var.qmd
+      - 019_joint_prob.qmd
+      - 020_density_func.qmd
+    - part: distr.qmd
+      chapters:
+      - 022_discr_rv_distr.qmd
+      - 023_cont_rv_distr.qmd
+      - 024_likelihood.qmd
+    - part: bayes_inference.qmd
+      chapters:
+      - 025_intro_bayes.qmd
+      - 026_subj_prop.qmd
+      - 029_conjugate_families.qmd
+      - 030_balance_prior_post.qmd
+      - 036_posterior_sim.qmd
+      - 040_beta_binomial_mod.qmd
+      - 041_mcmc_diagnostics.qmd
+      - 045_summarize_posterior.qmd
+      - 046_bayesian_prediction.qmd
+      - 050_normal_normal_mod.qmd
+    - part: regression.qmd
+      chapters:
+      - 051_reglin1.qmd
+      - 052_reglin2.qmd
+      - 053_reglin3.qmd
+      - 054_reglin4.qmd
+      - 055_reglin5.qmd
+      - 056_pred_check.qmd
+      - 060_anova.qmd
+      - 070_mod_hier.qmd
+      - 071_mod_hier_sim.qmd
+    - part: entropy.qmd
+      chapters:
+      - 090_entropy.qmd
+      - 091_kl.qmd
+      - 092_info_criterion.qmd
+      # - 093_projpred.qmd
+    - part: frequentist_inference.qmd
+      chapters: 
+        - 220_intro_frequentist.qmd
+        - 221_conf_interv.qmd
+        - 225_distr_camp_mean.qmd
+        - 226_test_ipotesi.qmd
+        - 227_ttest.qmd
+        - 228_limiti_stat_frequentista.qmd
+    - 999_refs.qmd
+  appendices:
+    - a01_math_symbols.qmd
+    - a02_number_sets.qmd
+    - a03_set_theory.qmd
+    - a04_summation_notation.qmd
+    - a05_calculus_notation.qmd
+    - a10_markov_chains.qmd
+    - a15_stan_lang.qmd
+
+bibliography: book.bib
+csl: apa.csl
+
+format:
+  html: 
+    theme: 
+      - cosmo
+      - r4ds.scss
+    callout-appearance: 
+      - simple
+    # cover-image: cover.png
+    # monofont: "Ubuntu Mono"
+    code-link: true
+    link-citations: yes
+    code-fold: false
+    code-tools: true
+
+

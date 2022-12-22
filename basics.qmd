@@ -1,0 +1,9 @@
+# Parte 1: Nozioni di base {#sec-key-notions}
+
+Questa dispensa è strutturata in maniera tale da rispecchiare la suddivisione tra i temi della misurazione, dell'analisi descrittiva e dell'inferenza.
+
+In questa prima parte affronteremo i temi della misurazione e delll'analisi descrittiva dei dati. Nel capitolo [@sec-basics] verranno presentati i concetti chiave della Data Science. Nel capitolo [@sec-measurement] sarà affrontato il tema della misurazione. Nel capitolo [@sec-eda] verranno introdotti i concetti che vengono utilizzati per descrivere le distribuzioni dei dati. Verranno poi introdotti gli indici di tendenza centrale e di dispersione nel capitolo [@sec-loc-scale]. Infine, nel capitolo [@sec-corr] verrà affrontato il problema di descrivere le relazioni tra variabili.
+
+Prima di affrontare tali temi sarà necessario introdurre il linguaggio di programmazione statistica R (un'introduzione a R è fornita in Appendice).
+
+<!-- e, nell'ultima parte della dispensa verrà discusso l'argomento più difficile, quello dell'inferenza. Prima di affrontare il secondo tema, l'analisi descrittiva dei dati, sarà necessario introdurre il linguaggio di programmazione statistica R (un'introduzione a R è fornita in Appendice). Inoltre, prima di potere discutere l'inferenza, dovranno essere introdotti i concetti di base della teoria delle probabilità, in quanto l'inferenza non è che l'applicazione della teoria delle probabilità all'analisi dei dati. -->

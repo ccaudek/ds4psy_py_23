@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Data Science per psicologi - 6&nbsp; Manipolazione e visualizzazione dei dati in \(\mathsf{R}\)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./prob.html" rel="next">
+<link href="./012_correlation.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Manipolazione e visualizzazione dei dati in <span class="math inline">\(\mathsf{R}\)</span></span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Data Science per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/data_science/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Benvenuti</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">Prefazione</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./basics.html" class="sidebar-item-text sidebar-link">Parte 1: Nozioni di base</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001_key_notions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Concetti chiave</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005_measurement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007_freq_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011_loc_scale.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012_correlation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013_penguins.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Manipolazione e visualizzazione dei dati in <span class="math inline">\(\mathsf{R}\)</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">Parte 2: Il calcolo delle probabilità</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015_prob_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La logica dell’incerto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016_conditional_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probabilità condizionata: significato, teoremi, eventi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017_bayes_theorem.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018_expval_var.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Indici di posizione, di varianza e di associazione di variabili casuali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019_joint_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020_density_func.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La densità di probabilità</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./distr.html" class="sidebar-item-text sidebar-link">Parte 3: Distribuzioni di v.c. discrete e continue</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022_discr_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023_cont_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024_likelihood.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">La funzione di verosimiglianza</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./bayes_inference.html" class="sidebar-item-text sidebar-link">Parte 4: Inferenza bayesiana</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025_intro_bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Credibilità, modelli e parametri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026_subj_prop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029_conjugate_families.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030_balance_prior_post.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./036_posterior_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Approssimazione della distribuzione a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./040_beta_binomial_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello beta-binomiale in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./041_mcmc_diagnostics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./045_summarize_posterior.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./046_bayesian_prediction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./050_normal_normal_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Inferenza sul parametro <span class="math inline">\(\mu\)</span> (media di una v.c. Normale)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./regression.html" class="sidebar-item-text sidebar-link">Parte 5: Regressione lineare</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./051_reglin1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./052_reglin2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./053_reglin3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Modello di regressione in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./054_reglin4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Inferenza sul modello lineare</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./055_reglin5.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./056_pred_check.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Predictive checks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./060_anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Confronto tra le medie di tre o più gruppi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./070_mod_hier.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello gerarchico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./071_mod_hier_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Modello gerarchico: simulazioni</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./entropy.html" class="sidebar-item-text sidebar-link">Parte 6: Entropia</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./090_entropy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Entropia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./091_kl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">La divergenza di Kullback-Leibler</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./092_info_criterion.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Criterio di informazione e convalida incrociata</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./frequentist_inference.html" class="sidebar-item-text sidebar-link">Parte 7: Inferenza frequentista</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./220_intro_frequentist.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Legge dei grandi numeri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./221_conf_interv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./225_distr_camp_mean.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./226_test_ipotesi.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Significatività statistica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./227_ttest.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Inferenza sulle medie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./228_limiti_stat_frequentista.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./999_refs.html" class="sidebar-item-text sidebar-link">Riferimenti bibliografici</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Appendici</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a01_math_symbols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Simbologia di base</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a02_number_sets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a03_set_theory.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Insiemi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a04_summation_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a05_calculus_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a10_markov_chains.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Le catene di Markov</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a15_stan_lang.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Programmare in Stan</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+   
+  <ul>
+<li><a href="#codifica-dei-dati-grezzi" id="toc-codifica-dei-dati-grezzi" class="nav-link active" data-scroll-target="#codifica-dei-dati-grezzi"><span class="toc-section-number">6.1</span>  Codifica dei dati grezzi</a></li>
+  <li><a href="#trattamento-dei-dati-con-dplyr" id="toc-trattamento-dei-dati-con-dplyr" class="nav-link" data-scroll-target="#trattamento-dei-dati-con-dplyr"><span class="toc-section-number">6.2</span>  Trattamento dei dati con <code>dplyr</code></a></li>
+  <li><a href="#esaminare-i-dati" id="toc-esaminare-i-dati" class="nav-link" data-scroll-target="#esaminare-i-dati"><span class="toc-section-number">6.3</span>  Esaminare i dati</a></li>
+  <li><a href="#estrarre-una-singola-colonna-con-pull" id="toc-estrarre-una-singola-colonna-con-pull" class="nav-link" data-scroll-target="#estrarre-una-singola-colonna-con-pull"><span class="toc-section-number">6.4</span>  Estrarre una singola colonna con <code>pull()</code></a></li>
+  <li><a href="#selezionare-pi%C3%B9-colonne-con-select" id="toc-selezionare-più-colonne-con-select" class="nav-link" data-scroll-target="#selezionare-pi%C3%B9-colonne-con-select"><span class="toc-section-number">6.5</span>  Selezionare più colonne con <code>select()</code></a></li>
+  <li><a href="#selezionare-le-righe-che-soddisfano-una-condizione" id="toc-selezionare-le-righe-che-soddisfano-una-condizione" class="nav-link" data-scroll-target="#selezionare-le-righe-che-soddisfano-una-condizione"><span class="toc-section-number">6.6</span>  Selezionare le righe che soddisfano una condizione</a></li>
+  <li><a href="#creare-una-nuova-variabile-con-mutate" id="toc-creare-una-nuova-variabile-con-mutate" class="nav-link" data-scroll-target="#creare-una-nuova-variabile-con-mutate"><span class="toc-section-number">6.7</span>  Creare una nuova variabile con <code>mutate()</code></a></li>
+  <li><a href="#ordinare-i-dati-con-arrange" id="toc-ordinare-i-dati-con-arrange" class="nav-link" data-scroll-target="#ordinare-i-dati-con-arrange"><span class="toc-section-number">6.8</span>  Ordinare i dati con <code>arrange()</code></a></li>
+  <li><a href="#raggruppare-i-dati-con-group_by" id="toc-raggruppare-i-dati-con-group_by" class="nav-link" data-scroll-target="#raggruppare-i-dati-con-group_by"><span class="toc-section-number">6.9</span>  Raggruppare i dati con <code>group_by()</code></a></li>
+  <li><a href="#sommario-dei-dati-con-summarise" id="toc-sommario-dei-dati-con-summarise" class="nav-link" data-scroll-target="#sommario-dei-dati-con-summarise"><span class="toc-section-number">6.10</span>  Sommario dei dati con <code>summarise()</code></a></li>
+  <li><a href="#operazioni-raggruppate" id="toc-operazioni-raggruppate" class="nav-link" data-scroll-target="#operazioni-raggruppate"><span class="toc-section-number">6.11</span>  Operazioni raggruppate</a></li>
+  <li><a href="#applicare-una-funzione-su-pi%C3%B9-colonne-across" id="toc-applicare-una-funzione-su-più-colonne-across" class="nav-link" data-scroll-target="#applicare-una-funzione-su-pi%C3%B9-colonne-across"><span class="toc-section-number">6.12</span>  Applicare una funzione su più colonne: <code>across()</code></a></li>
+  <li><a href="#dati-categoriali-in-mathsfr" id="toc-dati-categoriali-in-mathsfr" class="nav-link" data-scroll-target="#dati-categoriali-in-mathsfr"><span class="toc-section-number">6.13</span>  Dati categoriali in <span class="math inline">\(\mathsf{R}\)</span></a></li>
+  <li><a href="#modificare-le-etichette-dei-livelli-di-un-fattore" id="toc-modificare-le-etichette-dei-livelli-di-un-fattore" class="nav-link" data-scroll-target="#modificare-le-etichette-dei-livelli-di-un-fattore"><span class="toc-section-number">6.14</span>  Modificare le etichette dei livelli di un fattore</a></li>
+  <li><a href="#riordinare-i-livelli-di-un-fattore" id="toc-riordinare-i-livelli-di-un-fattore" class="nav-link" data-scroll-target="#riordinare-i-livelli-di-un-fattore"><span class="toc-section-number">6.15</span>  Riordinare i livelli di un fattore</a></li>
+  <li><a href="#creare-grafici-con-ggplot2" id="toc-creare-grafici-con-ggplot2" class="nav-link" data-scroll-target="#creare-grafici-con-ggplot2"><span class="toc-section-number">6.16</span>  Creare grafici con <code>ggplot2()</code></a></li>
+  <li><a href="#diagramma-a-dispersione" id="toc-diagramma-a-dispersione" class="nav-link" data-scroll-target="#diagramma-a-dispersione"><span class="toc-section-number">6.17</span>  Diagramma a dispersione</a></li>
+  <li><a href="#istogramma" id="toc-istogramma" class="nav-link" data-scroll-target="#istogramma"><span class="toc-section-number">6.18</span>  Istogramma</a></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali">Commenti e considerazioni finali</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-intro-dplyr" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Manipolazione e visualizzazione dei dati in <span class="math inline">\(\mathsf{R}\)</span></span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>In questo capitolo esamineremo le fuzionalità di <span class="math inline">\(\mathsf{R}\)</span> per la manipolazione e la visualizzazione dei dati. Nello specifico, esamineremo le funzioni fornite dal pacchetto <code>dplyr</code>.</p>
+<section id="codifica-dei-dati-grezzi" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="codifica-dei-dati-grezzi">
+<span class="header-section-number">6.1</span> Codifica dei dati grezzi</h2>
+<p>Si chiamano “dati grezzi” quelli che provengono dal mondo circostanze, i dati raccolti per mezzo di esperimenti, interviste, questionari, ecc. Questi dati (detti <em>dataset</em>) raramente vengono forniti con una struttura logica precisa. Per poterli elaborare mediante software è necessario prima trasformarli in maniera tale che abbiano una struttura logica organizzata. La struttura che solitamente si utilizza è quella tabellare (detta <em>matrice dei dati</em>), ovvero si dispongono i dati in una tabella nella quale ciascuna riga corrisponde ad un’osservazione e ciascuna colonna corrisponde ad una variabile rilevata. In <span class="math inline">\(\mathsf{R}\)</span> una tale struttura è chiamata <em>data frame</em> o <em>tibble</em> (il <em>tibble</em> è solo un modo diverso di stampare un data frame sulla console).</p>
+</section><section id="trattamento-dei-dati-con-dplyr" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="trattamento-dei-dati-con-dplyr">
+<span class="header-section-number">6.2</span> Trattamento dei dati con <code>dplyr</code>
+</h2>
+<p>Utilizzando i pacchetti del <code>tidyverse</code> (<code>tidyverse</code> è un insieme, o <em>bundle</em>, di pacchetti <code>R</code>), le operazioni di trasformazione dei dati risultano molto semplificate. Per la manipolazione dei dati vengono usati i seguenti pacchetti del <code>tidyverse</code>:</p>
+<ul>
+<li><code>dplyr</code></li>
+<li>
+<code>tidyr</code> (tibbles, dataframe e tabelle)</li>
+<li>
+<code>stringr</code> (stringhe)</li>
+</ul>
+<p>Il pacchetto <code>dplyr</code> (al momento uno dei pacchetti più famosi e utilizzati per la gestione dei dati) offre una serie di funzionalità che consentono di eseguire le operazioni più comuni di manipolazione dei dati in una maniera più semplice rispetto a quanto succeda quando usiamo le funzioni base di <code>R</code>.</p>
+<p>Il pacchetto <code>dplyr</code> include sei funzioni base: <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>. Queste sei funzioni costituiscono i <em>verbi</em> del linguaggio di manipolazione dei dati. A questi sei verbi si aggiunge il pipe <code>%&gt;%</code> (oppure <code>|&gt;</code>) che serve a concatenare più operazioni. In particolare, considerando una matrice osservazioni per variabili, <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> si occupano di organizzare le variabili, <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> i casi, e <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> i gruppi.</p>
+<p>Per introdurre le funzionalità di <code>dplyr</code>, utilizzeremo i dati <code>msleep</code> forniti dal pacchetto <code>ggplot2</code>. Tali dati descrivono le ore di sonno medie di 83 specie di mammiferi <span class="citation" data-cites="savage2007scaling">(<a href="999_refs.html#ref-savage2007scaling" role="doc-biblioref">Savage et al., 2007</a>)</span>. Carichiamo il <em>boundle</em> <code>tidyverse</code> (che contiene <code>ggplot2</code>) e leggiamo nella memoria di lavoro l’oggetto <code>msleep</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidyverse.tidyverse.org">"tidyverse"</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83 11</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="operatore-pipe" class="level4" data-number="6.2.0.1"><h4 data-number="6.2.0.1" class="anchored" data-anchor-id="operatore-pipe">
+<span class="header-section-number">6.2.0.1</span> Operatore pipe</h4>
+<p>Prima di presentare le funzionalità di <code>dplyr</code>, introduciamo l’operatore pipe <code>%&gt;%</code> del pacchetto <code>magrittr</code> – ma ora presente anche in base <span class="math inline">\(\mathsf{R}\)</span> nella versione <code>|&gt;</code>. L’operatore pipe, <code>%&gt;%</code> o <code>|&gt;</code>, serve a concatenare varie funzioni insieme, in modo da inserire un’operazione dietro l’altra. Una spiegazione intuitiva dell’operatore pipe è stata fornita in un tweet di <code>@andrewheiss</code>. Consideriamo la seguente istruzione in pseudo-codice <span class="math inline">\(\mathsf{R}\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">leave_house</span><span class="op">(</span></span>
+<span>  <span class="fu">get_dressed</span><span class="op">(</span></span>
+<span>    <span class="fu">get_out_of_bed</span><span class="op">(</span></span>
+<span>      <span class="fu">wake_up</span><span class="op">(</span><span class="va">me</span>, time <span class="op">=</span> <span class="st">"8:00"</span><span class="op">)</span>, </span>
+<span>      side <span class="op">=</span> <span class="st">"correct"</span><span class="op">)</span>, </span>
+<span>    pants <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>    shirt <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, </span>
+<span>  car <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>  bike <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il listato precedente descrive una serie di (pseudo) funzioni concatenate, le quali costituiscono gli argomenti di altre funzioni. Scritto così, il codice è molto difficile da capire. Possiamo però ottenere lo stesso risultato utilizzando l’operatore pipe che facilita enormememnte la leggibilità del codice:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">me</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">wake_up</span><span class="op">(</span>time <span class="op">=</span> <span class="st">"8:00"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">get_out_of_bed</span><span class="op">(</span>side <span class="op">=</span> <span class="st">"correct"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">get_dressed</span><span class="op">(</span>pants <span class="op">=</span> <span class="cn">TRUE</span>, shirt <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">leave_house</span><span class="op">(</span>car <span class="op">=</span> <span class="cn">TRUE</span>, bike <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In questa seconda versione del (pseudo) codice <span class="math inline">\(\mathsf{R}\)</span> si capisce molto meglio ciò che vogliamo fare. Il <code>tibble</code> <code>me</code> viene passato alla funzione <code>wake_up()</code>. La funzione <code>wake_up()</code> ha come argomento l’ora del giorno: <code>time = "8:00"</code>. Una volta “svegliati” (wake up) dobbiamo scendere dal letto. Quindi l’output di <code>wake_up()</code> viene passato alla funzione <code>get_out_of_bed()</code> la quale ha come argomento <code>side = "correct"</code> perché vogliamo scendere dal letto dalla parte giusta. E così via.</p>
+<p>Questo pseudo-codice chiarisce il significato dell’operatore pipe. L’operatore <code>|&gt;</code> è “syntactic sugar” per una serie di chiamate di funzioni concatenate, ovvero, detto in altre parole, consente di definire la relazione tra una serie di funzioni nelle quali il risultato (output) di una funzione viene utilizzato come l’input di una funzione successiva.</p>
+</section></section><section id="esaminare-i-dati" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="esaminare-i-dati">
+<span class="header-section-number">6.3</span> Esaminare i dati</h2>
+<p>Iniziamo a trasformare il data frame <code>msleep</code> in un <code>tibble</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I nomi delle colonne del tibble (ovvero, i nomi delle variabili del campione) si ottengono con la funzione <code><a href="https://rdrr.io/r/base/names.html">names()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "name"         "genus"        "vore"         "order"        "conservation"</span></span>
+<span><span class="co">#&gt;  [6] "sleep_total"  "sleep_rem"    "sleep_cycle"  "awake"        "brainwt"     </span></span>
+<span><span class="co">#&gt; [11] "bodywt"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I valori iniziali di ciascuna colonna del tibble possono essere visualizzati usando la funzone <code><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 83</span></span>
+<span><span class="co">#&gt; Columns: 11</span></span>
+<span><span class="co">#&gt; $ name         &lt;chr&gt; "Cheetah", "Owl monkey", "Mountain beaver", "Greater shor…</span></span>
+<span><span class="co">#&gt; $ genus        &lt;chr&gt; "Acinonyx", "Aotus", "Aplodontia", "Blarina", "Bos", "Bra…</span></span>
+<span><span class="co">#&gt; $ vore         &lt;chr&gt; "carni", "omni", "herbi", "omni", "herbi", "herbi", "carn…</span></span>
+<span><span class="co">#&gt; $ order        &lt;chr&gt; "Carnivora", "Primates", "Rodentia", "Soricomorpha", "Art…</span></span>
+<span><span class="co">#&gt; $ conservation &lt;chr&gt; "lc", NA, "nt", "lc", "domesticated", NA, "vu", NA, "dome…</span></span>
+<span><span class="co">#&gt; $ sleep_total  &lt;dbl&gt; 12.1, 17.0, 14.4, 14.9, 4.0, 14.4, 8.7, 7.0, 10.1, 3.0, 5…</span></span>
+<span><span class="co">#&gt; $ sleep_rem    &lt;dbl&gt; NA, 1.8, 2.4, 2.3, 0.7, 2.2, 1.4, NA, 2.9, NA, 0.6, 0.8, …</span></span>
+<span><span class="co">#&gt; $ sleep_cycle  &lt;dbl&gt; NA, NA, NA, 0.1333333, 0.6666667, 0.7666667, 0.3833333, N…</span></span>
+<span><span class="co">#&gt; $ awake        &lt;dbl&gt; 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, 1…</span></span>
+<span><span class="co">#&gt; $ brainwt      &lt;dbl&gt; NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, 0…</span></span>
+<span><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per le variabili qualitative, possiamo creare una distribuzione di frequenze assolute mediante la funzione <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   carni   herbi insecti    omni </span></span>
+<span><span class="co">#&gt;      19      32       5      20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Usando <code><a href="https://rdrr.io/r/base/table.html">table()</a></code> possiamo anche creare una tabella di contingenza.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span>, <span class="va">msleep</span><span class="op">$</span><span class="va">conservation</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          </span></span>
+<span><span class="co">#&gt;           cd domesticated en lc nt vu</span></span>
+<span><span class="co">#&gt;   carni    1            2  1  5  1  4</span></span>
+<span><span class="co">#&gt;   herbi    1            7  2 10  3  3</span></span>
+<span><span class="co">#&gt;   insecti  0            0  1  2  0  0</span></span>
+<span><span class="co">#&gt;   omni     0            1  0  8  0  0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si ricordi che, quando si usa <code><a href="https://rdrr.io/r/base/table.html">table()</a></code> per creare una tabella di contingenza, i dati mancanti (<code>NA</code>) vengono esclusi.</p>
+</section><section id="estrarre-una-singola-colonna-con-pull" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="estrarre-una-singola-colonna-con-pull">
+<span class="header-section-number">6.4</span> Estrarre una singola colonna con <code>pull()</code>
+</h2>
+<p>Estraiamo da <code>msleep</code> la variabile <code>sleep_total</code> usando il verbo <code><a href="https://dplyr.tidyverse.org/reference/pull.html">pull()</a></code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] 12.1 17.0 14.4 14.9  4.0 14.4  8.7  7.0 10.1  3.0  5.3  9.4 10.0 12.5 10.3</span></span>
+<span><span class="co">#&gt; [16]  8.3  9.1 17.4  5.3 18.0  3.9 19.7  2.9  3.1 10.1 10.9 14.9 12.5  9.8  1.9</span></span>
+<span><span class="co">#&gt; [31]  2.7  6.2  6.3  8.0  9.5  3.3 19.4 10.1 14.2 14.3 12.8 12.5 19.9 14.6 11.0</span></span>
+<span><span class="co">#&gt; [46]  7.7 14.5  8.4  3.8  9.7 15.8 10.4 13.5  9.4 10.3 11.0 11.5 13.7  3.5  5.6</span></span>
+<span><span class="co">#&gt; [61] 11.1 18.1  5.4 13.0  8.7  9.6  8.4 11.3 10.6 16.6 13.8 15.9 12.8  9.1  8.6</span></span>
+<span><span class="co">#&gt; [76] 15.8  4.4 15.6  8.9  5.2  6.3 12.5  9.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In maniera equivalente, possiamo usare l’operatore <code>$</code> di base <span class="math inline">\(\mathsf{R}\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span><span class="op">$</span><span class="va">sleep_total</span></span>
+<span><span class="co">#&gt;  [1] 12.1 17.0 14.4 14.9  4.0 14.4  8.7  7.0 10.1  3.0  5.3  9.4 10.0 12.5 10.3</span></span>
+<span><span class="co">#&gt; [16]  8.3  9.1 17.4  5.3 18.0  3.9 19.7  2.9  3.1 10.1 10.9 14.9 12.5  9.8  1.9</span></span>
+<span><span class="co">#&gt; [31]  2.7  6.2  6.3  8.0  9.5  3.3 19.4 10.1 14.2 14.3 12.8 12.5 19.9 14.6 11.0</span></span>
+<span><span class="co">#&gt; [46]  7.7 14.5  8.4  3.8  9.7 15.8 10.4 13.5  9.4 10.3 11.0 11.5 13.7  3.5  5.6</span></span>
+<span><span class="co">#&gt; [61] 11.1 18.1  5.4 13.0  8.7  9.6  8.4 11.3 10.6 16.6 13.8 15.9 12.8  9.1  8.6</span></span>
+<span><span class="co">#&gt; [76] 15.8  4.4 15.6  8.9  5.2  6.3 12.5  9.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Possiamo ordinare i dati con <code><a href="https://rdrr.io/r/base/sort.html">sort()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span><span class="op">$</span><span class="va">sleep_total</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="co">#&gt;  [1]  1.9  2.7  2.9  3.0  3.1  3.3  3.5  3.8  3.9  4.0  4.4  5.2  5.3  5.3  5.4</span></span>
+<span><span class="co">#&gt; [16]  5.6  6.2  6.3  6.3  7.0  7.7  8.0  8.3  8.4  8.4  8.6  8.7  8.7  8.9  9.1</span></span>
+<span><span class="co">#&gt; [31]  9.1  9.4  9.4  9.5  9.6  9.7  9.8  9.8 10.0 10.1 10.1 10.1 10.3 10.3 10.4</span></span>
+<span><span class="co">#&gt; [46] 10.6 10.9 11.0 11.0 11.1 11.3 11.5 12.1 12.5 12.5 12.5 12.5 12.8 12.8 13.0</span></span>
+<span><span class="co">#&gt; [61] 13.5 13.7 13.8 14.2 14.3 14.4 14.4 14.5 14.6 14.9 14.9 15.6 15.8 15.8 15.9</span></span>
+<span><span class="co">#&gt; [76] 16.6 17.0 17.4 18.0 18.1 19.4 19.7 19.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Oppure, in ordine decrescente:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span><span class="op">$</span><span class="va">sleep_total</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span>decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
+<span><span class="co">#&gt;  [1] 19.9 19.7 19.4 18.1 18.0 17.4 17.0 16.6 15.9 15.8 15.8 15.6 14.9 14.9 14.6</span></span>
+<span><span class="co">#&gt; [16] 14.5 14.4 14.4 14.3 14.2 13.8 13.7 13.5 13.0 12.8 12.8 12.5 12.5 12.5 12.5</span></span>
+<span><span class="co">#&gt; [31] 12.1 11.5 11.3 11.1 11.0 11.0 10.9 10.6 10.4 10.3 10.3 10.1 10.1 10.1 10.0</span></span>
+<span><span class="co">#&gt; [46]  9.8  9.8  9.7  9.6  9.5  9.4  9.4  9.1  9.1  8.9  8.7  8.7  8.6  8.4  8.4</span></span>
+<span><span class="co">#&gt; [61]  8.3  8.0  7.7  7.0  6.3  6.3  6.2  5.6  5.4  5.3  5.3  5.2  4.4  4.0  3.9</span></span>
+<span><span class="co">#&gt; [76]  3.8  3.5  3.3  3.1  3.0  2.9  2.7  1.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Possiamo attribuire la colonna estratta dal tibble ad un oggetto nella memoria di lavoro di <span class="math inline">\(\mathsf{R}\)</span> usando l’operatore di attribuzione <code>&lt;-</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sl_tot</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Essendo <code>sl_tot</code> presente nella emoria di lavoro di <span class="math inline">\(\mathsf{R}\)</span>, possiamo passarlo a qualsiasi altra funzione di <span class="math inline">\(\mathsf{R}\)</span>. Per esempio, possiamo calcolare la media di <code>sl_tot</code> usando la funzione <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sl_tot</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 10.43373</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>oppure la deviazione standard usando la funzione <code><a href="https://rdrr.io/r/stats/sd.html">sd()</a></code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">sl_tot</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4.450357</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="selezionare-più-colonne-con-select" class="level2" data-number="6.5"><h2 data-number="6.5" class="anchored" data-anchor-id="selezionare-più-colonne-con-select">
+<span class="header-section-number">6.5</span> Selezionare più colonne con <code>select()</code>
+</h2>
+<p>Se vogliamo selezionare da <code>msleep</code> un insieme di variabili, ad esempio <code>name</code>, <code>vore</code> e <code>sleep_total</code>, possiamo usare il verbo <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">vore</span>, <span class="va">sleep_total</span><span class="op">)</span></span>
+<span><span class="va">dt</span></span>
+<span><span class="co">#&gt; # A tibble: 83 × 3</span></span>
+<span><span class="co">#&gt;   name                       vore  sleep_total</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                      &lt;chr&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Cheetah                    carni        12.1</span></span>
+<span><span class="co">#&gt; 2 Owl monkey                 omni         17  </span></span>
+<span><span class="co">#&gt; 3 Mountain beaver            herbi        14.4</span></span>
+<span><span class="co">#&gt; 4 Greater short-tailed shrew omni         14.9</span></span>
+<span><span class="co">#&gt; 5 Cow                        herbi         4  </span></span>
+<span><span class="co">#&gt; 6 Three-toed sloth           herbi        14.4</span></span>
+<span><span class="co">#&gt; 7 Northern fur seal          carni         8.7</span></span>
+<span><span class="co">#&gt; 8 Vesper mouse               &lt;NA&gt;          7  </span></span>
+<span><span class="co">#&gt; # … with 75 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>laddove la sequenza di istruzioni precedenti significa che abbiamo passato <code>msleep</code> alla funzione <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> contenuta nel pacchetto <code>dplyr</code> e l’output di <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> è stato salvato (usando l’operatore di assegnazione, <code>&lt;-</code>) nell’oggetto <code>dt</code>. Alla funzione <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> abbiamo passato gli argomenti <code>name</code>, <code>vore</code> e <code>sleep_total</code>.</p>
+</section><section id="selezionare-le-righe-che-soddisfano-una-condizione" class="level2" data-number="6.6"><h2 data-number="6.6" class="anchored" data-anchor-id="selezionare-le-righe-che-soddisfano-una-condizione">
+<span class="header-section-number">6.6</span> Selezionare le righe che soddisfano una condizione</h2>
+<p>Il verbo <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> consente di selezionare da un <code>tibble</code> un sottoinsieme di righe (osservazioni). Per esempio, possiamo selezionare tutte le osservazioni nella variabile <code>vore</code> contrassegnate come <code>carni</code> (ovvero, tutti i carnivori):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">vore</span> <span class="op">==</span> <span class="st">"carni"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 19 × 3</span></span>
+<span><span class="co">#&gt;   name                 vore  sleep_total</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Cheetah              carni        12.1</span></span>
+<span><span class="co">#&gt; 2 Northern fur seal    carni         8.7</span></span>
+<span><span class="co">#&gt; 3 Dog                  carni        10.1</span></span>
+<span><span class="co">#&gt; 4 Long-nosed armadillo carni        17.4</span></span>
+<span><span class="co">#&gt; 5 Domestic cat         carni        12.5</span></span>
+<span><span class="co">#&gt; 6 Pilot whale          carni         2.7</span></span>
+<span><span class="co">#&gt; 7 Gray seal            carni         6.2</span></span>
+<span><span class="co">#&gt; 8 Thick-tailed opposum carni        19.4</span></span>
+<span><span class="co">#&gt; # … with 11 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per utilizzare il verbo <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> in modo efficace è neccessario usare gli operatori relazionali</p>
+<span class="math display">\[\begin{array}{l l}
+\hline
+\text{Operazione logica}   &amp; \text{Operatore}  \\
+\hline
+      \text{uguale}             &amp;  == \\
+      \text{diverso}            &amp;  !=  \\
+      \text{minore}             &amp;  &lt;  \\
+      \text{maggiore}           &amp;  &gt;  \\
+      \text{minore o uguale}      &amp; &lt;=  \\
+      \text{maggiore o uguale}  &amp; &gt;=  \\
+\hline
+\end{array}\]</span>
+<p>e gli operatori logici di <span class="math inline">\(\mathsf{R}\)</span>.</p>
+<span class="math display">\[\begin{array}{l l}
+\hline
+\text{Operazione logica}   &amp; \text{Operatore}  \\
+\hline
+      \text{AND}      &amp;  \&amp;    \\
+      \text{OR }      &amp;  | \\
+      \text{NOT}     &amp;  !   \\
+\hline
+\end{array}\]</span>
+<p>Per un approfondimento, si veda il Capitolo <a href="https://r4ds.had.co.nz/transform.html">Comparisons</a> di <em>R for Data Science</em>.</p>
+</section><section id="creare-una-nuova-variabile-con-mutate" class="level2" data-number="6.7"><h2 data-number="6.7" class="anchored" data-anchor-id="creare-una-nuova-variabile-con-mutate">
+<span class="header-section-number">6.7</span> Creare una nuova variabile con <code>mutate()</code>
+</h2>
+<p>Talvolta vogliamo creare una nuova variabile, per esempio, sommando o dividendo due variabili, oppure calcolandone la media. A questo scopo si usa il verbo <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>. Per esempio, se vogliamo esprimere i valori di <code>sleep_total</code> in minuti, moltiplichiamo per 60:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    sleep_minutes <span class="op">=</span> <span class="va">sleep_total</span> <span class="op">*</span> <span class="fl">60</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">sleep_total</span>, <span class="va">sleep_minutes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 83 × 2</span></span>
+<span><span class="co">#&gt;   sleep_total sleep_minutes</span></span>
+<span><span class="co">#&gt;         &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1        12.1           726</span></span>
+<span><span class="co">#&gt; 2        17            1020</span></span>
+<span><span class="co">#&gt; 3        14.4           864</span></span>
+<span><span class="co">#&gt; 4        14.9           894</span></span>
+<span><span class="co">#&gt; 5         4             240</span></span>
+<span><span class="co">#&gt; 6        14.4           864</span></span>
+<span><span class="co">#&gt; 7         8.7           522</span></span>
+<span><span class="co">#&gt; 8         7             420</span></span>
+<span><span class="co">#&gt; # … with 75 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="ordinare-i-dati-con-arrange" class="level2" data-number="6.8"><h2 data-number="6.8" class="anchored" data-anchor-id="ordinare-i-dati-con-arrange">
+<span class="header-section-number">6.8</span> Ordinare i dati con <code>arrange()</code>
+</h2>
+<p>Il verbo <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> ordina i dati in base ai valori di una o più variabili. Per esempio, possiamo ordinare la variabile <code>sleep_total</code> dal valore più alto al più basso in questo modo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 83 × 3</span></span>
+<span><span class="co">#&gt;   name                   vore    sleep_total</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Little brown bat       insecti        19.9</span></span>
+<span><span class="co">#&gt; 2 Big brown bat          insecti        19.7</span></span>
+<span><span class="co">#&gt; 3 Thick-tailed opposum   carni          19.4</span></span>
+<span><span class="co">#&gt; 4 Giant armadillo        insecti        18.1</span></span>
+<span><span class="co">#&gt; 5 North American Opossum omni           18  </span></span>
+<span><span class="co">#&gt; 6 Long-nosed armadillo   carni          17.4</span></span>
+<span><span class="co">#&gt; 7 Owl monkey             omni           17  </span></span>
+<span><span class="co">#&gt; 8 Arctic ground squirrel herbi          16.6</span></span>
+<span><span class="co">#&gt; # … with 75 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="raggruppare-i-dati-con-group_by" class="level2" data-number="6.9"><h2 data-number="6.9" class="anchored" data-anchor-id="raggruppare-i-dati-con-group_by">
+<span class="header-section-number">6.9</span> Raggruppare i dati con <code>group_by()</code>
+</h2>
+<p>Il verbo <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> raggruppa insieme i valori in base a una o più variabili. Lo vedremo in uso in seguito insieme a <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>.</p>
+<p>Nota: con <code>dplyr()</code>, le operazioni raggruppate vengono iniziate con la funzione <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>. È una buona norma utilizzare <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup()</a></code> alla fine di una serie di operazioni raggruppate, altrimenti i raggruppamenti verranno mantenuti nelle analisi successiva, il che non è sempre auspicabile.</p>
+</section><section id="sommario-dei-dati-con-summarise" class="level2" data-number="6.10"><h2 data-number="6.10" class="anchored" data-anchor-id="sommario-dei-dati-con-summarise">
+<span class="header-section-number">6.10</span> Sommario dei dati con <code>summarise()</code>
+</h2>
+<p>Il verbo <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> collassa il dataset in una singola riga dove viene riportato il risultato della statistica richiesta. Per esempio, la media del tempo totale del sonno è</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    m_sleep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_total</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> </span>
+<span><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span><span class="co">#&gt;   m_sleep</span></span>
+<span><span class="co">#&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1    10.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="operazioni-raggruppate" class="level2" data-number="6.11"><h2 data-number="6.11" class="anchored" data-anchor-id="operazioni-raggruppate">
+<span class="header-section-number">6.11</span> Operazioni raggruppate</h2>
+<p>Sopra abbiamo visto come i mammiferi considerati dormano, in media, 10.4 ore al giorno. Troviamo ora il sonno medio in funzione di <code>vore</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dt</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">vore</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    m_sleep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_total</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, </span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
+<span><span class="co">#&gt;   vore    m_sleep     n</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 carni     10.4     19</span></span>
+<span><span class="co">#&gt; 2 herbi      9.51    32</span></span>
+<span><span class="co">#&gt; 3 insecti   14.9      5</span></span>
+<span><span class="co">#&gt; 4 omni      10.9     20</span></span>
+<span><span class="co">#&gt; 5 &lt;NA&gt;      10.2      7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si noti che, nel caso di 7 osservazioni, il valore di <code>vore</code> non era specificato. Per tali osservazioni, dunque, la classe di appartenenza è <code>NA</code>.</p>
+</section><section id="applicare-una-funzione-su-più-colonne-across" class="level2" data-number="6.12"><h2 data-number="6.12" class="anchored" data-anchor-id="applicare-una-funzione-su-più-colonne-across">
+<span class="header-section-number">6.12</span> Applicare una funzione su più colonne: <code>across()</code>
+</h2>
+<p>È spesso utile eseguire la stessa operazione su più colonne, ma copiare e incollare è sia noioso che soggetto a errori:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>,</span>
+<span>    b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span>,</span>
+<span>    c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">c</span><span class="op">)</span>,</span>
+<span>    d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In tali circostanze è possibile usare la funzione <code><a href="https://dplyr.tidyverse.org/reference/across.html">across()</a></code> che consente di riscrivere il codice precedente in modo più succinto:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="va">a</span><span class="op">:</span><span class="va">d</span>, <span class="va">mean</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per i dati presenti, ad esempio, possiamo avere:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">vore</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"sleep"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
+<span><span class="co">#&gt;   vore    sleep_total sleep_rem sleep_cycle</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 carni         10.4       2.29       0.373</span></span>
+<span><span class="co">#&gt; 2 herbi          9.51      1.37       0.418</span></span>
+<span><span class="co">#&gt; 3 insecti       14.9       3.52       0.161</span></span>
+<span><span class="co">#&gt; 4 omni          10.9       1.96       0.592</span></span>
+<span><span class="co">#&gt; 5 &lt;NA&gt;          10.2       1.88       0.183</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="dati-categoriali-in-mathsfr" class="level2" data-number="6.13"><h2 data-number="6.13" class="anchored" data-anchor-id="dati-categoriali-in-mathsfr">
+<span class="header-section-number">6.13</span> Dati categoriali in <span class="math inline">\(\mathsf{R}\)</span>
+</h2>
+<p>Consideriamo una variabile che descrive il genere e include le categorie <code>male</code>, <code>female</code> e <code>non-conforming</code>. In <span class="math inline">\(\mathsf{R}\)</span>, ci sono due modi per memorizzare queste informazioni. Uno è usare la classe <em>character strings</em> e l’altro è usare la classe <em>factor</em>. Non ci addentrimo qui nelle sottigliezze di questa distinzione, motivata in gran parte per le necessità della programmazione con le funzioni di <code>tidyverse</code>. Per gli scopi di questo insegnamento sarà sufficiente codificare le variabili qualitative usando la classe <em>factor</em>. Una volta codificati i dati qualitativi utilizzando la classe <em>factor</em>, si pongono spesso due problemi:</p>
+<ol type="1">
+<li>modificare le etichette dei livelli (ovvero, le modalità) di un fattore,</li>
+<li>riordinare i livelli di un fattore.</li>
+</ol></section><section id="modificare-le-etichette-dei-livelli-di-un-fattore" class="level2" data-number="6.14"><h2 data-number="6.14" class="anchored" data-anchor-id="modificare-le-etichette-dei-livelli-di-un-fattore">
+<span class="header-section-number">6.14</span> Modificare le etichette dei livelli di un fattore</h2>
+<p>Esaminiamo l’esempio seguente.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"old_3"</span>, <span class="st">"old_4"</span>, <span class="st">"old_1"</span>, <span class="st">"old_1"</span>, <span class="st">"old_2"</span><span class="op">)</span></span>
+<span><span class="va">f_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">f_1</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span><span class="va">f_1</span>, <span class="va">y</span><span class="op">)</span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span><span class="co">#&gt;   f_1       y</span></span>
+<span><span class="co">#&gt;   &lt;fct&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 old_3     1</span></span>
+<span><span class="co">#&gt; 2 old_4     2</span></span>
+<span><span class="co">#&gt; 3 old_1     3</span></span>
+<span><span class="co">#&gt; 4 old_1     4</span></span>
+<span><span class="co">#&gt; 5 old_2     5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Supponiamo ora di volere che i livelli del fattore <code>f_1</code> abbiano le etichette <code>new_1</code>, <code>new_2</code>, ecc. Per ottenere questo risultato usiamo la funzione <code><a href="https://forcats.tidyverse.org/reference/fct_recode.html">forcats::fct_recode()</a></code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>f_1 <span class="op">=</span></span>
+<span>    <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_recode.html">fct_recode</a></span><span class="op">(</span></span>
+<span>      <span class="va">f_1</span>, </span>
+<span>      <span class="st">"poco"</span> <span class="op">=</span> <span class="st">"old_1"</span>, </span>
+<span>      <span class="st">"medio"</span> <span class="op">=</span> <span class="st">"old_2"</span>, </span>
+<span>      <span class="st">"tanto"</span> <span class="op">=</span> <span class="st">"old_3"</span>, </span>
+<span>      <span class="st">"massimo"</span> <span class="op">=</span> <span class="st">"old_4"</span></span>
+<span>      <span class="op">)</span></span>
+<span>   <span class="op">)</span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span><span class="co">#&gt;   f_1         y</span></span>
+<span><span class="co">#&gt;   &lt;fct&gt;   &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 tanto       1</span></span>
+<span><span class="co">#&gt; 2 massimo     2</span></span>
+<span><span class="co">#&gt; 3 poco        3</span></span>
+<span><span class="co">#&gt; 4 poco        4</span></span>
+<span><span class="co">#&gt; 5 medio       5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="riordinare-i-livelli-di-un-fattore" class="level2" data-number="6.15"><h2 data-number="6.15" class="anchored" data-anchor-id="riordinare-i-livelli-di-un-fattore">
+<span class="header-section-number">6.15</span> Riordinare i livelli di un fattore</h2>
+<p>Spesso i livelli dei fattori hanno un ordinamento naturale. Quindi, gli utenti devono avere un modo per imporre l’ordine desiderato sulla codifica delle loro variabili qualitative. Se per qualche motivo vogliamo ordinare i livelli <code>f_1</code> in ordine inverso, ad esempio, possiamo procedere nel modo seguente.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">f_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">f_1</span>,</span>
+<span>  levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"massimo"</span>, <span class="st">"tanto"</span>, <span class="st">"medio"</span>, <span class="st">"poco"</span> </span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">f_1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; massimo   tanto   medio    poco </span></span>
+<span><span class="co">#&gt;       1       1       1       2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per approfondire le problematiche della manipolazione di variabili qualitative in <span class="math inline">\(\mathsf{R}\)</span>, si veda <span class="citation" data-cites="mcnamara2018wrangling">McNamara &amp; Horton (<a href="999_refs.html#ref-mcnamara2018wrangling" role="doc-biblioref">2018</a>)</span>.</p>
+</section><section id="creare-grafici-con-ggplot2" class="level2" data-number="6.16"><h2 data-number="6.16" class="anchored" data-anchor-id="creare-grafici-con-ggplot2">
+<span class="header-section-number">6.16</span> Creare grafici con <code>ggplot2()</code>
+</h2>
+<p>Il pacchetto <code>ggplot2()</code> è un potente strumento per rappresentare graficamente i dati. Le iniziali del nome, <code>gg</code>, si riferiscono alla “Grammar of Graphics”, che è un modo di pensare le figure come una serie di layer stratificati. Originariamente descritta da <span class="citation" data-cites="wilkinson2012grammar">Wilkinson (<a href="999_refs.html#ref-wilkinson2012grammar" role="doc-biblioref">2012</a>)</span>, la grammatica dei grafici è stata aggiornata e applicata in <code>R</code> da Hadley Wickham, il creatore del pacchetto.</p>
+<p>La funzione da cui si parte per inizializzare un grafico è <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code>. La funzione <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> richiede due argomenti. Il primo è l’oggetto di tipo data.frame che contiene i dati da visualizzare – in alternativa al primo argomento, un dataframe può essere passato a <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> mediante l’operatore pipe. Il secondo è una particolare lista che viene generata dalla funzione <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code>, la quale determina l’aspetto (<em>aesthetic</em>) del grafico. La funzione <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code> richiede necessariamente di specificare “x” e “y”, ovvero i nomi delle colonne del data.frame che è stato utilizzato quale primo argomento di <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> (o che è stato passato da pipe), le quali rappresentano le variabili da porre rispettivamente sugli assi orizzontale e verticale.</p>
+<p>La definizione della tipologia di grafico e i vari parametri sono poi definiti successivamente, aggiungendo all’oggetto creato da <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> tutte le componenti necessarie. Saranno quindi altre funzioni, come <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code> o <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> a occuparsi di aggiungere al livello di base barre, linee, punti, e così via. Infine, tramite altre funzioni, ad esempio <code><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs()</a></code>, sarà possibile definire i dettagli più fini.</p>
+<p>Gli elementi grafici (bare, punti, segmenti, …) usati da <code>ggplot2</code> sono chiamati <code>geoms</code>. Mediante queste funzioni è possibile costruire diverse tipologie di grafici:</p>
+<ul>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar()</a></code>: crea un layer con delle barre;</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code>: crea un layer con dei punti (diagramma a dispersione);</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line()</a></code>: crea un layer con una linea retta;</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram()</a></code>: crea un layer con un istogramma;</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot()</a></code>: crea un layer con un box-plot;</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_errorbar()</a></code>: crea un layer con barre che rappresentano intervalli di confidenza;</li>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline()</a></code> e <code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline()</a></code> : crea un layer con una linea orizzontale o verticale definita dall’utente.</li>
+</ul>
+<p>Un comando generico ha la seguente forma:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_graph</span> <span class="op">&lt;-</span> <span class="va">my_data</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x_var</span>, <span class="va">y_var</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_...</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La prima volta che si usa il pacchetto <code>ggplot2</code> è necessario installarlo. Per fare questo possiamo installare <code>tidyverse</code> che, oltre a caricare <code>ggplot2</code>, carica anche altre utili funzioni per l’analisi dei dati. Ogni volta che si inizia una sessione R è necessario attivare i pacchetti che si vogliono usare, ma non è necessario istallarli una nuova volta. Se è necessario specificare il pacchetto nel quale è contenuta la funzione che vogliamo utilizzare, usiamo la sintassi <code>package::function()</code>. Per esempio, l’istruzione <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot2::ggplot()</a></code> rende esplicito che stiamo usando la funzione <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> contenuta nel pacchetto <code>ggplot2</code>.</p>
+</section><section id="diagramma-a-dispersione" class="level2" data-number="6.17"><h2 data-number="6.17" class="anchored" data-anchor-id="diagramma-a-dispersione">
+<span class="header-section-number">6.17</span> Diagramma a dispersione</h2>
+<p>Consideriamo nuovamenti i dati contenuti nel <code>tibble</code> <code>msleep</code> e poniamoci il problema di rappresentare graficamente la relazione tra il numero medio di ore di sonno giornaliero (<code>sleep_total</code>) e il peso dell’animale (<code>bodywt</code>). Usando le impostazioni di default di <code>ggplot2</code>, con le istruzioni seguenti, otteniamo il grafico fornito dalla figura seguente.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"msleep"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bodywt</span>, y <span class="op">=</span> <span class="va">sleep_total</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="013_penguins_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Coloriamo ora in maniera diversa i punti che rappresentano animali carnivori, erbivori, ecc.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bodywt</span>, y <span class="op">=</span> <span class="va">sleep_total</span>, col <span class="op">=</span> <span class="va">vore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="013_penguins_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>È chiaro, senza fare alcuna analisi statistica, che la relazione tra le due variabili non è lineare. Trasformando in maniera logaritmica i valori dell’asse <span class="math inline">\(x\)</span> la relazione si linearizza.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">bodywt</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">sleep_total</span>, col <span class="op">=</span> <span class="va">vore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="013_penguins_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Infine, aggiustiamo il “tema” del grafico (si noti l’utilizzo di una tavolozza di colori adatta ai daltonici mediante il pacchetto <code>viridis</code>), aggiungiamo le etichette sugli assi e il titolo.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://sjmgarnier.github.io/viridis/">"viridis"</a></span><span class="op">)</span></span>
+<span><span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">bodywt</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">sleep_total</span>, col <span class="op">=</span> <span class="va">vore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span>, alpha <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Peso corporeo (log)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Ore di sonno"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Il sonno in 83 specie di mammiferi"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Un esempio di visualizzazione con ggplot()"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Fonte: Savage e West (2007)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span>discrete <span class="op">=</span> <span class="cn">TRUE</span>, option <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="013_penguins_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La visualizzazione può essere migliorata cambiando le etichette della legenda del grafico. Per fare questo è necessario intervenire sui dati prima di usare <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> – per esempio, come abbiamo fatto in precedenza con la funzione <code><a href="https://forcats.tidyverse.org/reference/fct_recode.html">forcats::fct_recode()</a></code>.</p>
+</section><section id="istogramma" class="level2" data-number="6.18"><h2 data-number="6.18" class="anchored" data-anchor-id="istogramma">
+<span class="header-section-number">6.18</span> Istogramma</h2>
+<p>Creiamo ora un istogramma che rappresenta la distribuzione del (logaritmo del) peso medio del cervello delle 83 specie di mammiferi considerate da <span class="citation" data-cites="savage2007quantitative">Savage &amp; West (<a href="999_refs.html#ref-savage2007quantitative" role="doc-biblioref">2007</a>)</span>. L’argomento <code>aes(y = ..density..)</code> in <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram()</a></code> produce le frequenze relative. L’opzione di default (senza questo argomento) porta <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot()</a></code> a rappresentare le frequenze assolute.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">brainwt</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">..density..</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Peso del cervello (log)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Frequenza relativa"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="013_penguins_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="commenti-e-considerazioni-finali" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="commenti-e-considerazioni-finali">Commenti e considerazioni finali</h2>
+<p>Per minimizzare gli errori di sintassi (dimenticare una virgola, non chiudere una parentesi, ecc.) – ovvero, gli errori più frequenti quando si scrive il codice in <span class="math inline">\(\mathsf{R}\)</span> – è necessario utilizzare uno stile di programmazione. Uno stile di programmazione è un insieme di regole per la gestione dell’indentazione dei blocchi di codice, per la creazione dei nomi dei file e delle variabili e per le convenzioni tipografiche che vengono usate. Scrivere il codice in <span class="math inline">\(\mathsf{R}\)</span> con stile consente di creare listati più leggibili e semplici da modificare, minimizza la possibilità di errore, e consente correzioni e modifiche più rapide. Vi sono molteplici stili di programmazione che possono essere utilizzati dall’utente, anche se è bene attenersi a quelle che sono le convenzioni maggiormente diffuse, allo scopo di favorire la comunicazione. In ogni caso, l’importante è di essere coerenti, ovvero di adottare le stesse convenzioni in tutte le parti del codice che si scrive. Ad esempio, se si sceglie di usare lo stile <code>snake_case</code> per il nome composto di una variabile (es., <code>personality_trait</code>), non è appropriato usare lo stile <em>lower Camel case</em> per un’altra variabile (es., <code>socialStatus</code>). Dato che questo argomento è stato trattato ampiamente in varie sedi, mi limito qui a rimandare ad uno <a href="http://style.tidyverse.org/">stile di programmazione</a> molto popolare, quello proposto da Hadley Wickham, il creatore di <code>tidyverse</code>. La soluzione più semplice è quella installare <code>stiler</code>, che è uno RStudio Addin, e formattare il codice in maniera automatica utilizzando lo stile proposto da Hadley Wickham. Si possono ottenere informazioni su <code>stiler</code> seguendo questo <a href="https://github.com/r-lib/styler">link</a>.</p>
+
+
+<!-- -->
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography" style="display: none">
+<div id="ref-mcnamara2018wrangling" class="csl-entry" role="doc-biblioentry">
+McNamara, A., &amp; Horton, N. J. (2018). Wrangling categorical data in r. <em>The American Statistician</em>, <em>72</em>(1), 97–104.
+</div>
+<div id="ref-savage2007scaling" class="csl-entry" role="doc-biblioentry">
+Savage, V. M., Allen, A. P., Brown, J. H., Gillooly, J. F., Herman, A. B., Woodruff, W. H., &amp; West, G. B. (2007). Scaling of number, size, and metabolic rate of cells with body size in mammals. <em>Proceedings of the National Academy of Sciences</em>, <em>104</em>(11), 4718–4723.
+</div>
+<div id="ref-savage2007quantitative" class="csl-entry" role="doc-biblioentry">
+Savage, V. M., &amp; West, G. B. (2007). A quantitative, theoretical framework for understanding mammalian sleep. <em>Proceedings of the National Academy of Sciences</em>, <em>104</em>(3), 1051–1056.
+</div>
+<div id="ref-wilkinson2012grammar" class="csl-entry" role="doc-biblioentry">
+Wilkinson, L. (2012). The grammar of graphics. In <em>Handbook of computational statistics</em> (pp. 375–414). Springer.
+</div>
+</div>
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./012_correlation.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./prob.html" class="pagination-link">
+        <span class="nav-page-text">Parte 2: Il calcolo delle probabilità</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb34" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Manipolazione e visualizzazione dei dati in $\mathsf{R}$ {#sec-intro-dplyr}</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include = FALSE}</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>In questo capitolo esamineremo le fuzionalità di $\mathsf{R}$ per la manipolazione e la visualizzazione dei dati. Nello specifico, esamineremo le funzioni fornite dal pacchetto <span class="in">`dplyr`</span>.</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Codifica dei dati grezzi</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>Si chiamano "dati grezzi" quelli che provengono dal mondo circostanze, i dati raccolti per mezzo di esperimenti, interviste, questionari, ecc. Questi dati (detti *dataset*) raramente vengono forniti con una struttura logica precisa. Per poterli elaborare mediante software è necessario prima trasformarli in maniera tale che abbiano una struttura logica organizzata. La struttura che solitamente si utilizza è quella tabellare (detta *matrice dei dati*), ovvero si dispongono i dati in una tabella nella quale ciascuna riga corrisponde ad un'osservazione e ciascuna colonna corrisponde ad una variabile rilevata. In $\mathsf{R}$ una tale struttura è chiamata *data frame* o *tibble* (il *tibble* è solo un modo diverso di stampare un data frame sulla console).</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Trattamento dei dati con `dplyr`</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>Utilizzando i pacchetti del <span class="in">`tidyverse`</span> (<span class="in">`tidyverse`</span> è un insieme, o *bundle*, di pacchetti <span class="in">`R`</span>), le operazioni di trasformazione dei dati risultano molto semplificate. Per la manipolazione dei dati vengono usati i seguenti pacchetti del <span class="in">`tidyverse`</span>:</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`dplyr`</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`tidyr`</span> (tibbles, dataframe e tabelle)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`stringr`</span> (stringhe)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>Il pacchetto <span class="in">`dplyr`</span> (al momento uno dei pacchetti più famosi e utilizzati per la gestione dei dati) offre una serie di funzionalità che consentono di eseguire le operazioni più comuni di manipolazione dei dati in una maniera più semplice rispetto a quanto succeda quando usiamo le funzioni base di <span class="in">`R`</span>.</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>Il pacchetto <span class="in">`dplyr`</span> include sei funzioni base: <span class="in">`filter()`</span>, <span class="in">`select()`</span>, <span class="in">`mutate()`</span>, <span class="in">`arrange()`</span>, <span class="in">`group_by()`</span> e <span class="in">`summarise()`</span>. Queste sei funzioni costituiscono i *verbi* del linguaggio di manipolazione dei dati. A questi sei verbi si aggiunge il pipe <span class="in">`%&gt;%`</span> (oppure <span class="in">`|&gt;`</span>) che serve a concatenare più operazioni. In particolare, considerando una matrice osservazioni per variabili, <span class="in">`select()`</span> e <span class="in">`mutate()`</span> si occupano di organizzare le variabili, <span class="in">`filter()`</span> e <span class="in">`arrange()`</span> i casi, e <span class="in">`group_by()`</span> e <span class="in">`summarise()`</span> i gruppi.</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>Per introdurre le funzionalità di <span class="in">`dplyr`</span>, utilizzeremo i dati <span class="in">`msleep`</span> forniti dal pacchetto <span class="in">`ggplot2`</span>. Tali dati descrivono le ore di sonno medie di 83 specie di mammiferi <span class="co">[</span><span class="ot">@savage2007scaling</span><span class="co">]</span>. Carichiamo il *boundle* <span class="in">`tidyverse`</span> (che contiene <span class="in">`ggplot2`</span>) e leggiamo nella memoria di lavoro l'oggetto <span class="in">`msleep`</span>:</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(msleep)</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(msleep)</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Operatore pipe</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>Prima di presentare le funzionalità di <span class="in">`dplyr`</span>, introduciamo l'operatore pipe <span class="in">`%&gt;%`</span> del pacchetto <span class="in">`magrittr`</span> -- ma ora presente anche in base $\mathsf{R}$ nella versione <span class="in">`|&gt;`</span>. L'operatore pipe, <span class="in">`%&gt;%`</span> o <span class="in">`|&gt;`</span>, serve a concatenare varie funzioni insieme, in modo da inserire un'operazione dietro l'altra. Una spiegazione intuitiva dell'operatore pipe è stata fornita in un tweet di <span class="in">`@andrewheiss`</span>. Consideriamo la seguente istruzione in pseudo-codice $\mathsf{R}$:</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a><span class="fu">leave_house</span>(</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_dressed</span>(</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_out_of_bed</span>(</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">wake_up</span>(me, <span class="at">time =</span> <span class="st">"8:00"</span>), </span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">side =</span> <span class="st">"correct"</span>), </span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">pants =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">shirt =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">car =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">bike =</span> <span class="cn">FALSE</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>Il listato precedente descrive una serie di (pseudo) funzioni concatenate, le quali costituiscono gli argomenti di altre funzioni. Scritto così, il codice è molto difficile da capire. Possiamo però ottenere lo stesso risultato utilizzando l'operatore pipe che facilita enormememnte la leggibilità del codice:</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>me <span class="sc">|&gt;</span> </span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wake_up</span>(<span class="at">time =</span> <span class="st">"8:00"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_out_of_bed</span>(<span class="at">side =</span> <span class="st">"correct"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_dressed</span>(<span class="at">pants =</span> <span class="cn">TRUE</span>, <span class="at">shirt =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leave_house</span>(<span class="at">car =</span> <span class="cn">TRUE</span>, <span class="at">bike =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>In questa seconda versione del (pseudo) codice $\mathsf{R}$ si capisce molto meglio ciò che vogliamo fare. Il <span class="in">`tibble`</span> <span class="in">`me`</span> viene passato alla funzione <span class="in">`wake_up()`</span>. La funzione <span class="in">`wake_up()`</span> ha come argomento l'ora del giorno: <span class="in">`time = "8:00"`</span>. Una volta "svegliati" (wake up) dobbiamo scendere dal letto. Quindi l'output di <span class="in">`wake_up()`</span> viene passato alla funzione <span class="in">`get_out_of_bed()`</span> la quale ha come argomento <span class="in">`side = "correct"`</span> perché vogliamo scendere dal letto dalla parte giusta. E così via.</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>Questo pseudo-codice chiarisce il significato dell'operatore pipe. L'operatore <span class="in">`|&gt;`</span> è "syntactic sugar" per una serie di chiamate di funzioni concatenate, ovvero, detto in altre parole, consente di definire la relazione tra una serie di funzioni nelle quali il risultato (output) di una funzione viene utilizzato come l'input di una funzione successiva.</span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## Esaminare i dati</span></span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>Iniziamo a trasformare il data frame <span class="in">`msleep`</span> in un <span class="in">`tibble`</span>.</span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>msleep <span class="ot">&lt;-</span> <span class="fu">tibble</span>(msleep)</span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a>I nomi delle colonne del tibble (ovvero, i nomi delle variabili del campione) si ottengono con la funzione <span class="in">`names()`</span>.</span>
+<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(msleep)</span>
+<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>I valori iniziali di ciascuna colonna del tibble possono essere visualizzati usando la funzone <span class="in">`glimpse()`</span>.</span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(msleep)</span>
+<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>Per le variabili qualitative, possiamo creare una distribuzione di frequenze assolute mediante la funzione <span class="in">`table()`</span>.</span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-96"><a href="#cb34-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-97"><a href="#cb34-97" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(msleep<span class="sc">$</span>vore)</span>
+<span id="cb34-98"><a href="#cb34-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-99"><a href="#cb34-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-100"><a href="#cb34-100" aria-hidden="true" tabindex="-1"></a>Usando <span class="in">`table()`</span> possiamo anche creare una tabella di contingenza.</span>
+<span id="cb34-101"><a href="#cb34-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-104"><a href="#cb34-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-105"><a href="#cb34-105" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(msleep<span class="sc">$</span>vore, msleep<span class="sc">$</span>conservation)</span>
+<span id="cb34-106"><a href="#cb34-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-107"><a href="#cb34-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a>Si ricordi che, quando si usa <span class="in">`table()`</span> per creare una tabella di contingenza, i dati mancanti (<span class="in">`NA`</span>) vengono esclusi.</span>
+<span id="cb34-109"><a href="#cb34-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-110"><a href="#cb34-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estrarre una singola colonna con `pull()`</span></span>
+<span id="cb34-111"><a href="#cb34-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-112"><a href="#cb34-112" aria-hidden="true" tabindex="-1"></a>Estraiamo da <span class="in">`msleep`</span> la variabile <span class="in">`sleep_total`</span> usando il verbo <span class="in">`pull()`</span>:</span>
+<span id="cb34-113"><a href="#cb34-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-116"><a href="#cb34-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-117"><a href="#cb34-117" aria-hidden="true" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-118"><a href="#cb34-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(sleep_total)</span>
+<span id="cb34-119"><a href="#cb34-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-120"><a href="#cb34-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-121"><a href="#cb34-121" aria-hidden="true" tabindex="-1"></a>In maniera equivalente, possiamo usare l'operatore <span class="in">`$`</span> di base $\mathsf{R}$:</span>
+<span id="cb34-122"><a href="#cb34-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-125"><a href="#cb34-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-126"><a href="#cb34-126" aria-hidden="true" tabindex="-1"></a>msleep<span class="sc">$</span>sleep_total</span>
+<span id="cb34-127"><a href="#cb34-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-128"><a href="#cb34-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-129"><a href="#cb34-129" aria-hidden="true" tabindex="-1"></a>Possiamo ordinare i dati con <span class="in">`sort()`</span>.</span>
+<span id="cb34-130"><a href="#cb34-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-133"><a href="#cb34-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-134"><a href="#cb34-134" aria-hidden="true" tabindex="-1"></a>msleep<span class="sc">$</span>sleep_total <span class="sc">|&gt;</span> </span>
+<span id="cb34-135"><a href="#cb34-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>() </span>
+<span id="cb34-136"><a href="#cb34-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-137"><a href="#cb34-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-138"><a href="#cb34-138" aria-hidden="true" tabindex="-1"></a>Oppure, in ordine decrescente:</span>
+<span id="cb34-139"><a href="#cb34-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-142"><a href="#cb34-142" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-143"><a href="#cb34-143" aria-hidden="true" tabindex="-1"></a>msleep<span class="sc">$</span>sleep_total <span class="sc">|&gt;</span> </span>
+<span id="cb34-144"><a href="#cb34-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">decreasing =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb34-145"><a href="#cb34-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-146"><a href="#cb34-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-147"><a href="#cb34-147" aria-hidden="true" tabindex="-1"></a>Possiamo attribuire la colonna estratta dal tibble ad un oggetto nella memoria di lavoro di $\mathsf{R}$ usando l'operatore di attribuzione <span class="in">`&lt;-`</span>.</span>
+<span id="cb34-148"><a href="#cb34-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-151"><a href="#cb34-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-152"><a href="#cb34-152" aria-hidden="true" tabindex="-1"></a>sl_tot <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-153"><a href="#cb34-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(sleep_total)</span>
+<span id="cb34-154"><a href="#cb34-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-155"><a href="#cb34-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-156"><a href="#cb34-156" aria-hidden="true" tabindex="-1"></a>Essendo <span class="in">`sl_tot`</span> presente nella emoria di lavoro di $\mathsf{R}$, possiamo passarlo a qualsiasi altra funzione di $\mathsf{R}$. Per esempio, possiamo calcolare la media di <span class="in">`sl_tot`</span> usando la funzione <span class="in">`mean()`</span></span>
+<span id="cb34-157"><a href="#cb34-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-160"><a href="#cb34-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-161"><a href="#cb34-161" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sl_tot)</span>
+<span id="cb34-162"><a href="#cb34-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-163"><a href="#cb34-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-164"><a href="#cb34-164" aria-hidden="true" tabindex="-1"></a>oppure la deviazione standard usando la funzione <span class="in">`sd()`</span></span>
+<span id="cb34-165"><a href="#cb34-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-168"><a href="#cb34-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-169"><a href="#cb34-169" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(sl_tot)</span>
+<span id="cb34-170"><a href="#cb34-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-171"><a href="#cb34-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-172"><a href="#cb34-172" aria-hidden="true" tabindex="-1"></a><span class="fu">## Selezionare più colonne con `select()`</span></span>
+<span id="cb34-173"><a href="#cb34-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-174"><a href="#cb34-174" aria-hidden="true" tabindex="-1"></a>Se vogliamo selezionare da <span class="in">`msleep`</span> un insieme di variabili, ad esempio <span class="in">`name`</span>, <span class="in">`vore`</span> e <span class="in">`sleep_total`</span>, possiamo usare il verbo <span class="in">`select()`</span></span>
+<span id="cb34-175"><a href="#cb34-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-178"><a href="#cb34-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-179"><a href="#cb34-179" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-180"><a href="#cb34-180" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, vore, sleep_total)</span>
+<span id="cb34-181"><a href="#cb34-181" aria-hidden="true" tabindex="-1"></a>dt</span>
+<span id="cb34-182"><a href="#cb34-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-183"><a href="#cb34-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-184"><a href="#cb34-184" aria-hidden="true" tabindex="-1"></a>laddove la sequenza di istruzioni precedenti significa che abbiamo passato <span class="in">`msleep`</span> alla funzione <span class="in">`select()`</span> contenuta nel pacchetto <span class="in">`dplyr`</span> e l'output di <span class="in">`select()`</span> è stato salvato (usando l'operatore di assegnazione, <span class="in">`&lt;-`</span>) nell'oggetto <span class="in">`dt`</span>. Alla funzione <span class="in">`select()`</span> abbiamo passato gli argomenti <span class="in">`name`</span>, <span class="in">`vore`</span> e <span class="in">`sleep_total`</span>.</span>
+<span id="cb34-185"><a href="#cb34-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-186"><a href="#cb34-186" aria-hidden="true" tabindex="-1"></a><span class="fu">## Selezionare le righe che soddisfano una condizione</span></span>
+<span id="cb34-187"><a href="#cb34-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-188"><a href="#cb34-188" aria-hidden="true" tabindex="-1"></a>Il verbo <span class="in">`filter()`</span> consente di selezionare da un <span class="in">`tibble`</span> un sottoinsieme di righe (osservazioni). Per esempio, possiamo selezionare tutte le osservazioni nella variabile <span class="in">`vore`</span> contrassegnate come <span class="in">`carni`</span> (ovvero, tutti i carnivori):</span>
+<span id="cb34-189"><a href="#cb34-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-192"><a href="#cb34-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-193"><a href="#cb34-193" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">%&gt;%</span></span>
+<span id="cb34-194"><a href="#cb34-194" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(vore <span class="sc">==</span> <span class="st">"carni"</span>)</span>
+<span id="cb34-195"><a href="#cb34-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-196"><a href="#cb34-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-197"><a href="#cb34-197" aria-hidden="true" tabindex="-1"></a>Per utilizzare il verbo <span class="in">`filter()`</span> in modo efficace è neccessario usare gli operatori relazionali</span>
+<span id="cb34-198"><a href="#cb34-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-199"><a href="#cb34-199" aria-hidden="true" tabindex="-1"></a><span class="in">```{=tex}</span></span>
+<span id="cb34-200"><a href="#cb34-200" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{array}{l l}</span></span>
+<span id="cb34-201"><a href="#cb34-201" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-202"><a href="#cb34-202" aria-hidden="true" tabindex="-1"></a><span class="in">\text{Operazione logica}   &amp; \text{Operatore}  \\</span></span>
+<span id="cb34-203"><a href="#cb34-203" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-204"><a href="#cb34-204" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{uguale}             &amp;  == \\</span></span>
+<span id="cb34-205"><a href="#cb34-205" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{diverso}            &amp;  !=  \\</span></span>
+<span id="cb34-206"><a href="#cb34-206" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{minore}             &amp;  &lt;  \\</span></span>
+<span id="cb34-207"><a href="#cb34-207" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{maggiore}           &amp;  &gt;  \\</span></span>
+<span id="cb34-208"><a href="#cb34-208" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{minore o uguale}      &amp; &lt;=  \\</span></span>
+<span id="cb34-209"><a href="#cb34-209" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{maggiore o uguale}  &amp; &gt;=  \\</span></span>
+<span id="cb34-210"><a href="#cb34-210" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-211"><a href="#cb34-211" aria-hidden="true" tabindex="-1"></a><span class="in">\end{array}</span></span>
+<span id="cb34-212"><a href="#cb34-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-213"><a href="#cb34-213" aria-hidden="true" tabindex="-1"></a>e gli operatori logici di $\mathsf{R}$.</span>
+<span id="cb34-214"><a href="#cb34-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-215"><a href="#cb34-215" aria-hidden="true" tabindex="-1"></a><span class="in">```{=tex}</span></span>
+<span id="cb34-216"><a href="#cb34-216" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{array}{l l}</span></span>
+<span id="cb34-217"><a href="#cb34-217" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-218"><a href="#cb34-218" aria-hidden="true" tabindex="-1"></a><span class="in">\text{Operazione logica}   &amp; \text{Operatore}  \\</span></span>
+<span id="cb34-219"><a href="#cb34-219" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-220"><a href="#cb34-220" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{AND}      &amp;  \&amp;    \\</span></span>
+<span id="cb34-221"><a href="#cb34-221" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{OR }      &amp;  | \\</span></span>
+<span id="cb34-222"><a href="#cb34-222" aria-hidden="true" tabindex="-1"></a><span class="in">      \text{NOT}     &amp;  !   \\</span></span>
+<span id="cb34-223"><a href="#cb34-223" aria-hidden="true" tabindex="-1"></a><span class="in">\hline</span></span>
+<span id="cb34-224"><a href="#cb34-224" aria-hidden="true" tabindex="-1"></a><span class="in">\end{array}</span></span>
+<span id="cb34-225"><a href="#cb34-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-226"><a href="#cb34-226" aria-hidden="true" tabindex="-1"></a>Per un approfondimento, si veda il Capitolo <span class="co">[</span><span class="ot">Comparisons</span><span class="co">](https://r4ds.had.co.nz/transform.html)</span> di *R for Data Science*.</span>
+<span id="cb34-227"><a href="#cb34-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-228"><a href="#cb34-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Creare una nuova variabile con `mutate()`</span></span>
+<span id="cb34-229"><a href="#cb34-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-230"><a href="#cb34-230" aria-hidden="true" tabindex="-1"></a>Talvolta vogliamo creare una nuova variabile, per esempio, sommando o dividendo due variabili, oppure calcolandone la media. A questo scopo si usa il verbo <span class="in">`mutate()`</span>. Per esempio, se vogliamo esprimere i valori di <span class="in">`sleep_total`</span> in minuti, moltiplichiamo per 60:</span>
+<span id="cb34-231"><a href="#cb34-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-234"><a href="#cb34-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-235"><a href="#cb34-235" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">|&gt;</span> </span>
+<span id="cb34-236"><a href="#cb34-236" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-237"><a href="#cb34-237" aria-hidden="true" tabindex="-1"></a>    <span class="at">sleep_minutes =</span> sleep_total <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb34-238"><a href="#cb34-238" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb34-239"><a href="#cb34-239" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(sleep_total, sleep_minutes)</span>
+<span id="cb34-240"><a href="#cb34-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-241"><a href="#cb34-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-242"><a href="#cb34-242" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ordinare i dati con `arrange()`</span></span>
+<span id="cb34-243"><a href="#cb34-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-244"><a href="#cb34-244" aria-hidden="true" tabindex="-1"></a>Il verbo <span class="in">`arrange()`</span> ordina i dati in base ai valori di una o più variabili. Per esempio, possiamo ordinare la variabile <span class="in">`sleep_total`</span> dal valore più alto al più basso in questo modo:</span>
+<span id="cb34-245"><a href="#cb34-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-248"><a href="#cb34-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-249"><a href="#cb34-249" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">|&gt;</span> </span>
+<span id="cb34-250"><a href="#cb34-250" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
+<span id="cb34-251"><a href="#cb34-251" aria-hidden="true" tabindex="-1"></a>    <span class="fu">desc</span>(sleep_total)</span>
+<span id="cb34-252"><a href="#cb34-252" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-253"><a href="#cb34-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-254"><a href="#cb34-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-255"><a href="#cb34-255" aria-hidden="true" tabindex="-1"></a><span class="fu">## Raggruppare i dati con `group_by()`</span></span>
+<span id="cb34-256"><a href="#cb34-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-257"><a href="#cb34-257" aria-hidden="true" tabindex="-1"></a>Il verbo <span class="in">`group_by()`</span> raggruppa insieme i valori in base a una o più variabili. Lo vedremo in uso in seguito insieme a <span class="in">`summarise()`</span>.</span>
+<span id="cb34-258"><a href="#cb34-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-259"><a href="#cb34-259" aria-hidden="true" tabindex="-1"></a>Nota: con <span class="in">`dplyr()`</span>, le operazioni raggruppate vengono iniziate con la funzione <span class="in">`group_by()`</span>. È una buona norma utilizzare <span class="in">`ungroup()`</span> alla fine di una serie di operazioni raggruppate, altrimenti i raggruppamenti verranno mantenuti nelle analisi successiva, il che non è sempre auspicabile.</span>
+<span id="cb34-260"><a href="#cb34-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-261"><a href="#cb34-261" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sommario dei dati con `summarise()`</span></span>
+<span id="cb34-262"><a href="#cb34-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-263"><a href="#cb34-263" aria-hidden="true" tabindex="-1"></a>Il verbo <span class="in">`summarise()`</span> collassa il dataset in una singola riga dove viene riportato il risultato della statistica richiesta. Per esempio, la media del tempo totale del sonno è</span>
+<span id="cb34-264"><a href="#cb34-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-267"><a href="#cb34-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-268"><a href="#cb34-268" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">|&gt;</span> </span>
+<span id="cb34-269"><a href="#cb34-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-270"><a href="#cb34-270" aria-hidden="true" tabindex="-1"></a>    <span class="at">m_sleep =</span> <span class="fu">mean</span>(sleep_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-271"><a href="#cb34-271" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb34-272"><a href="#cb34-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-273"><a href="#cb34-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-274"><a href="#cb34-274" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operazioni raggruppate</span></span>
+<span id="cb34-275"><a href="#cb34-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-276"><a href="#cb34-276" aria-hidden="true" tabindex="-1"></a>Sopra abbiamo visto come i mammiferi considerati dormano, in media, 10.4 ore al giorno. Troviamo ora il sonno medio in funzione di <span class="in">`vore`</span>:</span>
+<span id="cb34-277"><a href="#cb34-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-280"><a href="#cb34-280" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-281"><a href="#cb34-281" aria-hidden="true" tabindex="-1"></a>dt <span class="sc">|&gt;</span> </span>
+<span id="cb34-282"><a href="#cb34-282" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(vore) <span class="sc">|&gt;</span> </span>
+<span id="cb34-283"><a href="#cb34-283" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-284"><a href="#cb34-284" aria-hidden="true" tabindex="-1"></a>    <span class="at">m_sleep =</span> <span class="fu">mean</span>(sleep_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb34-285"><a href="#cb34-285" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb34-286"><a href="#cb34-286" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-287"><a href="#cb34-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-288"><a href="#cb34-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-289"><a href="#cb34-289" aria-hidden="true" tabindex="-1"></a>Si noti che, nel caso di 7 osservazioni, il valore di <span class="in">`vore`</span> non era specificato. Per tali osservazioni, dunque, la classe di appartenenza è <span class="in">`NA`</span>.</span>
+<span id="cb34-290"><a href="#cb34-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-291"><a href="#cb34-291" aria-hidden="true" tabindex="-1"></a><span class="fu">## Applicare una funzione su più colonne: `across()`</span></span>
+<span id="cb34-292"><a href="#cb34-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-293"><a href="#cb34-293" aria-hidden="true" tabindex="-1"></a>È spesso utile eseguire la stessa operazione su più colonne, ma copiare e incollare è sia noioso che soggetto a errori:</span>
+<span id="cb34-294"><a href="#cb34-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-295"><a href="#cb34-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb34-296"><a href="#cb34-296" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span> </span>
+<span id="cb34-297"><a href="#cb34-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(g1, g2) <span class="sc">%&gt;%</span></span>
+<span id="cb34-298"><a href="#cb34-298" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-299"><a href="#cb34-299" aria-hidden="true" tabindex="-1"></a>    <span class="at">a =</span> <span class="fu">mean</span>(a),</span>
+<span id="cb34-300"><a href="#cb34-300" aria-hidden="true" tabindex="-1"></a>    <span class="at">b =</span> <span class="fu">mean</span>(b),</span>
+<span id="cb34-301"><a href="#cb34-301" aria-hidden="true" tabindex="-1"></a>    <span class="at">c =</span> <span class="fu">mean</span>(c),</span>
+<span id="cb34-302"><a href="#cb34-302" aria-hidden="true" tabindex="-1"></a>    <span class="at">d =</span> <span class="fu">mean</span>(d)</span>
+<span id="cb34-303"><a href="#cb34-303" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-304"><a href="#cb34-304" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-305"><a href="#cb34-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-306"><a href="#cb34-306" aria-hidden="true" tabindex="-1"></a>In tali circostanze è possibile usare la funzione <span class="in">`across()`</span> che consente di riscrivere il codice precedente in modo più succinto:</span>
+<span id="cb34-307"><a href="#cb34-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-308"><a href="#cb34-308" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb34-309"><a href="#cb34-309" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span> </span>
+<span id="cb34-310"><a href="#cb34-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(g1, g2) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-311"><a href="#cb34-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(a<span class="sc">:</span>d, mean))</span>
+<span id="cb34-312"><a href="#cb34-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-313"><a href="#cb34-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-314"><a href="#cb34-314" aria-hidden="true" tabindex="-1"></a>Per i dati presenti, ad esempio, possiamo avere:</span>
+<span id="cb34-315"><a href="#cb34-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-318"><a href="#cb34-318" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-319"><a href="#cb34-319" aria-hidden="true" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-320"><a href="#cb34-320" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(vore) <span class="sc">|&gt;</span> </span>
+<span id="cb34-321"><a href="#cb34-321" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"sleep"</span>), <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb34-322"><a href="#cb34-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-323"><a href="#cb34-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-324"><a href="#cb34-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dati categoriali in $\mathsf{R}$</span></span>
+<span id="cb34-325"><a href="#cb34-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-326"><a href="#cb34-326" aria-hidden="true" tabindex="-1"></a>Consideriamo una variabile che descrive il genere e include le categorie <span class="in">`male`</span>, <span class="in">`female`</span> e <span class="in">`non-conforming`</span>. In $\mathsf{R}$, ci sono due modi per memorizzare queste informazioni. Uno è usare la classe *character strings* e l'altro è usare la classe *factor*. Non ci addentrimo qui nelle sottigliezze di questa distinzione, motivata in gran parte per le necessità della programmazione con le funzioni di `tidyverse`. Per gli scopi di questo insegnamento sarà sufficiente codificare le variabili qualitative usando la classe *factor*. Una volta codificati i dati qualitativi utilizzando la classe *factor*, si pongono spesso due problemi:</span>
+<span id="cb34-327"><a href="#cb34-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-328"><a href="#cb34-328" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>modificare le etichette dei livelli (ovvero, le modalità) di un fattore,</span>
+<span id="cb34-329"><a href="#cb34-329" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>riordinare i livelli di un fattore.</span>
+<span id="cb34-330"><a href="#cb34-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-331"><a href="#cb34-331" aria-hidden="true" tabindex="-1"></a><span class="fu">## Modificare le etichette dei livelli di un fattore</span></span>
+<span id="cb34-332"><a href="#cb34-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-333"><a href="#cb34-333" aria-hidden="true" tabindex="-1"></a>Esaminiamo l'esempio seguente.</span>
+<span id="cb34-334"><a href="#cb34-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-337"><a href="#cb34-337" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-338"><a href="#cb34-338" aria-hidden="true" tabindex="-1"></a>f_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"old_3"</span>, <span class="st">"old_4"</span>, <span class="st">"old_1"</span>, <span class="st">"old_1"</span>, <span class="st">"old_2"</span>)</span>
+<span id="cb34-339"><a href="#cb34-339" aria-hidden="true" tabindex="-1"></a>f_1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(f_1)</span>
+<span id="cb34-340"><a href="#cb34-340" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb34-341"><a href="#cb34-341" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(f_1, y)</span>
+<span id="cb34-342"><a href="#cb34-342" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb34-343"><a href="#cb34-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-344"><a href="#cb34-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-345"><a href="#cb34-345" aria-hidden="true" tabindex="-1"></a>Supponiamo ora di volere che i livelli del fattore <span class="in">`f_1`</span> abbiano le etichette <span class="in">`new_1`</span>, <span class="in">`new_2`</span>, ecc. Per ottenere questo risultato usiamo la funzione <span class="in">`forcats::fct_recode()`</span>:</span>
+<span id="cb34-346"><a href="#cb34-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-349"><a href="#cb34-349" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-350"><a href="#cb34-350" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> </span>
+<span id="cb34-351"><a href="#cb34-351" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">f_1 =</span></span>
+<span id="cb34-352"><a href="#cb34-352" aria-hidden="true" tabindex="-1"></a>    forcats<span class="sc">::</span><span class="fu">fct_recode</span>(</span>
+<span id="cb34-353"><a href="#cb34-353" aria-hidden="true" tabindex="-1"></a>      f_1, </span>
+<span id="cb34-354"><a href="#cb34-354" aria-hidden="true" tabindex="-1"></a>      <span class="st">"poco"</span> <span class="ot">=</span> <span class="st">"old_1"</span>, </span>
+<span id="cb34-355"><a href="#cb34-355" aria-hidden="true" tabindex="-1"></a>      <span class="st">"medio"</span> <span class="ot">=</span> <span class="st">"old_2"</span>, </span>
+<span id="cb34-356"><a href="#cb34-356" aria-hidden="true" tabindex="-1"></a>      <span class="st">"tanto"</span> <span class="ot">=</span> <span class="st">"old_3"</span>, </span>
+<span id="cb34-357"><a href="#cb34-357" aria-hidden="true" tabindex="-1"></a>      <span class="st">"massimo"</span> <span class="ot">=</span> <span class="st">"old_4"</span></span>
+<span id="cb34-358"><a href="#cb34-358" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb34-359"><a href="#cb34-359" aria-hidden="true" tabindex="-1"></a>   )</span>
+<span id="cb34-360"><a href="#cb34-360" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb34-361"><a href="#cb34-361" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-362"><a href="#cb34-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-363"><a href="#cb34-363" aria-hidden="true" tabindex="-1"></a><span class="fu">## Riordinare i livelli di un fattore</span></span>
+<span id="cb34-364"><a href="#cb34-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-365"><a href="#cb34-365" aria-hidden="true" tabindex="-1"></a>Spesso i livelli dei fattori hanno un ordinamento naturale. Quindi, gli utenti devono avere un modo per imporre l'ordine desiderato sulla codifica delle loro variabili qualitative. Se per qualche motivo vogliamo ordinare i livelli <span class="in">`f_1`</span> in ordine inverso, ad esempio, possiamo procedere nel modo seguente.</span>
+<span id="cb34-366"><a href="#cb34-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-369"><a href="#cb34-369" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-370"><a href="#cb34-370" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>f_1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>f_1,</span>
+<span id="cb34-371"><a href="#cb34-371" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb34-372"><a href="#cb34-372" aria-hidden="true" tabindex="-1"></a>    <span class="st">"massimo"</span>, <span class="st">"tanto"</span>, <span class="st">"medio"</span>, <span class="st">"poco"</span> </span>
+<span id="cb34-373"><a href="#cb34-373" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-374"><a href="#cb34-374" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-375"><a href="#cb34-375" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df<span class="sc">$</span>f_1)</span>
+<span id="cb34-376"><a href="#cb34-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-377"><a href="#cb34-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-378"><a href="#cb34-378" aria-hidden="true" tabindex="-1"></a>Per approfondire le problematiche della manipolazione di variabili qualitative in $\mathsf{R}$, si veda @mcnamara2018wrangling.</span>
+<span id="cb34-379"><a href="#cb34-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-380"><a href="#cb34-380" aria-hidden="true" tabindex="-1"></a><span class="fu">## Creare grafici con `ggplot2()`</span></span>
+<span id="cb34-381"><a href="#cb34-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-382"><a href="#cb34-382" aria-hidden="true" tabindex="-1"></a>Il pacchetto <span class="in">`ggplot2()`</span> è un potente strumento per rappresentare graficamente i dati. Le iniziali del nome, <span class="in">`gg`</span>, si riferiscono alla "Grammar of Graphics", che è un modo di pensare le figure come una serie di layer stratificati. Originariamente descritta da @wilkinson2012grammar, la grammatica dei grafici è stata aggiornata e applicata in <span class="in">`R`</span> da Hadley Wickham, il creatore del pacchetto.</span>
+<span id="cb34-383"><a href="#cb34-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-384"><a href="#cb34-384" aria-hidden="true" tabindex="-1"></a>La funzione da cui si parte per inizializzare un grafico è <span class="in">`ggplot()`</span>. La funzione <span class="in">`ggplot()`</span> richiede due argomenti. Il primo è l'oggetto di tipo data.frame che contiene i dati da visualizzare -- in alternativa al primo argomento, un dataframe può essere passato a <span class="in">`ggplot()`</span> mediante l'operatore pipe. Il secondo è una particolare lista che viene generata dalla funzione <span class="in">`aes()`</span>, la quale determina l'aspetto (*aesthetic*) del grafico. La funzione <span class="in">`aes()`</span> richiede necessariamente di specificare "x" e "y", ovvero i nomi delle colonne del data.frame che è stato utilizzato quale primo argomento di <span class="in">`ggplot()`</span> (o che è stato passato da pipe), le quali rappresentano le variabili da porre rispettivamente sugli assi orizzontale e verticale.</span>
+<span id="cb34-385"><a href="#cb34-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-386"><a href="#cb34-386" aria-hidden="true" tabindex="-1"></a>La definizione della tipologia di grafico e i vari parametri sono poi definiti successivamente, aggiungendo all'oggetto creato da <span class="in">`ggplot()`</span> tutte le componenti necessarie. Saranno quindi altre funzioni, come <span class="in">`geom_bar()`</span>, <span class="in">`geom_line()`</span> o <span class="in">`geom_point()`</span> a occuparsi di aggiungere al livello di base barre, linee, punti, e così via. Infine, tramite altre funzioni, ad esempio <span class="in">`labs()`</span>, sarà possibile definire i dettagli più fini.</span>
+<span id="cb34-387"><a href="#cb34-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-388"><a href="#cb34-388" aria-hidden="true" tabindex="-1"></a>Gli elementi grafici (bare, punti, segmenti, ...) usati da <span class="in">`ggplot2`</span> sono chiamati <span class="in">`geoms`</span>. Mediante queste funzioni è possibile costruire diverse tipologie di grafici:</span>
+<span id="cb34-389"><a href="#cb34-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-390"><a href="#cb34-390" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_bar()`</span>: crea un layer con delle barre;</span>
+<span id="cb34-391"><a href="#cb34-391" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_point()`</span>: crea un layer con dei punti (diagramma a dispersione);</span>
+<span id="cb34-392"><a href="#cb34-392" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_line()`</span>: crea un layer con una linea retta;</span>
+<span id="cb34-393"><a href="#cb34-393" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_histogram()`</span>: crea un layer con un istogramma;</span>
+<span id="cb34-394"><a href="#cb34-394" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_boxplot()`</span>: crea un layer con un box-plot;</span>
+<span id="cb34-395"><a href="#cb34-395" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_errorbar()`</span>: crea un layer con barre che rappresentano intervalli di confidenza;</span>
+<span id="cb34-396"><a href="#cb34-396" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`geom_hline()`</span> e <span class="in">`geom_vline()`</span> : crea un layer con una linea orizzontale o verticale definita dall'utente.</span>
+<span id="cb34-397"><a href="#cb34-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-398"><a href="#cb34-398" aria-hidden="true" tabindex="-1"></a>Un comando generico ha la seguente forma:</span>
+<span id="cb34-399"><a href="#cb34-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-400"><a href="#cb34-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb34-401"><a href="#cb34-401" aria-hidden="true" tabindex="-1"></a>my_graph <span class="ot">&lt;-</span> my_data <span class="sc">|&gt;</span> </span>
+<span id="cb34-402"><a href="#cb34-402" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x_var, y_var)) <span class="sc">+</span></span>
+<span id="cb34-403"><a href="#cb34-403" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_...</span>()</span>
+<span id="cb34-404"><a href="#cb34-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-405"><a href="#cb34-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-406"><a href="#cb34-406" aria-hidden="true" tabindex="-1"></a>La prima volta che si usa il pacchetto <span class="in">`ggplot2`</span> è necessario installarlo. Per fare questo possiamo installare <span class="in">`tidyverse`</span> che, oltre a caricare <span class="in">`ggplot2`</span>, carica anche altre utili funzioni per l'analisi dei dati. Ogni volta che si inizia una sessione R è necessario attivare i pacchetti che si vogliono usare, ma non è necessario istallarli una nuova volta. Se è necessario specificare il pacchetto nel quale è contenuta la funzione che vogliamo utilizzare, usiamo la sintassi <span class="in">`package::function()`</span>. Per esempio, l'istruzione <span class="in">`ggplot2::ggplot()`</span> rende esplicito che stiamo usando la funzione <span class="in">`ggplot()`</span> contenuta nel pacchetto <span class="in">`ggplot2`</span>.</span>
+<span id="cb34-407"><a href="#cb34-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-408"><a href="#cb34-408" aria-hidden="true" tabindex="-1"></a><span class="fu">## Diagramma a dispersione</span></span>
+<span id="cb34-409"><a href="#cb34-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-410"><a href="#cb34-410" aria-hidden="true" tabindex="-1"></a>Consideriamo nuovamenti i dati contenuti nel <span class="in">`tibble`</span> <span class="in">`msleep`</span> e poniamoci il problema di rappresentare graficamente la relazione tra il numero medio di ore di sonno giornaliero (<span class="in">`sleep_total`</span>) e il peso dell'animale (<span class="in">`bodywt`</span>). Usando le impostazioni di default di <span class="in">`ggplot2`</span>, con le istruzioni seguenti, otteniamo il grafico fornito dalla figura seguente.</span>
+<span id="cb34-411"><a href="#cb34-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-414"><a href="#cb34-414" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-415"><a href="#cb34-415" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"msleep"</span>)</span>
+<span id="cb34-416"><a href="#cb34-416" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-417"><a href="#cb34-417" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb34-418"><a href="#cb34-418" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> bodywt, <span class="at">y =</span> sleep_total)</span>
+<span id="cb34-419"><a href="#cb34-419" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-420"><a href="#cb34-420" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb34-421"><a href="#cb34-421" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb34-422"><a href="#cb34-422" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-423"><a href="#cb34-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-424"><a href="#cb34-424" aria-hidden="true" tabindex="-1"></a>Coloriamo ora in maniera diversa i punti che rappresentano animali carnivori, erbivori, ecc.</span>
+<span id="cb34-425"><a href="#cb34-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-428"><a href="#cb34-428" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-429"><a href="#cb34-429" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-430"><a href="#cb34-430" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb34-431"><a href="#cb34-431" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> bodywt, <span class="at">y =</span> sleep_total, <span class="at">col =</span> vore)</span>
+<span id="cb34-432"><a href="#cb34-432" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-433"><a href="#cb34-433" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb34-434"><a href="#cb34-434" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb34-435"><a href="#cb34-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-436"><a href="#cb34-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-437"><a href="#cb34-437" aria-hidden="true" tabindex="-1"></a>È chiaro, senza fare alcuna analisi statistica, che la relazione tra le due variabili non è lineare. Trasformando in maniera logaritmica i valori dell'asse $x$ la relazione si linearizza.</span>
+<span id="cb34-438"><a href="#cb34-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-441"><a href="#cb34-441" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-442"><a href="#cb34-442" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-443"><a href="#cb34-443" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb34-444"><a href="#cb34-444" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(bodywt), <span class="at">y =</span> sleep_total, <span class="at">col =</span> vore)</span>
+<span id="cb34-445"><a href="#cb34-445" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-446"><a href="#cb34-446" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb34-447"><a href="#cb34-447" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb34-448"><a href="#cb34-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-449"><a href="#cb34-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-450"><a href="#cb34-450" aria-hidden="true" tabindex="-1"></a>Infine, aggiustiamo il "tema" del grafico (si noti l'utilizzo di una tavolozza di colori adatta ai daltonici mediante il pacchetto <span class="in">`viridis`</span>), aggiungiamo le etichette sugli assi e il titolo.</span>
+<span id="cb34-451"><a href="#cb34-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-454"><a href="#cb34-454" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-455"><a href="#cb34-455" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"viridis"</span>)</span>
+<span id="cb34-456"><a href="#cb34-456" aria-hidden="true" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-457"><a href="#cb34-457" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb34-458"><a href="#cb34-458" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(bodywt), <span class="at">y =</span> sleep_total, <span class="at">col =</span> vore)</span>
+<span id="cb34-459"><a href="#cb34-459" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-460"><a href="#cb34-460" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb34-461"><a href="#cb34-461" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-462"><a href="#cb34-462" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Peso corporeo (log)"</span>,</span>
+<span id="cb34-463"><a href="#cb34-463" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ore di sonno"</span>,</span>
+<span id="cb34-464"><a href="#cb34-464" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Il sonno in 83 specie di mammiferi"</span>,</span>
+<span id="cb34-465"><a href="#cb34-465" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Un esempio di visualizzazione con ggplot()"</span>,</span>
+<span id="cb34-466"><a href="#cb34-466" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fonte: Savage e West (2007)"</span></span>
+<span id="cb34-467"><a href="#cb34-467" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-468"><a href="#cb34-468" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>, <span class="at">option =</span> <span class="st">"viridis"</span>) <span class="sc">+</span></span>
+<span id="cb34-469"><a href="#cb34-469" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb34-470"><a href="#cb34-470" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>()) </span>
+<span id="cb34-471"><a href="#cb34-471" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-472"><a href="#cb34-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-473"><a href="#cb34-473" aria-hidden="true" tabindex="-1"></a>La visualizzazione può essere migliorata cambiando le etichette della legenda del grafico. Per fare questo è necessario intervenire sui dati prima di usare <span class="in">`ggplot()`</span> -- per esempio, come abbiamo fatto in precedenza con la funzione <span class="in">`forcats::fct_recode()`</span>.</span>
+<span id="cb34-474"><a href="#cb34-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-475"><a href="#cb34-475" aria-hidden="true" tabindex="-1"></a><span class="fu">## Istogramma</span></span>
+<span id="cb34-476"><a href="#cb34-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-477"><a href="#cb34-477" aria-hidden="true" tabindex="-1"></a>Creiamo ora un istogramma che rappresenta la distribuzione del (logaritmo del) peso medio del cervello delle 83 specie di mammiferi considerate da @savage2007quantitative. L'argomento <span class="in">`aes(y = ..density..)`</span> in <span class="in">`geom_histogram()`</span> produce le frequenze relative. L'opzione di default (senza questo argomento) porta <span class="in">`ggplot()`</span> a rappresentare le frequenze assolute.</span>
+<span id="cb34-478"><a href="#cb34-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-481"><a href="#cb34-481" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-482"><a href="#cb34-482" aria-hidden="true" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> </span>
+<span id="cb34-483"><a href="#cb34-483" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb34-484"><a href="#cb34-484" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="fu">log</span>(brainwt))</span>
+<span id="cb34-485"><a href="#cb34-485" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-486"><a href="#cb34-486" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb34-487"><a href="#cb34-487" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-488"><a href="#cb34-488" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Peso del cervello (log)"</span>,</span>
+<span id="cb34-489"><a href="#cb34-489" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequenza relativa"</span></span>
+<span id="cb34-490"><a href="#cb34-490" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-491"><a href="#cb34-491" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb34-492"><a href="#cb34-492" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-493"><a href="#cb34-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-494"><a href="#cb34-494" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali {.unnumbered}</span></span>
+<span id="cb34-495"><a href="#cb34-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-496"><a href="#cb34-496" aria-hidden="true" tabindex="-1"></a>Per minimizzare gli errori di sintassi (dimenticare una virgola, non chiudere una parentesi, ecc.) -- ovvero, gli errori più frequenti quando si scrive il codice in $\mathsf{R}$ -- è necessario utilizzare uno stile di programmazione. Uno stile di programmazione è un insieme di regole per la gestione dell'indentazione dei blocchi di codice, per la creazione dei nomi dei file e delle variabili e per le convenzioni tipografiche che vengono usate. Scrivere il codice in $\mathsf{R}$ con stile consente di creare listati più leggibili e semplici da modificare, minimizza la possibilità di errore, e consente correzioni e modifiche più rapide. Vi sono molteplici stili di programmazione che possono essere utilizzati dall'utente, anche se è bene attenersi a quelle che sono le convenzioni maggiormente diffuse, allo scopo di favorire la comunicazione. In ogni caso, l'importante è di essere coerenti, ovvero di adottare le stesse convenzioni in tutte le parti del codice che si scrive. Ad esempio, se si sceglie di usare lo stile <span class="in">`snake_case`</span> per il nome composto di una variabile (es., <span class="in">`personality_trait`</span>), non è appropriato usare lo stile *lower Camel case* per un'altra variabile (es., <span class="in">`socialStatus`</span>). Dato che questo argomento è stato trattato ampiamente in varie sedi, mi limito qui a rimandare ad uno <span class="co">[</span><span class="ot">stile di programmazione</span><span class="co">](http://style.tidyverse.org/)</span> molto popolare, quello proposto da Hadley Wickham, il creatore di <span class="in">`tidyverse`</span>. La soluzione più semplice è quella installare <span class="in">`stiler`</span>, che è uno RStudio Addin, e formattare il codice in maniera automatica utilizzando lo stile proposto da Hadley Wickham. Si possono ottenere informazioni su <span class="in">`stiler`</span> seguendo questo <span class="co">[</span><span class="ot">link</span><span class="co">](https://github.com/r-lib/styler)</span>.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

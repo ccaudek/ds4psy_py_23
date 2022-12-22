@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Data Science per psicologi - 40&nbsp; Distribuzione campionaria</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./226_test_ipotesi.html" rel="next">
+<link href="./221_conf_interv.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Data Science per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/data_science/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Benvenuti</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">Prefazione</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./basics.html" class="sidebar-item-text sidebar-link">Parte 1: Nozioni di base</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001_key_notions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Concetti chiave</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005_measurement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007_freq_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011_loc_scale.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012_correlation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013_penguins.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Manipolazione e visualizzazione dei dati in <span class="math inline">\(\mathsf{R}\)</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">Parte 2: Il calcolo delle probabilità</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015_prob_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La logica dell’incerto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016_conditional_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probabilità condizionata: significato, teoremi, eventi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017_bayes_theorem.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018_expval_var.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Indici di posizione, di varianza e di associazione di variabili casuali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019_joint_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020_density_func.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La densità di probabilità</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./distr.html" class="sidebar-item-text sidebar-link">Parte 3: Distribuzioni di v.c. discrete e continue</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022_discr_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023_cont_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024_likelihood.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">La funzione di verosimiglianza</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./bayes_inference.html" class="sidebar-item-text sidebar-link">Parte 4: Inferenza bayesiana</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025_intro_bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Credibilità, modelli e parametri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026_subj_prop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029_conjugate_families.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030_balance_prior_post.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./036_posterior_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Approssimazione della distribuzione a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./040_beta_binomial_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello beta-binomiale in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./041_mcmc_diagnostics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./045_summarize_posterior.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./046_bayesian_prediction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./050_normal_normal_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Inferenza sul parametro <span class="math inline">\(\mu\)</span> (media di una v.c. Normale)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./regression.html" class="sidebar-item-text sidebar-link">Parte 5: Regressione lineare</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./051_reglin1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./052_reglin2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./053_reglin3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Modello di regressione in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./054_reglin4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Inferenza sul modello lineare</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./055_reglin5.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./056_pred_check.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Predictive checks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./060_anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Confronto tra le medie di tre o più gruppi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./070_mod_hier.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello gerarchico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./071_mod_hier_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Modello gerarchico: simulazioni</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./entropy.html" class="sidebar-item-text sidebar-link">Parte 6: Entropia</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./090_entropy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Entropia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./091_kl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">La divergenza di Kullback-Leibler</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./092_info_criterion.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Criterio di informazione e convalida incrociata</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./frequentist_inference.html" class="sidebar-item-text sidebar-link">Parte 7: Inferenza frequentista</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./220_intro_frequentist.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Legge dei grandi numeri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./221_conf_interv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./225_distr_camp_mean.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./226_test_ipotesi.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Significatività statistica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./227_ttest.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Inferenza sulle medie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./228_limiti_stat_frequentista.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./999_refs.html" class="sidebar-item-text sidebar-link">Riferimenti bibliografici</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Appendici</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a01_math_symbols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Simbologia di base</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a02_number_sets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a03_set_theory.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Insiemi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a04_summation_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a05_calculus_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a10_markov_chains.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Le catene di Markov</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a15_stan_lang.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Programmare in Stan</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+   
+  <ul>
+<li>
+<a href="#distribuzione-campionaria" id="toc-distribuzione-campionaria" class="nav-link active" data-scroll-target="#distribuzione-campionaria"><span class="toc-section-number">40.1</span>  Distribuzione campionaria</a>
+  <ul class="collapse">
+<li><a href="#simulazione" id="toc-simulazione" class="nav-link" data-scroll-target="#simulazione"><span class="toc-section-number">40.1.1</span>  Simulazione</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#distribuzione-campionaria-della-media" id="toc-distribuzione-campionaria-della-media" class="nav-link" data-scroll-target="#distribuzione-campionaria-della-media"><span class="toc-section-number">40.2</span>  Distribuzione campionaria della media</a>
+  <ul class="collapse">
+<li><a href="#valore-atteso-della-media-campionaria" id="toc-valore-atteso-della-media-campionaria" class="nav-link" data-scroll-target="#valore-atteso-della-media-campionaria"><span class="toc-section-number">40.2.1</span>  Valore atteso della media campionaria</a></li>
+  <li><a href="#varianza-della-media-campionaria" id="toc-varianza-della-media-campionaria" class="nav-link" data-scroll-target="#varianza-della-media-campionaria"><span class="toc-section-number">40.2.2</span>  Varianza della media campionaria</a></li>
+  <li><a href="#errore-standard" id="toc-errore-standard" class="nav-link" data-scroll-target="#errore-standard"><span class="toc-section-number">40.2.3</span>  Errore standard</a></li>
+  <li><a href="#distribuzioni-delle-statistiche-campionarie" id="toc-distribuzioni-delle-statistiche-campionarie" class="nav-link" data-scroll-target="#distribuzioni-delle-statistiche-campionarie"><span class="toc-section-number">40.2.4</span>  Distribuzioni delle statistiche campionarie</a></li>
+  </ul>
+</li>
+  <li><a href="#sec:tlc" id="toc-sec:tlc" class="nav-link" data-scroll-target="#sec\:tlc"><span class="toc-section-number">40.3</span>  Teorema del limite centrale</a></li>
+  <li>
+<a href="#intervalli-di-confidenza" id="toc-intervalli-di-confidenza" class="nav-link" data-scroll-target="#intervalli-di-confidenza"><span class="toc-section-number">40.4</span>  Intervalli di confidenza</a>
+  <ul class="collapse">
+<li><a href="#parametri-di-un-modello-statistico" id="toc-parametri-di-un-modello-statistico" class="nav-link" data-scroll-target="#parametri-di-un-modello-statistico"><span class="toc-section-number">40.4.1</span>  Parametri di un modello statistico</a></li>
+  <li><a href="#lincertezza-della-stima" id="toc-lincertezza-della-stima" class="nav-link" data-scroll-target="#lincertezza-della-stima"><span class="toc-section-number">40.4.2</span>  L’incertezza della stima</a></li>
+  </ul>
+</li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali">Commenti e considerazioni finali</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-sampling-distr-mean" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>Il problema che l’inferenza statistica si pone è quello di capire, sulla base di eventi osservati, quale possa essere la popolazione che li ha generati. L’approccio frequentista all’inferenza statistica è basato sull’idea di probabilità come limite a cui tende la frequenza relativa, al tendere all’infinito del numero delle prove effettuate. È dunque centrale all’approccio frequentista l’idea di una ripetizione dell’esperimento casuale i cui esiti definiscono l’evento di interesse.</p>
+<p>Per fornire un’intuizione del tipo di metodi statistici di cui fa uso l’approccio frequentista, esamineremo qui un concetto cruciale di un tale approccio: quello di distribuzione campionaria.</p>
+<section id="distribuzione-campionaria" class="level2" data-number="40.1"><h2 data-number="40.1" class="anchored" data-anchor-id="distribuzione-campionaria">
+<span class="header-section-number">40.1</span> Distribuzione campionaria</h2>
+<p>In precedenza abbiamo presentato la Legge dei grandi numeri.La Legge dei grandi numeri è uno strumento molto potente, ma non è sufficiente per rispondere a tutte le nostre domande. Tutto ciò che ci offre è una “garanzia a lungo termine”. Essa ci garantisce che, a lungo termine, le statistiche campionarie saranno corrette – le statistiche campionarie forniranno la risposta esatta se verrà raccolta una quantità infinita di dati. Ma come ha affermato John Maynard Keynes (1923) in economia, una garanzia a lungo termine è di scarsa utilità nella vita reale:</p>
+<blockquote class="blockquote">
+<p>Il lungo periodo è una guida fuorviante per ciò che accade ora. Alla lunga saremo tutti morti. Gli economisti si sono dati un compito troppo facile, troppo inutile, se nelle stagioni tempestose possono solo dirci che, quando la tempesta sarà passata da un pezzo, l’oceano sarà di nuovo piatto.</p>
+</blockquote>
+<p>Come in economia, così anche in psicologia e nella statistica. Non è sufficiente sapere che, a lungo termine, arriveremo alla risposta giusta. È di scarso conforto sapere che un campione di dati infinitamente grande ci fornisce il valore esatto della media della popolazione, quando il campione che possiamo ottenere in qualsiasi situazione pratica non può che avere una numerosità modesta. Nell’attività pratica della ricerca psicologica, quindi, è necessario sapere qualcosa di più del comportamento delle statistiche campionarie (per esempio, la media) quando esse vengono calcolate a partire da un campione di dati molto più piccolo di quello ipotizzato dalla Legge dei grandi numeri. Queste considerazioni portano l’approccio frequentista alla formulazione di un nuovo concetto: quello di <em>distribuzione campionaria</em> (<em>sampling distribution</em>).</p>
+<div class="definition">
+<p>La distribuzione campionaria di una statistica basata su <span class="math inline">\(n\)</span> osservazioni è la distribuzione di frequenza dei valori che la statistica assume. Tale distribuzione è generata teoricamente prendendo infiniti campioni di dimensione <span class="math inline">\(n\)</span> e calcolando i valori della statistica per ogni campione.</p>
+</div>
+<section id="simulazione" class="level3" data-number="40.1.1"><h3 data-number="40.1.1" class="anchored" data-anchor-id="simulazione">
+<span class="header-section-number">40.1.1</span> Simulazione</h3>
+<p>Tenendo a mente quanto detto nella sezione precedente, abbandoniamo l’idea che i nostri campioni siano in grado di raggiungere numerosità dell’ordine di grandezza delle decine o delle centinaia di migliaia di osservazioni. Prendiamo invece in esame una situazione più vicina a quella in cui gli psicologi si trovano ad operare. Consideriamo, quale esempio, un’ampiezza campionaria di <span class="math inline">\(n = 5\)</span>. Come in precedenza, possiamo simulare questo esperimento casuale in R, usando la funzione <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iq3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">iq3</span></span>
+<span><span class="co">#&gt; [1] 110  98 112 104 112</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il QI medio in questo campione risulta pari a 107.2. Non sorprende che questo risultato sia molto meno accurato rispetto all’esperimento casuale precedente.</p>
+<p>Immaginiamo ora di replicare l’esperimento; immaginiamo cioè di ripetere nuovamente la procedura descritta sopra: estraiamo un nuovo campione casuale e misuriamo il QI di 5 persone. Ancora una volta utilizziamo R per effettuare la simulazione:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iq4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">iq4</span></span>
+<span><span class="co">#&gt; [1] 124 101 128 105 107</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">iq4</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 113</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In quest altro campione casuale il QI medio è 113. Procediamo in questo modo e simuliamo l’esperimento casuale dieci volte in maniera tale da ottenere i risultati seguenti.</p>
+<p>Iniziamo creando una lista di 10 campioni di ampiezza <span class="math inline">\(n = 5\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">sample_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">sample_list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">100</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">sample_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1]  92  97 123 101 102</span></span>
+<span><span class="va">sample_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] 126 107  81  90  93</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Trasformiamo la lista in un data.frame.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">sample_list</span><span class="op">)</span>, nrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">sample_list</span><span class="op">)</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#&gt;     X1  X2  X3  X4  X5</span></span>
+<span><span class="co">#&gt; 1   92  97 123 101 102</span></span>
+<span><span class="co">#&gt; 2  126 107  81  90  93</span></span>
+<span><span class="co">#&gt; 3  118 105 106 102  92</span></span>
+<span><span class="co">#&gt; 4  127 107  71 111  93</span></span>
+<span><span class="co">#&gt; 5   84  97  85  89  91</span></span>
+<span><span class="co">#&gt; 6   75 113 102  83 119</span></span>
+<span><span class="co">#&gt; 7  106  96 113 113 112</span></span>
+<span><span class="co">#&gt; 8  110 108  99  95  94</span></span>
+<span><span class="co">#&gt; 9   90  97  81 133 118</span></span>
+<span><span class="co">#&gt; 10  83  94  93 112  99</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Le medie di ciascuno dei 10 campioni di ampiezza <span class="math inline">\(n = 5\)</span> sono:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] 103.0  99.4 104.6 101.8  89.2  98.4 108.0 101.2 103.8  96.2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Poniamoci ora il problema di replicare tante volte la procedura che ci porta a calcolare la media dei valori del QI di cinque persone prese a caso. Per ciascuna replica dell’esperimento casuale salviamo il valore della media campionaria. Così facendo, generiamo tanti valori, ciascuno dei quali corrisponde alla media di un campione casuale di 5 osservazioni. Usando i poteri magici di R, possiamo eseguire una tale simulazione mediante le seguenti istruzioni:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n_samples</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
+<span><span class="va">sample_means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n_samples</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">100</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">sample_means</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nella <a href="#fig-histmeaniq">Figura&nbsp;<span>40.1</span></a> sono riportati i risultati della simulazione. Come illustrato dalla figura, la media dei 5 punteggi del QI è solitamente compresa tra 80 e 120. Ma il risultato più importante di questa simulazione è quello che ci fa capire che, se ripetiamo l’esperimento casuale più e più volte, otteniamo una distribuzione di medie campionarie. Un tale distribuzione ha un nome speciale in statistica: si chiama <em>distribuzione campionaria della media</em>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">sample_means</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_means</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">..density..</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Media del quoziente d'intelligenza in campioni di ampiezza n = 5"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Densità"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-histmeaniq" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-histmeaniq-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.1: Istogramma della distribuzione delle medie dei punteggi del QI calcolate su 10000 campioni casuali di ampiezza <span class="math inline">\(n=5\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La “distribuzione campionaria” è un importante concetto della statistica ed è fondamentale per comprendere il comportamento dei piccoli campioni. Quando abbiamo eseguito per la prima volta l’esperimento casuale relativo all’estrazione di cinque punteggi IQ dalla popolazione, abbiamo trovato una media campionaria pari a 101.4. Quello che impariamo dalla distribuzione campionaria delle medie di campioni di ampiezza <span class="math inline">\(n = 5\)</span> della <a href="#fig-histmeaniq">Figura&nbsp;<span>40.1</span></a> è che un tale esperimento casuale è poco accurato. Infatti, la distribuzione campionaria della media dei campioni di ampiezza <span class="math inline">\(n=5\)</span> ci fa capire che, se ripetendo un tale esperimento casuale tante volte, otteniamo delle medie campionarie con valori che possono essere compresi nell’intervallo tra 80 e 120. In altre parole, la distribuzione campionaria della media di campioni di ampiezza 5 ci dice che il risultato dell’esperimento casuale (ovvero, la media osservata in un singolo campione) varia di molto tra i diversi campioni che possono essere estratti dalla popolazione. Di conseguenza, se il nostro obiettivo è quello di stimare la media della popolazione, allora non dobbiamo fidarci troppo del risultato ottenuto <em>per caso</em> da un singolo campione di numerosità <span class="math inline">\(n\)</span> = 5. Nella discussione seguente mostreremo come sia possibile utilizzare la stima della distribuzione campionaria per descrivere le proprietà statistiche delle stime (ovvero, il grado di incertezza che è associato alle stime che otteniamo).</p>
+<p>Si noti che, in generale, la distribuzione campionaria non è nota, poiché dipende dalle caratteristiche della popolazione e non solo dai dati osservati nel campione. In pratica, quindi, non possiamo mai conoscere le caratteristiche esatte della distribuzione campionaria di una statistica; tali caratteristiche possono solo essere stimate.</p>
+</section></section><section id="distribuzione-campionaria-della-media" class="level2" data-number="40.2"><h2 data-number="40.2" class="anchored" data-anchor-id="distribuzione-campionaria-della-media">
+<span class="header-section-number">40.2</span> Distribuzione campionaria della media</h2>
+<p>Consideriamo ora l’inferenza statistica nel caso della statistica campionaria corrispondente alla media del campione. Denotiamo con <span class="math inline">\(\bar{X}_n\)</span> la media calcolata su un campione di <span class="math inline">\(n\)</span> osservazioni. Abbiamo detto che, ogni volta che osserviamo un nuovo campione di ampiezza <span class="math inline">\(n\)</span>, la statistica <span class="math inline">\(\bar{X}_n\)</span> assumerà un valore diverso. In termini tecnici diciamo che <span class="math inline">\(\bar{X}_n\)</span> è una variabile aleatoria, ovvero è una variabile che assume un nuovo valore ogni qualvolta l’esperimento casuale viene ripetuto (nel caso presente l’esperimento casuale corrisponde all’estrazione di un campione casuale dalla popolazione e al calcolo della media delle osservazioni campionarie). L’insieme dei valori che <span class="math inline">\(\bar{X}_n\)</span> può assumere in tutti i campioni casuali di ampiezza <span class="math inline">\(n\)</span> che possono essere estratti dalla popolazione è detto <em>distribuzione campionaria della media</em>.</p>
+<section id="valore-atteso-della-media-campionaria" class="level3" data-number="40.2.1"><h3 data-number="40.2.1" class="anchored" data-anchor-id="valore-atteso-della-media-campionaria">
+<span class="header-section-number">40.2.1</span> Valore atteso della media campionaria</h3>
+<p>Qual è la media (valore atteso) della distribuzione campionaria della media? È facile mostrare che <span class="math inline">\(\mu_{\bar{X}_n}\)</span> coincide con il valore medio <span class="math inline">\(\mu\)</span> della popolazione da cui i campioni di ampiezza <span class="math inline">\(n\)</span> sono stati estratti.</p>
+<div class="{proof}">
+<p>Ponendo <span class="math inline">\(\bar{X}_n = S_n/n\)</span>, dove <span class="math inline">\(S_n = X_1 + X_2 + \dots + X_n\)</span> è la somma di <span class="math inline">\(n\)</span> variabili aleatorie iid, ne segue che: <span class="math display">\[
+\mathbb{E}(\bar{X}_n) = \frac{1}{n} \mathbb{E}(S_n) = \frac{1}{n} \mathbb{E}(X_1 + X_2 + \dots + X_n ) =  \frac{1}{n} n \mu = \mu.
+\]</span></p>
+</div>
+</section><section id="varianza-della-media-campionaria" class="level3" data-number="40.2.2"><h3 data-number="40.2.2" class="anchored" data-anchor-id="varianza-della-media-campionaria">
+<span class="header-section-number">40.2.2</span> Varianza della media campionaria</h3>
+<p>Qual è la varianza della distribuzione campionaria della media? Anche in questo caso si può facilmente mostrare come la varianza della distribuzione delle medie campionarie è legata alla varianza <span class="math inline">\(\sigma^2\)</span> della popolazione dalla seguente relazione:</p>
+<p><span id="eq-varmedia"><span class="math display">\[
+var(\bar{X}\_n) = \frac{\sigma^2}{n},
+\tag{40.1}\]</span></span></p>
+<p>dove <span class="math inline">\(n\)</span> è la numerosità dei campioni casuali.</p>
+<p>Prima di presentare la dimostrazione dell’<a href="#eq-varmedia">Equazione&nbsp;<span>40.1</span></a> è necessario ricordare la seguente proprietà della varianza: se una variabile aleatoria <span class="math inline">\(X\)</span> viene moltiplicata per una costante <span class="math inline">\(a\)</span>, la varianza della variabile aleatoria <span class="math inline">\(aX\)</span> diventa</p>
+<p><span class="math display">\[
+var(a X) = a^2 var(X).
+\]</span></p>
+<p>Possiamo ora comprendere la dimostrazione seguente.</p>
+<div id="proof-varmedia">
+<p><span class="math display">\[
+var(\bar{X}_n) = \frac{1}{n^2} var(S_n) = \frac{1}{n^2} n \sigma^2
+= \frac{\sigma^2}{n}.
+\]</span></p>
+</div>
+<p>I due risultati che abbiamo ottenuto sopra sono molto importanti. Il primo ci dice che la media campionaria è uno stimatore corretto (ovvero, non distorto) della media della popolazione. Il secondo quantifica l’errore medio che compiamo usando usiamo la media del campione quale stima della media della popolazione.</p>
+</section><section id="errore-standard" class="level3" data-number="40.2.3"><h3 data-number="40.2.3" class="anchored" data-anchor-id="errore-standard">
+<span class="header-section-number">40.2.3</span> Errore standard</h3>
+<p>La radice quadrata della varianza della distribuzione campionaria della media si chiama <em>errore standard</em> della media campionaria. Questa è una quantità molto importante perché ci informa sul livello di incertezza della nostra stima fornendoci un valore che ha la stessa unità di misura delle osservazioni. Se vogliamo stimare la media della popolazione utilizzando la media del campione quale stimatore ci possiamo aspettare di compiere un errore medio pari a <span class="math inline">\(\frac{\hat{\sigma}_n}{\sqrt{n}},\)</span> laddove <span class="math inline">\(\hat{\sigma}_n\)</span> è la deviazione standard del campione utilizzata quale stima della deviazione standard della popolazione.</p>
+<section id="simulazione-1" class="level4" data-number="40.2.3.1"><h4 data-number="40.2.3.1" class="anchored" data-anchor-id="simulazione-1">
+<span class="header-section-number">40.2.3.1</span> Simulazione</h4>
+<p>Per chiarire le due conclusioni precedenti, utilizziamo nuovamente la simulazione che abbiamo eseguito in precedenza, quando abbiamo generato 10000 medie campionarie per campioni di ampiezza <span class="math inline">\(n = 5\)</span> estratti dalla popolazione <span class="math inline">\(\mathcal{N}(\mu = 100, \sigma = 15\)</span>). La distribuzione di tali medie è rappresentata nella figura <a href="#fig-histmeaniq">Figura&nbsp;<span>40.1</span></a>). In realtà, quella fornita dalla <a href="#fig-histmeaniq">Figura&nbsp;<span>40.1</span></a> <em>non è</em> esattamente la distribuzione campionaria delle medie di campioni casuali di ampiezza <span class="math inline">\(n=5\)</span> estratti dalla popolazione <span class="math inline">\(\mathcal{N}(\mu = 100, \sigma = 15\)</span>): la vera distribuzione campionaria della media si otterrebbe estraendo <em>infiniti</em> campioni di ampiezza <span class="math inline">\(n = 5\)</span> dalla popolazione. Tuttavia, avendo a disposizione le medie di 10000 campioni, ci possiamo aspettare un risultato empirico non troppo diverso da quello teorico. Verifichiamo dunque le due conclusioni a cui siamo giunti sopra.</p>
+<p>Sappiamo che la media delle 10000 medie di campioni di ampiezza <span class="math inline">\(n=5\)</span> dovrà essere molto simile (anche se non identica, dato che il numero dei campioni è grande, ma non infinito) alla media della popolazione. Infatti, in questa simulazione, abbiamo che <span class="math inline">\(\hat{\mu}_{\bar{X}_n} =\)</span> 99.97 contro un valore teorico <span class="math inline">\(\mu=100\)</span>. All’aumentare del numero di campioni estratti <span class="math inline">\(\mu_{\bar{X}_n}\)</span> diventa sempre più simile a <span class="math inline">\(\mu\)</span>.</p>
+<p>Calcoliamo ora la deviazione standard (detta <em>errore standard</em>) delle 10000 medie campionarie che abbiamo trovato. Nella simulazione, tale valore è pari a 6.663 mentre il valore teorico è <span class="math inline">\(\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}} = \frac{15}{\sqrt{5}} = 6.708\)</span>. Possiamo dunque dire che, con 10000 medie campionarie le proprietà della distribuzione campionaria della media vengono approssimate molto bene.</p>
+<p>Si noti che possiamo attribuire a <span class="math inline">\(\sigma_{\bar{X}}\)</span> la stessa interpretazione che è possibile fornire, in generale, alla deviazione standard. Nel caso di un campione, la deviazione standard <span class="math inline">\(\sigma\)</span> ci dice di quanto, in media, i valori osservati sono lontani dalla media. Nel caso della distribuzione campionaria delle medie dei campioni, <span class="math inline">\(\sigma_{\bar{X}}\)</span> ci dice quale errore medio compiamo stimando <span class="math inline">\(\mu\)</span> con <span class="math inline">\(\bar{X}\)</span>. In altre parole, ci dice che, se considerassimo <em>tutte</em> le medie <span class="math inline">\(\bar{X}\)</span> che si possono calcolare sulla base degli infiniti campioni di dimensioni <span class="math inline">\(n\)</span> che possiamo estrarre dalla popolazione, la distanza media tra ciascuna di queste medie e la media della distribuzione (che corrisponde alla media della popolazione) è pari a <span class="math inline">\(\sigma_{\bar{X}}\)</span>. La quantità <span class="math inline">\(\sigma_{\bar{X}}\)</span> può dunque essere considerata come una misura di errore nella stima di <span class="math inline">\(\mu\)</span> mediante <span class="math inline">\(\bar{X}\)</span>.</p>
+</section></section><section id="distribuzioni-delle-statistiche-campionarie" class="level3" data-number="40.2.4"><h3 data-number="40.2.4" class="anchored" data-anchor-id="distribuzioni-delle-statistiche-campionarie">
+<span class="header-section-number">40.2.4</span> Distribuzioni delle statistiche campionarie</h3>
+<p>Qualunque statistica campionaria ha una sua distribuzione teorica. Consideriamo, ad esempio, il massimo del campione quale statistica campionaria di interesse. Ripetiamo la simulazione che abbiamo descritto sopra calcolando, questa volta, il valore massimo del campione.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">n_samples</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
+<span><span class="va">sample_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">n_samples</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">100</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">sample_max</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I risultati di questa simulazione sono riportati nella <a href="#fig-histmaxiq">Figura&nbsp;<span>40.2</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">sample_max</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">sample_max</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">..density..</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Valore massimo del QI in campioni di ampiezza n = 5"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Densità"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-histmaxiq" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-histmaxiq-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.2: Istogramma della distribuzione del QI massimo osservato in ciascun campione casuali di ampiezza <span class="math inline">\(n=5\)</span>. Per creare la figura sono stati considerati 10000 campioni casuali.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Non dovrebbe sorprenderci che, prendendo 5 persone a caso per poi selezionare la persona con il punteggio QI più alto, otteniamo una distribuzione che, rispetto alla distribuzione della figura <a href="#fig-histmaxiq">Figura&nbsp;<span>40.2</span></a>), è traslata verso destra. Nella presente simulazione, la distribuzione del QI massimo di un campione casuale di ampiezza <span class="math inline">\(n = 5\)</span> si situa approssimativamente nell’intervallo compreso tra 90 e 150.</p>
+</section></section><section id="sec:tlc" class="level2" data-number="40.3"><h2 data-number="40.3" class="anchored" data-anchor-id="sec:tlc">
+<span class="header-section-number">40.3</span> Teorema del limite centrale</h2>
+<p>Chiediamoci ora quale sia la relazione che intercorre tra la distribuzione campionaria della media e l’ampiezza <span class="math inline">\(n\)</span> dei campioni. In ciascun pannello della figura <a href="#fig-tlcnavarro">Figura&nbsp;<span>40.3</span></a> sono riportati i risultati di una simulazione nella quale sono stati generati 10000 campioni di ampiezza <span class="math inline">\(n\)</span> per poi calcolare il QI medio in ciascun campione.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">15</span></span>
+<span><span class="va">nrep</span> <span class="op">&lt;-</span> <span class="fl">1e5</span></span>
+<span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">nrep</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">get_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">nobs</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> </span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">ymax</span> <span class="op">&lt;-</span> <span class="fl">0.14</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 1"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 3"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 5"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">15</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 15"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nobs</span> <span class="op">&lt;-</span> <span class="fl">30</span></span>
+<span><span class="va">qi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nrep</span>, <span class="fu">get_mean</span><span class="op">(</span><span class="va">nobs</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">qi</span>, freq<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>     yaxt<span class="op">=</span><span class="st">'n'</span>, </span>
+<span>     ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">160</span><span class="op">)</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">"QI"</span>, main <span class="op">=</span> <span class="st">"n = 30"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, mean<span class="op">=</span><span class="va">mu</span>, sd<span class="op">=</span><span class="va">sigma</span><span class="op">)</span>, add<span class="op">=</span><span class="cn">TRUE</span>, yaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tlcnavarro" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-tlcnavarro-1.png" class="img-fluid figure-img" style="width:190.0%"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.3: Nel primo pannello in alto a sinistra ciascun campione contiene una sola osservazione, per cui la media del campione è identica al valore del QI di una persona. Di conseguenza, la distribuzione campionaria della media è identica alla distribuzione dei valori del QI nella popolazione. Quando <span class="math inline">\(n=2\)</span> la media di ciascun campione tende ad essere più simile alla media della popolazione di quanto lo sia ciascuna singola osservazione della popolazione. Quindi anche l’ampiezza dell’istogramma (ovvero, la distribuzione campionaria della media) diminuisce, se confrontata con la dispersione della popolazione. Quando giungiamo ad una numerosità campionaria pari a <span class="math inline">\(n=30\)</span> vediamo che la maggior parte delle medie campionarie tende ad addensarsi intorno alla media della popolazione.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Gli istogrammi mostrano la distribuzione delle medie così ottenute, cioè ci forniscono una rappresentazione grafica della distribuzione campionaria della media al variare dell’ampiezza campionaria <span class="math inline">\(n\)</span>. I punteggi del QI sono stati ricavati da una distribuzione normale con media 100 e deviazione standard 15 e tale distribuzione viene visualizzata con una linea nera continua in ciascun pannello della figura <a href="#fig-tlcnavarro">Figura&nbsp;<span>40.3</span></a>.</p>
+<p>Quello che ci chiediamo è come varia la distribuzione campionaria della media in funzione dell’ampiezza del campione. Intuitivamente, conosciamo già parte della risposta. Se abbiamo a disposizione solo poche osservazioni, è probabile che la media campionaria sia abbastanza imprecisa: se ripetiamo l’esperimento casuale del campionamento e ricalcoliamo la media del campione, otteniamo una risposta molto diversa ad ogni ripetizione dell’esperimento casuale. Di conseguenza, la distribuzione campionaria della media comprenderà una gamma di valori molto grande. Invece, si ottengono risultati molto simili tra loro se ripetiamo l’esperimento del campionamento utilizzando campioni di grandi dimensioni. In questo secondo caso, la distribuzione campionaria includerà una gamma di valori delle medie molto minore che in precedenza. Questo andamento si può notare nei pannelli della figura <a href="#fig-tlcnavarro">Figura&nbsp;<span>40.3</span></a>: l’errore standard della media campionaria diminuisce all’aumentare dell’ampiezza del campione.</p>
+<p>Ciò che abbiamo descritto finora, tuttavia, riguarda solo un aspetto di quello che accade alla distribuzione campionaria di <span class="math inline">\(\bar{X}\)</span> all’aumentare di <span class="math inline">\(n\)</span>. Gli esempi discussi finora erano relativi al caso di campioni casuali del QI. Poiché i punteggi del QI seguono approssimativamente una distribuzione normale, abbiamo assunto che anche la popolazione abbia una distribuzione normale. Tuttavia, si presentano spesso casi in cui la distribuzione della popolazione non è normale. In queste circostanze, cosa succede alla distribuzione campionaria della media? La cosa straordinaria è questa: non importa quale sia la forma della distribuzione della popolazione, all’aumentare della dimensione campionaria <span class="math inline">\(n\)</span>, la distribuzione di frequenza delle medie campionarie si approssima sempre più alla tipica forma a campana di una distribuzione normale.</p>
+<p>Per farci un’idea di quello che succede, eseguiamo alcune simulazioni usando R.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># needed for printing</span></span>
+<span><span class="va">width</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
+<span><span class="va">height</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
+<span></span>
+<span><span class="co"># parameters of the beta</span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># mean and standard deviation of the beta</span></span>
+<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">a</span> <span class="op">*</span> <span class="va">b</span> <span class="op">/</span> <span class="op">(</span><span class="va">a</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="op">(</span><span class="va">a</span> <span class="op">+</span> <span class="va">b</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">a</span> <span class="op">/</span> <span class="op">(</span><span class="va">a</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># define function to draw a plot</span></span>
+<span><span class="va">plot_one</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">N</span> <span class="op">=</span> <span class="fl">50000</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span>  <span class="co"># generate N random sample means of size n</span></span>
+<span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">rbeta</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="va">N</span>, <span class="va">a</span>, <span class="va">b</span><span class="op">)</span>, <span class="va">n</span>, <span class="va">N</span><span class="op">)</span></span>
+<span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># plot the data</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span></span>
+<span>    <span class="va">X</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">.025</span><span class="op">)</span>, border <span class="op">=</span> <span class="st">"white"</span>, freq <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    <span class="co">#col = ifelse(colour, emphColLight, emphGrey),</span></span>
+<span>    col <span class="op">=</span> <span class="st">"gray"</span>,</span>
+<span>    xlab <span class="op">=</span> <span class="st">"Media campionaria"</span>, ylab <span class="op">=</span> <span class="st">""</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.2</span><span class="op">)</span>,</span>
+<span>    main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"n ="</span>, <span class="va">n</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    font.main <span class="op">=</span> <span class="fl">1</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="co">#box()</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="co"># axis(2)</span></span>
+<span></span>
+<span>  <span class="co"># plot the theoretical distribution</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.2</span>, <span class="fl">.01</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">m</span>, <span class="va">s</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    lwd <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"black"</span>, type <span class="op">=</span> <span class="st">"l"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Consideriamo la distribuzione della popolazione rappresentata dall’istogramma riportato nella <a href="#fig-tlctriangle1">Figura&nbsp;<span>40.4</span></a>. Confrontando l’istogramma triangolare con la curva a campana tracciata dalla linea nera risulta chiaro che la distribuzione della popolazione non assomiglia affatto a una distribuzione normale.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">plot_one</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tlctriangle1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-tlctriangle1-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.4: Dimostrazione del Teorema del limite centrale. Consideriamo una popolazione che non segue la distribuzione normale. La distribuzione di tale popolazione è rappresentata dall’istogramma grigio.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In una prima simulazione, ho estratto 50000 campioni di ampiezza <span class="math inline">\(n=2\)</span> da questa distribuzione e, per ciascuno di essi ho calcolato la media campionaria. Come si può vedere nella figura <a href="#fig-tlctriangle2">Figura&nbsp;<span>40.5</span></a>, la distribuzione campionaria non è triangolare. Certamente non è Normale, ma assomiglia di più ad una distribuzione campanulare di quanto assomigli alla distribuzione della popolazione raffigurata nella figura <a href="#fig-tlctriangle1">Figura&nbsp;<span>40.4</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">plot_one</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tlctriangle2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-tlctriangle2-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.5: Distribuzione campionaria di <span class="math inline">\(ar{X}\)</span> per campioni casuali di ampiezza <span class="math inline">\(n=2\)</span> estratti dalla popolazione rappresentata nella figura 1.7.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Quando aumento la numerosità del campione a <span class="math inline">\(n=4\)</span> la distribuzione campionaria della media si approssima abbastanza bene alla normale, <a href="#fig-tlctriangle4">Figura&nbsp;<span>40.6</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">plot_one</span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tlctriangle4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-tlctriangle4-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.6: Distribuzione campionaria di <span class="math inline">\(ar{X}\)</span> per campioni casuali di ampiezza <span class="math inline">\(n=4\)</span> estratti dalla popolazione rappresentata nella figura 1.7.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Già con <span class="math inline">\(n=8\)</span> l’approssimazione diventa molto buona, come indicato nella <a href="#fig-tlctriangle8">Figura&nbsp;<span>40.7</span></a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">plot_one</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tlctriangle8" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="225_distr_camp_mean_files/figure-html/fig-tlctriangle8-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;40.7: Distribuzione campionaria di <span class="math inline">\(ar{X}\)</span> per campioni casuali di ampiezza <span class="math inline">\(n=8\)</span> estratti dalla popolazione rappresentata nella figura 1.7.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In altre parole, se la dimensione del campione non è piccola, allora la distribuzione campionaria della media sarà approssimativamente normale indipendentemente dalla distribuzione della popolazione! Questo comportamento della distribuzione campionaria di <span class="math inline">\(\bar{X}\)</span> al variare di <span class="math inline">\(n\)</span> viene descritto in maniera formale dal Teorema del limite centrale.</p>
+<div class="{thm-tlc}">
+<p>Siano <span class="math inline">\(X_1, X_2, \dots\)</span> variabili aleatorie i.i.d., tutte con lo stesso valore atteso <span class="math inline">\(\mu\)</span> e la stessa varianza <span class="math inline">\(\sigma^2\)</span>. Allora, <span class="math display">\[\lim_{n \rightarrow +\infty} P\left(a \leq \bar{X}_n \leq b \right) = P(a \leq Y \leq b),
+\label{theo:tlc}\]</span> dove <span class="math inline">\(Y \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)\)</span>.</p>
+</div>
+<p>Il Teorema del limite centrale ci dice che, se vengono selezionati campioni sufficientemente grandi (tipicamente è sufficiente che <span class="math inline">\(n &gt; 30\)</span> purché il carattere osservato non sia troppo asimmetrico), allora la media campionaria <span class="math inline">\(\bar{X}\)</span> di <span class="math inline">\(n\)</span> variabili aleatorie indipendenti <span class="math inline">\(X_1, X_2, \dots\)</span> converge in distribuzione ad una variabile aleatoria normale di media <span class="math inline">\(\mu\)</span> e varianza <span class="math inline">\(\sigma^2/n\)</span>.</p>
+<p>È altresì molto importante notare che, se le variabili di partenza <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, …<span class="math inline">\(X_n\)</span> sono esse stesse Normali, tutte con lo stesso valore atteso <span class="math inline">\(\mu\)</span> e la stessa varianza <span class="math inline">\(\sigma^2\)</span>, allora il Teoremadel limite centrale è <em>esatto</em>. Ovvero per ogni <span class="math inline">\(n\)</span>,</p>
+<p><span class="math display">\[
+\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right).
+\]</span></p>
+<p>Questa proprietà discende dal seguente teorema.</p>
+<div class="{thm-tlc-2}">
+<p>Se <span class="math inline">\(X_1, X_2, \dots, X_n\)</span> sono <span class="math inline">\(n\)</span> variabili aleatorie Normali tra di loro indipendenti, ciascuna con valore atteso <span class="math inline">\(\mu\)</span> e varianza <span class="math inline">\(\sigma^2\)</span>, allora la variabile aleatoria <span class="math inline">\(X_1 + X_2 + \dots + X_n\)</span> è a sua volta una variabile aleatoria Normale con valore atteso <span class="math inline">\(n \mu\)</span> e varianza <span class="math inline">\(n \sigma^2\)</span>.</p>
+</div>
+<p>In conclusione, il Teorema del limite centrale ci consente di specificare completamente le proprietà della distribuzione campionaria di <span class="math inline">\(\bar{X}_n\)</span>.</p>
+<ol type="1">
+<li><p>Se la popolazione è normale, allora <span class="math inline">\(\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)\)</span> indipendentemente da <span class="math inline">\(n\)</span>.</p></li>
+<li><p>Se invece la popolazione <em>non</em> è normale, allora la distribuzione di <span class="math inline">\(\bar{X}_n\)</span> tende a <span class="math inline">\(\mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)\)</span> al crescere di <span class="math inline">\(n\)</span>.</p></li>
+</ol>
+<p>Esaminiamo ora un esercizio in cui viene applicato il TLC.</p>
+<p>Supponiamo di misurare un oggetto con una bilancia non molto precisa. Supponiamo inoltre che l’errore di misura <span class="math inline">\(E\)</span> della bilancia si distribuisca in maniera Normale con media <span class="math inline">\(0\)</span> e deviazione standard <span class="math inline">\(\sigma = 2\)</span> grammi. Se l’oggetto considerato ha un peso uguale a <span class="math inline">\(w\)</span>, il peso osservato <span class="math inline">\(X\)</span> sarà dato dalla somma del suo peso vero e l’errore di misurazione: <span class="math inline">\(X = w + E\)</span>. Dato che <span class="math inline">\(w\)</span> è una costante, <span class="math inline">\(X\)</span> seguirà la distribuzione normale con media <span class="math inline">\(\mathbb{E}(X) = \mathbb{E}(w + E) = w + \mathbb{E}(E) = w\)</span> e varianza <span class="math inline">\(var(X) = var(w + E) = var(E) = 4\)</span>. Qual è la probabilità di ottenere una misurazione che non differisce di più di un grammo dal peso vero?</p>
+<p>Dobbiamo trovare la probabilità</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(-1 \leq X - w \leq 1)  &amp;= P\bigg(-\frac{1}{2} \leq \frac{X - w}{\sigma} \leq \frac{1}{2}\bigg)\notag\\ &amp;= P\bigg(-\frac{1}{2} \leq Z \leq \frac{1}{2}\bigg)\notag
+\end{aligned}
+\]</span></p>
+<p>ovvero</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3829249</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Considerando l’evento complementare, possiamo dunque dire che c’è una probabilità maggiore di <span class="math inline">\(0.6\)</span> che la bilancia produca un valore che differisce di almeno un grammo dal peso vero.</p>
+<p>Chiediamoci ora cosa succede se, invece di accontentarci di una singola misurazione, calcoliamo la media di <span class="math inline">\(n = 10\)</span> misurazioni. In questo secondo caso,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P\left(-1 \leq \frac{S_{10}}{10} - w \leq 1\right)
+&amp;= P\bigg(-\frac{1}{\sqrt{4/10}} \leq \frac{\frac{S_{10}}{10} - w}{\sigma/\sqrt{10}} \leq \frac{1}{\sqrt{4/10}}\bigg)\notag\\
+&amp;= P\bigg(-\frac{\sqrt{10}}{2} \leq Z \leq \frac{\sqrt{10}}{2}\bigg)\notag
+\end{aligned}
+\]</span></p>
+<p>ovvero</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.8861537</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Considerando l’evento complementare, possiamo concludere che c’è una probabilità pari a solo 0.114 che la media di 10 misurazioni assuma un valore che differisce di più di un grammo dal peso vero. È dunque ovvio che le medie di misurazioni ripetute sono migliori delle singole misure.</p>
+</section><section id="intervalli-di-confidenza" class="level2" data-number="40.4"><h2 data-number="40.4" class="anchored" data-anchor-id="intervalli-di-confidenza">
+<span class="header-section-number">40.4</span> Intervalli di confidenza</h2>
+<section id="parametri-di-un-modello-statistico" class="level3" data-number="40.4.1"><h3 data-number="40.4.1" class="anchored" data-anchor-id="parametri-di-un-modello-statistico">
+<span class="header-section-number">40.4.1</span> Parametri di un modello statistico</h3>
+<p>Nel gergo statistico, i parametri sono i valori sconosciuti che determinano un modello statistico. Si consideri il modello statistico <span class="math inline">\(Y \sim \mathcal{N}(\mu, \sigma)\)</span>. Il modello statistico precedente ci dice che <span class="math inline">\(Y\)</span> è una v.a. distribuita come una normale di parametri <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>. Supponiamo che la <span class="math inline">\(Y\)</span> sia il QI. In questo caso è facile capire cosa sono i parametri <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>. Quello del QI, infatti, è un caso particolare perché il test di intelligenza <em>Wechsler Adult Intelligence Scale</em> (WAIS) è stato costruito in modo tale da produrre dei dati che si distribuiscono in un modo noto: il QI segue la distribuzione normale di parametri <span class="math inline">\(\mu = 100\)</span> e <span class="math inline">\(\sigma = 15\)</span>. In generale, però, i parametri di un modello statistico sono sconosciuti.</p>
+</section><section id="lincertezza-della-stima" class="level3" data-number="40.4.2"><h3 data-number="40.4.2" class="anchored" data-anchor-id="lincertezza-della-stima">
+<span class="header-section-number">40.4.2</span> L’incertezza della stima</h3>
+<p>Dato che i parametri sono, in genere, sconosciuti, è necessario stimarli. Non è sufficiente, però, ottenere una stima puntuale di un parametro. È anche necessario quantificare l’incertezza della stima. L’incertezza della stima viene descritta dall’approccio frequentista nei termini di un <em>intervallo di confidenza</em>. L’intervallo di confidenza si costruisce mediante l’errore standard.</p>
+<p>L’errore standard è la deviazione standard stimata della stima di un parametro e quantifica il grado della nostra incertezza sulla quantità di interesse. Chiariamo questa idea facendo riferimento alla la <a href="#fig-histmeaniq">Figura&nbsp;<span>40.1</span></a>. Tale figura riporta la distribuzione di un grande numero di medie campionarie, laddove la media di ciascun campione può essere considerata come una stima della media <span class="math inline">\(\mu\)</span> della popolazione. La deviazione standard di queste stime, chiamata <em>errore standard</em>, ci fornisce una misura dell’incertezza della nostra stima. In altre parole, quantifica la variabilità dei valori delle stime del parametro <span class="math inline">\(\mu\)</span> che sono calcolate sulla base di campioni diversi. Come abbiamo visto nella simulazione del TLC, l’errore standard ha la proprietà di diminuire all’aumentare della dimensione del campione.</p>
+<p>L’errore standard viene utilizzato per calcolare l’intervallo di confidenza. L’<em>intervallo di confidenza</em> rappresenta un intervallo di valori di un parametro o quantità di interesse che sono approssimativamente coerenti con i dati, data la distribuzione campionaria presunta. All’intervallo di confidenza possiamo dunque assegnare la seguente interpretazione. Supponiamo che il modello statistico sia corretto e supponiamo di ripetere tante volte il processo di campionamento. Se per ogni campione estratto dalla popolazione calcoliamo una stima del parametro, allora gli intervalli di confidenza del 50% e del 95% includeranno il vero valore del parametro il 50% e il 95% delle volte.</p>
+<p>Sotto l’ipotesi che la distribuzione campionaria segua la distribuzione normale, per campioni di grandi dimensioni l’intervallo di confidenza al 95% si costruisce nel modo seguente: <span class="math display">\[
+\text{stima del parametro} \pm 2 \text{ errori standard.}
+\]</span> Dalla distribuzione normale sappiamo che una stima del parametro <span class="math inline">\(\pm\)</span> 1 errore standard corrisponde ad un intervallo del 68% e una stima del parametro <span class="math inline">\(\pm\)</span> <span class="math inline">\(\frac{2}{3}\)</span> di un errore standard corrisponde ad un intervallo del 50%. Un intervallo del 50% è particolarmente facile da interpretare dato che il vero valore del parametro ha la stessa probabilità di essere incluso o escluso dall’intervallo. Un intervallo del 95% basato sulla distribuzione normale è circa tre volte più ampio di un intervallo del 50%.</p>
+</section></section><section id="commenti-e-considerazioni-finali" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="commenti-e-considerazioni-finali">Commenti e considerazioni finali</h2>
+<p>I risultati precedenti consentono le seguenti conclusioni. Se <span class="math inline">\(X_1, \dots, X_n\)</span> è un insieme di variabili aleatorie i.i.d., tutte con media <span class="math inline">\(\mu\)</span> e varianza <span class="math inline">\(\sigma^2\)</span>, allora <span class="math display">\[
+\mathbb{E}(\bar{X}) = \mu, \quad var(\bar{X}) = \frac{\sigma^2}{n}.
+\]</span> Se le <span class="math inline">\(X_i\)</span> seguono la distribuzione normale, ne segue che <span class="math inline">\(\bar{X} \sim \mathcal{N}(\mu, \sigma/\sqrt{n})\)</span>, in quanto qualunque combinazione lineare di variabili aleatorie Normali è ancora una variabile aleatoria Normale. Invece, se le <span class="math inline">\(X_i\)</span> non seguono la distribuzione normale, il Teorema del limite centrale ci consente comunque di dire che <span class="math inline">\(\bar{X}\)</span> tende a <span class="math inline">\(\mathcal{N}(\mu, \sigma/\sqrt{n})\)</span> al crescere di <span class="math inline">\(n\)</span>. I risultati precedenti sono estremamente importanti perché specificano completamente la distribuzione della media campionaria e vengono utilizzati dall’approccio frequentista per l’inferenza sulla media di una popolazione.</p>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./221_conf_interv.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./226_test_ipotesi.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb18" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Distribuzione campionaria {#sec-sampling-distr-mean}</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include = FALSE}</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>Il problema che l'inferenza statistica si pone è quello di capire, sulla base di eventi osservati, quale possa essere la popolazione che li ha generati. L'approccio frequentista all'inferenza statistica è basato sull'idea di probabilità come limite a cui tende la frequenza relativa, al tendere all'infinito del numero delle prove effettuate. È dunque centrale all'approccio frequentista l'idea di una ripetizione dell'esperimento casuale i cui esiti definiscono l'evento di interesse.</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>Per fornire un'intuizione del tipo di metodi statistici di cui fa uso l'approccio frequentista, esamineremo qui un concetto cruciale di un tale approccio: quello di distribuzione campionaria.</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Distribuzione campionaria</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>In precedenza abbiamo presentato la Legge dei grandi numeri.La Legge dei grandi numeri è uno strumento molto potente, ma non è sufficiente per rispondere a tutte le nostre domande. Tutto ciò che ci offre è una "garanzia a lungo termine". Essa ci garantisce che, a lungo termine, le statistiche campionarie saranno corrette -- le statistiche campionarie forniranno la risposta esatta se verrà raccolta una quantità infinita di dati. Ma come ha affermato John Maynard Keynes (1923) in economia, una garanzia a lungo termine è di scarsa utilità nella vita reale:</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Il lungo periodo è una guida fuorviante per ciò che accade ora. Alla lunga saremo tutti morti. Gli economisti si sono dati un compito troppo facile, troppo inutile, se nelle stagioni tempestose possono solo dirci che, quando la tempesta sarà passata da un pezzo, l'oceano sarà di nuovo piatto.</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>Come in economia, così anche in psicologia e nella statistica. Non è sufficiente sapere che, a lungo termine, arriveremo alla risposta giusta. È di scarso conforto sapere che un campione di dati infinitamente grande ci fornisce il valore esatto della media della popolazione, quando il campione che possiamo ottenere in qualsiasi situazione pratica non può che avere una numerosità modesta. Nell'attività pratica della ricerca psicologica, quindi, è necessario sapere qualcosa di più del comportamento delle statistiche campionarie (per esempio, la media) quando esse vengono calcolate a partire da un campione di dati molto più piccolo di quello ipotizzato dalla Legge dei grandi numeri. Queste considerazioni portano l'approccio frequentista alla formulazione di un nuovo concetto: quello di *distribuzione campionaria* (*sampling distribution*).</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>::: definition</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>La distribuzione campionaria di una statistica basata su $n$ osservazioni è la distribuzione di frequenza dei valori che la statistica assume. Tale distribuzione è generata teoricamente prendendo infiniti campioni di dimensione $n$ e calcolando i valori della statistica per ogni campione.</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="fu">### Simulazione</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>Tenendo a mente quanto detto nella sezione precedente, abbandoniamo l'idea che i nostri campioni siano in grado di raggiungere numerosità dell'ordine di grandezza delle decine o delle centinaia di migliaia di osservazioni. Prendiamo invece in esame una situazione più vicina a quella in cui gli psicologi si trovano ad operare. Consideriamo, quale esempio, un'ampiezza campionaria di $n = 5$. Come in precedenza, possiamo simulare questo esperimento casuale in R, usando la funzione <span class="in">`rnorm()`</span>:</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>iq3 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">15</span>))</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>iq3</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>Il QI medio in questo campione risulta pari a <span class="in">`r round(mean(iq3), 2)`</span>. Non sorprende che questo risultato sia molto meno accurato rispetto all'esperimento casuale precedente.</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>Immaginiamo ora di replicare l'esperimento; immaginiamo cioè di ripetere nuovamente la procedura descritta sopra: estraiamo un nuovo campione casuale e misuriamo il QI di 5 persone. Ancora una volta utilizziamo R per effettuare la simulazione:</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>iq4 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">15</span>))</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>iq4</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(iq4)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>In quest altro campione casuale il QI medio è <span class="in">`r round(mean(iq4), 2)`</span>. Procediamo in questo modo e simuliamo l'esperimento casuale dieci volte in maniera tale da ottenere i risultati seguenti.</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>Iniziamo creando una lista di 10 campioni di ampiezza $n = 5$.</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>sample_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>  sample_list[[i]] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">15</span>))</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>sample_list[[<span class="dv">1</span>]]</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>sample_list[[<span class="dv">2</span>]]</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>Trasformiamo la lista in un data.frame.</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(sample_list), <span class="at">nrow=</span><span class="fu">length</span>(sample_list), <span class="at">byrow=</span><span class="cn">TRUE</span>))</span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a>Le medie di ciascuno dei 10 campioni di ampiezza $n = 5$ sono:</span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(df)</span>
+<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a>Poniamoci ora il problema di replicare tante volte la procedura che ci porta a calcolare la media dei valori del QI di cinque persone prese a caso. Per ciascuna replica dell'esperimento casuale salviamo il valore della media campionaria. Così facendo, generiamo tanti valori, ciascuno dei quali corrisponde alla media di un campione casuale di 5 osservazioni. Usando i poteri magici di R, possiamo eseguire una tale simulazione mediante le seguenti istruzioni:</span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>n_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>sample_means <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_samples)</span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-88"><a href="#cb18-88" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_samples) {</span>
+<span id="cb18-89"><a href="#cb18-89" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">15</span>))</span>
+<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a>    sample_means[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a>Nella @fig-histmeaniq sono riportati i risultati della simulazione. Come illustrato dalla figura, la media dei 5 punteggi del QI è solitamente compresa tra 80 e 120. Ma il risultato più importante di questa simulazione è quello che ci fa capire che, se ripetiamo l'esperimento casuale più e più volte, otteniamo una distribuzione di medie campionarie. Un tale distribuzione ha un nome speciale in statistica: si chiama *distribuzione campionaria della media*.</span>
+<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-histmeaniq, fig.cap="Istogramma della distribuzione delle medie dei punteggi del QI calcolate su 10000 campioni casuali di ampiezza $n=5$."}</span></span>
+<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(sample_means) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample_means)) <span class="sc">+</span></span>
+<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-101"><a href="#cb18-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Media del quoziente d'intelligenza in campioni di ampiezza n = 5"</span>,</span>
+<span id="cb18-102"><a href="#cb18-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densità"</span></span>
+<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a>La "distribuzione campionaria" è un importante concetto della statistica ed è fondamentale per comprendere il comportamento dei piccoli campioni. Quando abbiamo eseguito per la prima volta l'esperimento casuale relativo all'estrazione di cinque punteggi IQ dalla popolazione, abbiamo trovato una media campionaria pari a <span class="in">`r round(mean(y), 2)`</span>. Quello che impariamo dalla distribuzione campionaria delle medie di campioni di ampiezza $n = 5$ della @fig-histmeaniq è che un tale esperimento casuale è poco accurato. Infatti, la distribuzione campionaria della media dei campioni di ampiezza $n=5$ ci fa capire che, se ripetendo un tale esperimento casuale tante volte, otteniamo delle medie campionarie con valori che possono essere compresi nell'intervallo tra 80 e 120. In altre parole, la distribuzione campionaria della media di campioni di ampiezza 5 ci dice che il risultato dell'esperimento casuale (ovvero, la media osservata in un singolo campione) varia di molto tra i diversi campioni che possono essere estratti dalla popolazione. Di conseguenza, se il nostro obiettivo è quello di stimare la media della popolazione, allora non dobbiamo fidarci troppo del risultato ottenuto *per caso* da un singolo campione di numerosità $n$ = 5. Nella discussione seguente mostreremo come sia possibile utilizzare la stima della distribuzione campionaria per descrivere le proprietà statistiche delle stime (ovvero, il grado di incertezza che è associato alle stime che otteniamo).</span>
+<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a>Si noti che, in generale, la distribuzione campionaria non è nota, poiché dipende dalle caratteristiche della popolazione e non solo dai dati osservati nel campione. In pratica, quindi, non possiamo mai conoscere le caratteristiche esatte della distribuzione campionaria di una statistica; tali caratteristiche possono solo essere stimate.</span>
+<span id="cb18-109"><a href="#cb18-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-110"><a href="#cb18-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## Distribuzione campionaria della media</span></span>
+<span id="cb18-111"><a href="#cb18-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-112"><a href="#cb18-112" aria-hidden="true" tabindex="-1"></a>Consideriamo ora l'inferenza statistica nel caso della statistica campionaria corrispondente alla media del campione. Denotiamo con $\bar{X}_n$ la media calcolata su un campione di $n$ osservazioni. Abbiamo detto che, ogni volta che osserviamo un nuovo campione di ampiezza $n$, la statistica $\bar{X}_n$ assumerà un valore diverso. In termini tecnici diciamo che $\bar{X}_n$ è una variabile aleatoria, ovvero è una variabile che assume un nuovo valore ogni qualvolta l'esperimento casuale viene ripetuto (nel caso presente l'esperimento casuale corrisponde all'estrazione di un campione casuale dalla popolazione e al calcolo della media delle osservazioni campionarie). L'insieme dei valori che $\bar{X}_n$ può assumere in tutti i campioni casuali di ampiezza $n$ che possono essere estratti dalla popolazione è detto *distribuzione campionaria della media*.</span>
+<span id="cb18-113"><a href="#cb18-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-114"><a href="#cb18-114" aria-hidden="true" tabindex="-1"></a><span class="fu">### Valore atteso della media campionaria</span></span>
+<span id="cb18-115"><a href="#cb18-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-116"><a href="#cb18-116" aria-hidden="true" tabindex="-1"></a>Qual è la media (valore atteso) della distribuzione campionaria della media? È facile mostrare che $\mu_{\bar{X}_n}$ coincide con il valore medio $\mu$ della popolazione da cui i campioni di ampiezza $n$ sono stati estratti.</span>
+<span id="cb18-117"><a href="#cb18-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-118"><a href="#cb18-118" aria-hidden="true" tabindex="-1"></a>::: {proof}</span>
+<span id="cb18-119"><a href="#cb18-119" aria-hidden="true" tabindex="-1"></a>Ponendo $\bar{X}_n = S_n/n$, dove $S_n = X_1 + X_2 + \dots + X_n$ è la somma di $n$ variabili aleatorie iid, ne segue che: $$</span>
+<span id="cb18-120"><a href="#cb18-120" aria-hidden="true" tabindex="-1"></a>\mathbb{E}(\bar{X}_n) = \frac{1}{n} \mathbb{E}(S_n) = \frac{1}{n} \mathbb{E}(X_1 + X_2 + \dots + X_n ) =  \frac{1}{n} n \mu = \mu.</span>
+<span id="cb18-121"><a href="#cb18-121" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-122"><a href="#cb18-122" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-123"><a href="#cb18-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-124"><a href="#cb18-124" aria-hidden="true" tabindex="-1"></a><span class="fu">### Varianza della media campionaria</span></span>
+<span id="cb18-125"><a href="#cb18-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-126"><a href="#cb18-126" aria-hidden="true" tabindex="-1"></a>Qual è la varianza della distribuzione campionaria della media? Anche in questo caso si può facilmente mostrare come la varianza della distribuzione delle medie campionarie è legata alla varianza $\sigma^2$ della popolazione dalla seguente relazione:</span>
+<span id="cb18-127"><a href="#cb18-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-128"><a href="#cb18-128" aria-hidden="true" tabindex="-1"></a>$$ </span>
+<span id="cb18-129"><a href="#cb18-129" aria-hidden="true" tabindex="-1"></a>var(\bar{X}<span class="sc">\_</span>n) = \frac{\sigma^2}{n},</span>
+<span id="cb18-130"><a href="#cb18-130" aria-hidden="true" tabindex="-1"></a>$$ {#eq-varmedia}</span>
+<span id="cb18-131"><a href="#cb18-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-132"><a href="#cb18-132" aria-hidden="true" tabindex="-1"></a>dove $n$ è la numerosità dei campioni casuali.</span>
+<span id="cb18-133"><a href="#cb18-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-134"><a href="#cb18-134" aria-hidden="true" tabindex="-1"></a>Prima di presentare la dimostrazione dell'@eq-varmedia è necessario ricordare la seguente proprietà della varianza: se una variabile aleatoria $X$ viene moltiplicata per una costante $a$, la varianza della variabile aleatoria $aX$ diventa</span>
+<span id="cb18-135"><a href="#cb18-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-136"><a href="#cb18-136" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-137"><a href="#cb18-137" aria-hidden="true" tabindex="-1"></a>var(a X) = a^2 var(X).</span>
+<span id="cb18-138"><a href="#cb18-138" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-139"><a href="#cb18-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-140"><a href="#cb18-140" aria-hidden="true" tabindex="-1"></a>Possiamo ora comprendere la dimostrazione seguente.</span>
+<span id="cb18-141"><a href="#cb18-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-142"><a href="#cb18-142" aria-hidden="true" tabindex="-1"></a>::: {#proof-varmedia}</span>
+<span id="cb18-143"><a href="#cb18-143" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-144"><a href="#cb18-144" aria-hidden="true" tabindex="-1"></a>var(\bar{X}_n) = \frac{1}{n^2} var(S_n) = \frac{1}{n^2} n \sigma^2 </span>
+<span id="cb18-145"><a href="#cb18-145" aria-hidden="true" tabindex="-1"></a>= \frac{\sigma^2}{n}.</span>
+<span id="cb18-146"><a href="#cb18-146" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-147"><a href="#cb18-147" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-148"><a href="#cb18-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-149"><a href="#cb18-149" aria-hidden="true" tabindex="-1"></a>I due risultati che abbiamo ottenuto sopra sono molto importanti. Il primo ci dice che la media campionaria è uno stimatore corretto (ovvero, non distorto) della media della popolazione. Il secondo quantifica l'errore medio che compiamo usando usiamo la media del campione quale stima della media della popolazione.</span>
+<span id="cb18-150"><a href="#cb18-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-151"><a href="#cb18-151" aria-hidden="true" tabindex="-1"></a><span class="fu">### Errore standard</span></span>
+<span id="cb18-152"><a href="#cb18-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-153"><a href="#cb18-153" aria-hidden="true" tabindex="-1"></a>La radice quadrata della varianza della distribuzione campionaria della media si chiama *errore standard* della media campionaria. Questa è una quantità molto importante perché ci informa sul livello di incertezza della nostra stima fornendoci un valore che ha la stessa unità di misura delle osservazioni. Se vogliamo stimare la media della popolazione utilizzando la media del campione quale stimatore ci possiamo aspettare di compiere un errore medio pari a $\frac{\hat{\sigma}_n}{\sqrt{n}},$ laddove $\hat{\sigma}_n$ è la deviazione standard del campione utilizzata quale stima della deviazione standard della popolazione.</span>
+<span id="cb18-154"><a href="#cb18-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-155"><a href="#cb18-155" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Simulazione</span></span>
+<span id="cb18-156"><a href="#cb18-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-157"><a href="#cb18-157" aria-hidden="true" tabindex="-1"></a>Per chiarire le due conclusioni precedenti, utilizziamo nuovamente la simulazione che abbiamo eseguito in precedenza, quando abbiamo generato 10000 medie campionarie per campioni di ampiezza $n = 5$ estratti dalla popolazione $\mathcal{N}(\mu = 100, \sigma = 15$). La distribuzione di tali medie è rappresentata nella figura @fig-histmeaniq). In realtà, quella fornita dalla @fig-histmeaniq *non è* esattamente la distribuzione campionaria delle medie di campioni casuali di ampiezza $n=5$ estratti dalla popolazione $\mathcal{N}(\mu = 100, \sigma = 15$): la vera distribuzione campionaria della media si otterrebbe estraendo *infiniti* campioni di ampiezza $n = 5$ dalla popolazione. Tuttavia, avendo a disposizione le medie di 10000 campioni, ci possiamo aspettare un risultato empirico non troppo diverso da quello teorico. Verifichiamo dunque le due conclusioni a cui siamo giunti sopra.</span>
+<span id="cb18-158"><a href="#cb18-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-159"><a href="#cb18-159" aria-hidden="true" tabindex="-1"></a>Sappiamo che la media delle 10000 medie di campioni di ampiezza $n=5$ dovrà essere molto simile (anche se non identica, dato che il numero dei campioni è grande, ma non infinito) alla media della popolazione. Infatti, in questa simulazione, abbiamo che $\hat{\mu}_{\bar{X}_n} =$ `r round(mean(sample_means), 2)` contro un valore teorico $\mu=100$. All'aumentare del numero di campioni estratti $\mu_{\bar{X}_n}$ diventa sempre più simile a $\mu$.</span>
+<span id="cb18-160"><a href="#cb18-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-161"><a href="#cb18-161" aria-hidden="true" tabindex="-1"></a>Calcoliamo ora la deviazione standard (detta *errore standard*) delle 10000 medie campionarie che abbiamo trovato. Nella simulazione, tale valore è pari a <span class="in">`r round(sd(sample_means), 3)`</span> mentre il valore teorico è $\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}} = \frac{15}{\sqrt{5}} = 6.708$. Possiamo dunque dire che, con 10000 medie campionarie le proprietà della distribuzione campionaria della media vengono approssimate molto bene.</span>
+<span id="cb18-162"><a href="#cb18-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-163"><a href="#cb18-163" aria-hidden="true" tabindex="-1"></a>Si noti che possiamo attribuire a $\sigma_{\bar{X}}$ la stessa interpretazione che è possibile fornire, in generale, alla deviazione standard. Nel caso di un campione, la deviazione standard $\sigma$ ci dice di quanto, in media, i valori osservati sono lontani dalla media. Nel caso della distribuzione campionaria delle medie dei campioni, $\sigma_{\bar{X}}$ ci dice quale errore medio compiamo stimando $\mu$ con $\bar{X}$. In altre parole, ci dice che, se considerassimo *tutte* le medie $\bar{X}$ che si possono calcolare sulla base degli infiniti campioni di dimensioni $n$ che possiamo estrarre dalla popolazione, la distanza media tra ciascuna di queste medie e la media della distribuzione (che corrisponde alla media della popolazione) è pari a $\sigma_{\bar{X}}$. La quantità $\sigma_{\bar{X}}$ può dunque essere considerata come una misura di errore nella stima di $\mu$ mediante $\bar{X}$.</span>
+<span id="cb18-164"><a href="#cb18-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-165"><a href="#cb18-165" aria-hidden="true" tabindex="-1"></a><span class="fu">### Distribuzioni delle statistiche campionarie</span></span>
+<span id="cb18-166"><a href="#cb18-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-167"><a href="#cb18-167" aria-hidden="true" tabindex="-1"></a>Qualunque statistica campionaria ha una sua distribuzione teorica. Consideriamo, ad esempio, il massimo del campione quale statistica campionaria di interesse. Ripetiamo la simulazione che abbiamo descritto sopra calcolando, questa volta, il valore massimo del campione.</span>
+<span id="cb18-168"><a href="#cb18-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-171"><a href="#cb18-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-172"><a href="#cb18-172" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb18-173"><a href="#cb18-173" aria-hidden="true" tabindex="-1"></a>n_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb18-174"><a href="#cb18-174" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb18-175"><a href="#cb18-175" aria-hidden="true" tabindex="-1"></a>sample_max <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_samples)</span>
+<span id="cb18-176"><a href="#cb18-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-177"><a href="#cb18-177" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_samples) {</span>
+<span id="cb18-178"><a href="#cb18-178" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">15</span>))</span>
+<span id="cb18-179"><a href="#cb18-179" aria-hidden="true" tabindex="-1"></a>    sample_max[i] <span class="ot">&lt;-</span> <span class="fu">max</span>(y)</span>
+<span id="cb18-180"><a href="#cb18-180" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-181"><a href="#cb18-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-182"><a href="#cb18-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-183"><a href="#cb18-183" aria-hidden="true" tabindex="-1"></a>I risultati di questa simulazione sono riportati nella @fig-histmaxiq.</span>
+<span id="cb18-184"><a href="#cb18-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-185"><a href="#cb18-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-histmaxiq, fig.cap="Istogramma della distribuzione del QI massimo osservato in ciascun campione casuali di ampiezza $n=5$. Per creare la figura sono stati considerati 10000 campioni casuali."}</span></span>
+<span id="cb18-186"><a href="#cb18-186" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(sample_max) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-187"><a href="#cb18-187" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample_max)) <span class="sc">+</span></span>
+<span id="cb18-188"><a href="#cb18-188" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb18-189"><a href="#cb18-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-190"><a href="#cb18-190" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Valore massimo del QI in campioni di ampiezza n = 5"</span>,</span>
+<span id="cb18-191"><a href="#cb18-191" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densità"</span></span>
+<span id="cb18-192"><a href="#cb18-192" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-193"><a href="#cb18-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-194"><a href="#cb18-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-195"><a href="#cb18-195" aria-hidden="true" tabindex="-1"></a>Non dovrebbe sorprenderci che, prendendo 5 persone a caso per poi selezionare la persona con il punteggio QI più alto, otteniamo una distribuzione che, rispetto alla distribuzione della figura @fig-histmaxiq), è traslata verso destra. Nella presente simulazione, la distribuzione del QI massimo di un campione casuale di ampiezza $n = 5$ si situa approssimativamente nell'intervallo compreso tra 90 e 150.</span>
+<span id="cb18-196"><a href="#cb18-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-197"><a href="#cb18-197" aria-hidden="true" tabindex="-1"></a><span class="fu">## Teorema del limite centrale {#sec:tlc}</span></span>
+<span id="cb18-198"><a href="#cb18-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-199"><a href="#cb18-199" aria-hidden="true" tabindex="-1"></a>Chiediamoci ora quale sia la relazione che intercorre tra la distribuzione campionaria della media e l'ampiezza $n$ dei campioni. In ciascun pannello della figura @fig-tlcnavarro sono riportati i risultati di una simulazione nella quale sono stati generati 10000 campioni di ampiezza $n$ per poi calcolare il QI medio in ciascun campione.</span>
+<span id="cb18-200"><a href="#cb18-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-201"><a href="#cb18-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-tlcnavarro, fig.cap="Nel primo pannello in alto a sinistra ciascun campione contiene una sola osservazione, per cui la media del campione è identica al valore del QI di una persona. Di conseguenza, la distribuzione campionaria della media è identica alla distribuzione dei valori del QI nella popolazione. Quando $n=2$ la media di ciascun campione tende ad essere più simile alla media della popolazione di quanto lo sia ciascuna singola osservazione della popolazione. Quindi anche l'ampiezza dell'istogramma (ovvero, la distribuzione campionaria della media) diminuisce, se confrontata con la dispersione della popolazione. Quando giungiamo ad una numerosità campionaria pari a $n=30$ vediamo che la maggior parte delle medie campionarie tende ad addensarsi intorno alla media della popolazione.", out.width = '190%'}</span></span>
+<span id="cb18-202"><a href="#cb18-202" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb18-203"><a href="#cb18-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-204"><a href="#cb18-204" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb18-205"><a href="#cb18-205" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb18-206"><a href="#cb18-206" aria-hidden="true" tabindex="-1"></a>nrep <span class="ot">&lt;-</span> <span class="fl">1e5</span></span>
+<span id="cb18-207"><a href="#cb18-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-208"><a href="#cb18-208" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, nrep)</span>
+<span id="cb18-209"><a href="#cb18-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-210"><a href="#cb18-210" aria-hidden="true" tabindex="-1"></a>get_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(nobs, mu, sigma) {</span>
+<span id="cb18-211"><a href="#cb18-211" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(<span class="at">n =</span> nobs, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma))</span>
+<span id="cb18-212"><a href="#cb18-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(x) </span>
+<span id="cb18-213"><a href="#cb18-213" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-214"><a href="#cb18-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-215"><a href="#cb18-215" aria-hidden="true" tabindex="-1"></a>ymax <span class="ot">&lt;-</span> <span class="fl">0.14</span></span>
+<span id="cb18-216"><a href="#cb18-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-217"><a href="#cb18-217" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb18-218"><a href="#cb18-218" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-219"><a href="#cb18-219" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-220"><a href="#cb18-220" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-221"><a href="#cb18-221" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-222"><a href="#cb18-222" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-223"><a href="#cb18-223" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 1"</span>)</span>
+<span id="cb18-224"><a href="#cb18-224" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-225"><a href="#cb18-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-226"><a href="#cb18-226" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb18-227"><a href="#cb18-227" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-228"><a href="#cb18-228" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-229"><a href="#cb18-229" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-230"><a href="#cb18-230" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-231"><a href="#cb18-231" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-232"><a href="#cb18-232" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 2"</span>)</span>
+<span id="cb18-233"><a href="#cb18-233" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-234"><a href="#cb18-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-235"><a href="#cb18-235" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb18-236"><a href="#cb18-236" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-237"><a href="#cb18-237" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-238"><a href="#cb18-238" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-239"><a href="#cb18-239" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-240"><a href="#cb18-240" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-241"><a href="#cb18-241" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 3"</span>)</span>
+<span id="cb18-242"><a href="#cb18-242" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-243"><a href="#cb18-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-244"><a href="#cb18-244" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb18-245"><a href="#cb18-245" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-246"><a href="#cb18-246" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-247"><a href="#cb18-247" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-248"><a href="#cb18-248" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-249"><a href="#cb18-249" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-250"><a href="#cb18-250" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 5"</span>)</span>
+<span id="cb18-251"><a href="#cb18-251" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-252"><a href="#cb18-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-253"><a href="#cb18-253" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb18-254"><a href="#cb18-254" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-255"><a href="#cb18-255" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-256"><a href="#cb18-256" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-257"><a href="#cb18-257" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-258"><a href="#cb18-258" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-259"><a href="#cb18-259" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 15"</span>)</span>
+<span id="cb18-260"><a href="#cb18-260" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-261"><a href="#cb18-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-262"><a href="#cb18-262" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb18-263"><a href="#cb18-263" aria-hidden="true" tabindex="-1"></a>qi <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nrep, <span class="fu">get_mean</span>(nobs, mu, sigma))</span>
+<span id="cb18-264"><a href="#cb18-264" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(qi, <span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb18-265"><a href="#cb18-265" aria-hidden="true" tabindex="-1"></a>     <span class="at">yaxt=</span><span class="st">'n'</span>, </span>
+<span id="cb18-266"><a href="#cb18-266" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, ymax),</span>
+<span id="cb18-267"><a href="#cb18-267" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">160</span>),</span>
+<span id="cb18-268"><a href="#cb18-268" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"QI"</span>, <span class="at">main =</span> <span class="st">"n = 30"</span>)</span>
+<span id="cb18-269"><a href="#cb18-269" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb18-270"><a href="#cb18-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-271"><a href="#cb18-271" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb18-272"><a href="#cb18-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-273"><a href="#cb18-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-274"><a href="#cb18-274" aria-hidden="true" tabindex="-1"></a>Gli istogrammi mostrano la distribuzione delle medie così ottenute, cioè ci forniscono una rappresentazione grafica della distribuzione campionaria della media al variare dell'ampiezza campionaria $n$. I punteggi del QI sono stati ricavati da una distribuzione normale con media 100 e deviazione standard 15 e tale distribuzione viene visualizzata con una linea nera continua in ciascun pannello della figura @fig-tlcnavarro.</span>
+<span id="cb18-275"><a href="#cb18-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-276"><a href="#cb18-276" aria-hidden="true" tabindex="-1"></a>Quello che ci chiediamo è come varia la distribuzione campionaria della media in funzione dell'ampiezza del campione. Intuitivamente, conosciamo già parte della risposta. Se abbiamo a disposizione solo poche osservazioni, è probabile che la media campionaria sia abbastanza imprecisa: se ripetiamo l'esperimento casuale del campionamento e ricalcoliamo la media del campione, otteniamo una risposta molto diversa ad ogni ripetizione dell'esperimento casuale. Di conseguenza, la distribuzione campionaria della media comprenderà una gamma di valori molto grande. Invece, si ottengono risultati molto simili tra loro se ripetiamo l'esperimento del campionamento utilizzando campioni di grandi dimensioni. In questo secondo caso, la distribuzione campionaria includerà una gamma di valori delle medie molto minore che in precedenza. Questo andamento si può notare nei pannelli della figura @fig-tlcnavarro: l'errore standard della media campionaria diminuisce all'aumentare dell'ampiezza del campione.</span>
+<span id="cb18-277"><a href="#cb18-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-278"><a href="#cb18-278" aria-hidden="true" tabindex="-1"></a>Ciò che abbiamo descritto finora, tuttavia, riguarda solo un aspetto di quello che accade alla distribuzione campionaria di $\bar{X}$ all'aumentare di $n$. Gli esempi discussi finora erano relativi al caso di campioni casuali del QI. Poiché i punteggi del QI seguono approssimativamente una distribuzione normale, abbiamo assunto che anche la popolazione abbia una distribuzione normale. Tuttavia, si presentano spesso casi in cui la distribuzione della popolazione non è normale. In queste circostanze, cosa succede alla distribuzione campionaria della media? La cosa straordinaria è questa: non importa quale sia la forma della distribuzione della popolazione, all'aumentare della dimensione campionaria $n$, la distribuzione di frequenza delle medie campionarie si approssima sempre più alla tipica forma a campana di una distribuzione normale.</span>
+<span id="cb18-279"><a href="#cb18-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-280"><a href="#cb18-280" aria-hidden="true" tabindex="-1"></a>Per farci un'idea di quello che succede, eseguiamo alcune simulazioni usando R.</span>
+<span id="cb18-281"><a href="#cb18-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-284"><a href="#cb18-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-285"><a href="#cb18-285" aria-hidden="true" tabindex="-1"></a><span class="co"># needed for printing</span></span>
+<span id="cb18-286"><a href="#cb18-286" aria-hidden="true" tabindex="-1"></a>width <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb18-287"><a href="#cb18-287" aria-hidden="true" tabindex="-1"></a>height <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb18-288"><a href="#cb18-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-289"><a href="#cb18-289" aria-hidden="true" tabindex="-1"></a><span class="co"># parameters of the beta</span></span>
+<span id="cb18-290"><a href="#cb18-290" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb18-291"><a href="#cb18-291" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb18-292"><a href="#cb18-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-293"><a href="#cb18-293" aria-hidden="true" tabindex="-1"></a><span class="co"># mean and standard deviation of the beta</span></span>
+<span id="cb18-294"><a href="#cb18-294" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(a <span class="sc">*</span> b <span class="sc">/</span> (a <span class="sc">+</span> b)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (a <span class="sc">+</span> b <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb18-295"><a href="#cb18-295" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> a <span class="sc">/</span> (a <span class="sc">+</span> b)</span>
+<span id="cb18-296"><a href="#cb18-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-297"><a href="#cb18-297" aria-hidden="true" tabindex="-1"></a><span class="co"># define function to draw a plot</span></span>
+<span id="cb18-298"><a href="#cb18-298" aria-hidden="true" tabindex="-1"></a>plot_one <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">N =</span> <span class="dv">50000</span>) {</span>
+<span id="cb18-299"><a href="#cb18-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-300"><a href="#cb18-300" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate N random sample means of size n</span></span>
+<span id="cb18-301"><a href="#cb18-301" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rbeta</span>(n <span class="sc">*</span> N, a, b), n, N)</span>
+<span id="cb18-302"><a href="#cb18-302" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(X)</span>
+<span id="cb18-303"><a href="#cb18-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-304"><a href="#cb18-304" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot the data</span></span>
+<span id="cb18-305"><a href="#cb18-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(</span>
+<span id="cb18-306"><a href="#cb18-306" aria-hidden="true" tabindex="-1"></a>    X,</span>
+<span id="cb18-307"><a href="#cb18-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, .<span class="dv">025</span>), <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb18-308"><a href="#cb18-308" aria-hidden="true" tabindex="-1"></a>    <span class="co">#col = ifelse(colour, emphColLight, emphGrey),</span></span>
+<span id="cb18-309"><a href="#cb18-309" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"gray"</span>,</span>
+<span id="cb18-310"><a href="#cb18-310" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Media campionaria"</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.2</span>),</span>
+<span id="cb18-311"><a href="#cb18-311" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"n ="</span>, n), <span class="at">axes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb18-312"><a href="#cb18-312" aria-hidden="true" tabindex="-1"></a>    <span class="at">font.main =</span> <span class="dv">1</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb18-313"><a href="#cb18-313" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-314"><a href="#cb18-314" aria-hidden="true" tabindex="-1"></a>  <span class="co">#box()</span></span>
+<span id="cb18-315"><a href="#cb18-315" aria-hidden="true" tabindex="-1"></a>  <span class="fu">axis</span>(<span class="dv">1</span>)</span>
+<span id="cb18-316"><a href="#cb18-316" aria-hidden="true" tabindex="-1"></a>  <span class="co"># axis(2)</span></span>
+<span id="cb18-317"><a href="#cb18-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-318"><a href="#cb18-318" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot the theoretical distribution</span></span>
+<span id="cb18-319"><a href="#cb18-319" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">1.2</span>, .<span class="dv">01</span>), <span class="fu">dnorm</span>(x, m, s <span class="sc">/</span> <span class="fu">sqrt</span>(n)),</span>
+<span id="cb18-320"><a href="#cb18-320" aria-hidden="true" tabindex="-1"></a>    <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">type =</span> <span class="st">"l"</span></span>
+<span id="cb18-321"><a href="#cb18-321" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-322"><a href="#cb18-322" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-323"><a href="#cb18-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-324"><a href="#cb18-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-325"><a href="#cb18-325" aria-hidden="true" tabindex="-1"></a>Consideriamo la distribuzione della popolazione rappresentata dall'istogramma riportato nella @fig-tlctriangle1. Confrontando l'istogramma triangolare con la curva a campana tracciata dalla linea nera risulta chiaro che la distribuzione della popolazione non assomiglia affatto a una distribuzione normale.</span>
+<span id="cb18-326"><a href="#cb18-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-327"><a href="#cb18-327" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-tlctriangle1, fig.cap="Dimostrazione del Teorema del limite centrale. Consideriamo una popolazione che non segue la distribuzione normale. La distribuzione di tale popolazione è rappresentata dall'istogramma grigio."}</span></span>
+<span id="cb18-328"><a href="#cb18-328" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_one</span>(<span class="dv">1</span>)</span>
+<span id="cb18-329"><a href="#cb18-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-330"><a href="#cb18-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-331"><a href="#cb18-331" aria-hidden="true" tabindex="-1"></a>In una prima simulazione, ho estratto 50000 campioni di ampiezza $n=2$ da questa distribuzione e, per ciascuno di essi ho calcolato la media campionaria. Come si può vedere nella figura @fig-tlctriangle2, la distribuzione campionaria non è triangolare. Certamente non è Normale, ma assomiglia di più ad una distribuzione campanulare di quanto assomigli alla distribuzione della popolazione raffigurata nella figura @fig-tlctriangle1.</span>
+<span id="cb18-332"><a href="#cb18-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-333"><a href="#cb18-333" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-tlctriangle2, fig.cap="Distribuzione campionaria di $\bar{X}$ per campioni casuali di ampiezza $n=2$ estratti dalla popolazione rappresentata nella figura 1.7."}</span></span>
+<span id="cb18-334"><a href="#cb18-334" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_one</span>(<span class="dv">2</span>)</span>
+<span id="cb18-335"><a href="#cb18-335" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-336"><a href="#cb18-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-337"><a href="#cb18-337" aria-hidden="true" tabindex="-1"></a>Quando aumento la numerosità del campione a $n=4$ la distribuzione campionaria della media si approssima abbastanza bene alla normale, @fig-tlctriangle4.</span>
+<span id="cb18-338"><a href="#cb18-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-339"><a href="#cb18-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-tlctriangle4, fig.cap="Distribuzione campionaria di $\bar{X}$ per campioni casuali di ampiezza $n=4$ estratti dalla popolazione rappresentata nella figura 1.7."}</span></span>
+<span id="cb18-340"><a href="#cb18-340" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_one</span>(<span class="dv">4</span>)</span>
+<span id="cb18-341"><a href="#cb18-341" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-342"><a href="#cb18-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-343"><a href="#cb18-343" aria-hidden="true" tabindex="-1"></a>Già con $n=8$ l'approssimazione diventa molto buona, come indicato nella @fig-tlctriangle8).</span>
+<span id="cb18-344"><a href="#cb18-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-345"><a href="#cb18-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-tlctriangle8, fig.cap="Distribuzione campionaria di $\bar{X}$ per campioni casuali di ampiezza $n=8$ estratti dalla popolazione rappresentata nella figura 1.7."}</span></span>
+<span id="cb18-346"><a href="#cb18-346" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_one</span>(<span class="dv">8</span>)</span>
+<span id="cb18-347"><a href="#cb18-347" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-348"><a href="#cb18-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-349"><a href="#cb18-349" aria-hidden="true" tabindex="-1"></a>In altre parole, se la dimensione del campione non è piccola, allora la distribuzione campionaria della media sarà approssimativamente normale indipendentemente dalla distribuzione della popolazione! Questo comportamento della distribuzione campionaria di $\bar{X}$ al variare di $n$ viene descritto in maniera formale dal Teorema del limite centrale.</span>
+<span id="cb18-350"><a href="#cb18-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-351"><a href="#cb18-351" aria-hidden="true" tabindex="-1"></a>::: {thm-tlc}</span>
+<span id="cb18-352"><a href="#cb18-352" aria-hidden="true" tabindex="-1"></a>Siano $X_1, X_2, \dots$ variabili aleatorie i.i.d., tutte con lo stesso valore atteso $\mu$ e la stessa varianza $\sigma^2$. Allora, $$\lim_{n \rightarrow +\infty} P\left(a \leq \bar{X}_n \leq b \right) = P(a \leq Y \leq b),</span>
+<span id="cb18-353"><a href="#cb18-353" aria-hidden="true" tabindex="-1"></a>\label{theo:tlc}$$ dove $Y \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$.</span>
+<span id="cb18-354"><a href="#cb18-354" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-355"><a href="#cb18-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-356"><a href="#cb18-356" aria-hidden="true" tabindex="-1"></a>Il Teorema del limite centrale ci dice che, se vengono selezionati campioni sufficientemente grandi (tipicamente è sufficiente che $n &gt; 30$ purché il carattere osservato non sia troppo asimmetrico), allora la media campionaria $\bar{X}$ di $n$ variabili aleatorie indipendenti $X_1, X_2, \dots$ converge in distribuzione ad una variabile aleatoria normale di media $\mu$ e varianza $\sigma^2/n$.</span>
+<span id="cb18-357"><a href="#cb18-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-358"><a href="#cb18-358" aria-hidden="true" tabindex="-1"></a>È altresì molto importante notare che, se le variabili di partenza $X_1$, $X_2$, ...$X_n$ sono esse stesse Normali, tutte con lo stesso valore atteso $\mu$ e la stessa varianza $\sigma^2$, allora il Teoremadel limite centrale è *esatto*. Ovvero per ogni $n$,</span>
+<span id="cb18-359"><a href="#cb18-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-360"><a href="#cb18-360" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-361"><a href="#cb18-361" aria-hidden="true" tabindex="-1"></a>\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right).</span>
+<span id="cb18-362"><a href="#cb18-362" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-363"><a href="#cb18-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-364"><a href="#cb18-364" aria-hidden="true" tabindex="-1"></a>Questa proprietà discende dal seguente teorema.</span>
+<span id="cb18-365"><a href="#cb18-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-366"><a href="#cb18-366" aria-hidden="true" tabindex="-1"></a>::: {thm-tlc-2}</span>
+<span id="cb18-367"><a href="#cb18-367" aria-hidden="true" tabindex="-1"></a>Se $X_1, X_2, \dots, X_n$ sono $n$ variabili aleatorie Normali tra di loro indipendenti, ciascuna con valore atteso $\mu$ e varianza $\sigma^2$, allora la variabile aleatoria $X_1 + X_2 + \dots + X_n$ è a sua volta una variabile aleatoria Normale con valore atteso $n \mu$ e varianza $n \sigma^2$.</span>
+<span id="cb18-368"><a href="#cb18-368" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-369"><a href="#cb18-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-370"><a href="#cb18-370" aria-hidden="true" tabindex="-1"></a>In conclusione, il Teorema del limite centrale ci consente di specificare completamente le proprietà della distribuzione campionaria di $\bar{X}_n$.</span>
+<span id="cb18-371"><a href="#cb18-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-372"><a href="#cb18-372" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Se la popolazione è normale, allora $\bar{X}_n \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ indipendentemente da $n$.</span>
+<span id="cb18-373"><a href="#cb18-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-374"><a href="#cb18-374" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Se invece la popolazione *non* è normale, allora la distribuzione di $\bar{X}_n$ tende a $\mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ al crescere di $n$.</span>
+<span id="cb18-375"><a href="#cb18-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-376"><a href="#cb18-376" aria-hidden="true" tabindex="-1"></a>Esaminiamo ora un esercizio in cui viene applicato il TLC.</span>
+<span id="cb18-377"><a href="#cb18-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-378"><a href="#cb18-378" aria-hidden="true" tabindex="-1"></a>Supponiamo di misurare un oggetto con una bilancia non molto precisa. Supponiamo inoltre che l'errore di misura $E$ della bilancia si distribuisca in maniera Normale con media $0$ e deviazione standard $\sigma = 2$ grammi. Se l'oggetto considerato ha un peso uguale a $w$, il peso osservato $X$ sarà dato dalla somma del suo peso vero e l'errore di misurazione: $X = w + E$. Dato che $w$ è una costante, $X$ seguirà la distribuzione normale con media $\mathbb{E}(X) = \mathbb{E}(w + E) = w + \mathbb{E}(E) = w$ e varianza $var(X) = var(w + E) = var(E) = 4$. Qual è la probabilità di ottenere una misurazione che non differisce di più di un grammo dal peso vero?</span>
+<span id="cb18-379"><a href="#cb18-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-380"><a href="#cb18-380" aria-hidden="true" tabindex="-1"></a>Dobbiamo trovare la probabilità</span>
+<span id="cb18-381"><a href="#cb18-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-382"><a href="#cb18-382" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-383"><a href="#cb18-383" aria-hidden="true" tabindex="-1"></a>\begin{aligned}</span>
+<span id="cb18-384"><a href="#cb18-384" aria-hidden="true" tabindex="-1"></a>P(-1 \leq X - w \leq 1)  &amp;= P\bigg(-\frac{1}{2} \leq \frac{X - w}{\sigma} \leq \frac{1}{2}\bigg)\notag<span class="sc">\\</span> &amp;= P\bigg(-\frac{1}{2} \leq Z \leq \frac{1}{2}\bigg)\notag</span>
+<span id="cb18-385"><a href="#cb18-385" aria-hidden="true" tabindex="-1"></a>\end{aligned}</span>
+<span id="cb18-386"><a href="#cb18-386" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-387"><a href="#cb18-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-388"><a href="#cb18-388" aria-hidden="true" tabindex="-1"></a>ovvero</span>
+<span id="cb18-389"><a href="#cb18-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-392"><a href="#cb18-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-393"><a href="#cb18-393" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb18-394"><a href="#cb18-394" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-395"><a href="#cb18-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-396"><a href="#cb18-396" aria-hidden="true" tabindex="-1"></a>Considerando l'evento complementare, possiamo dunque dire che c'è una probabilità maggiore di $0.6$ che la bilancia produca un valore che differisce di almeno un grammo dal peso vero.</span>
+<span id="cb18-397"><a href="#cb18-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-398"><a href="#cb18-398" aria-hidden="true" tabindex="-1"></a>Chiediamoci ora cosa succede se, invece di accontentarci di una singola misurazione, calcoliamo la media di $n = 10$ misurazioni. In questo secondo caso,</span>
+<span id="cb18-399"><a href="#cb18-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-400"><a href="#cb18-400" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-401"><a href="#cb18-401" aria-hidden="true" tabindex="-1"></a>\begin{aligned}</span>
+<span id="cb18-402"><a href="#cb18-402" aria-hidden="true" tabindex="-1"></a>P\left(-1 \leq \frac{S_{10}}{10} - w \leq 1\right) </span>
+<span id="cb18-403"><a href="#cb18-403" aria-hidden="true" tabindex="-1"></a>&amp;= P\bigg(-\frac{1}{\sqrt{4/10}} \leq \frac{\frac{S_{10}}{10} - w}{\sigma/\sqrt{10}} \leq \frac{1}{\sqrt{4/10}}\bigg)\notag<span class="sc">\\</span> </span>
+<span id="cb18-404"><a href="#cb18-404" aria-hidden="true" tabindex="-1"></a>&amp;= P\bigg(-\frac{\sqrt{10}}{2} \leq Z \leq \frac{\sqrt{10}}{2}\bigg)\notag</span>
+<span id="cb18-405"><a href="#cb18-405" aria-hidden="true" tabindex="-1"></a>\end{aligned}</span>
+<span id="cb18-406"><a href="#cb18-406" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb18-407"><a href="#cb18-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-408"><a href="#cb18-408" aria-hidden="true" tabindex="-1"></a>ovvero</span>
+<span id="cb18-409"><a href="#cb18-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-412"><a href="#cb18-412" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-413"><a href="#cb18-413" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fu">sqrt</span>(<span class="dv">10</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">sqrt</span>(<span class="dv">10</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb18-414"><a href="#cb18-414" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb18-415"><a href="#cb18-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-416"><a href="#cb18-416" aria-hidden="true" tabindex="-1"></a>Considerando l'evento complementare, possiamo concludere che c'è una probabilità pari a solo 0.114 che la media di 10 misurazioni assuma un valore che differisce di più di un grammo dal peso vero. È dunque ovvio che le medie di misurazioni ripetute sono migliori delle singole misure.</span>
+<span id="cb18-417"><a href="#cb18-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-418"><a href="#cb18-418" aria-hidden="true" tabindex="-1"></a><span class="fu">## Intervalli di confidenza</span></span>
+<span id="cb18-419"><a href="#cb18-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-420"><a href="#cb18-420" aria-hidden="true" tabindex="-1"></a><span class="fu">### Parametri di un modello statistico</span></span>
+<span id="cb18-421"><a href="#cb18-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-422"><a href="#cb18-422" aria-hidden="true" tabindex="-1"></a>Nel gergo statistico, i parametri sono i valori sconosciuti che determinano un modello statistico. Si consideri il modello statistico $Y \sim \mathcal{N}(\mu, \sigma)$. Il modello statistico precedente ci dice che $Y$ è una v.a. distribuita come una normale di parametri $\mu$ e $\sigma$. Supponiamo che la $Y$ sia il QI. In questo caso è facile capire cosa sono i parametri $\mu$ e $\sigma$. Quello del QI, infatti, è un caso particolare perché il test di intelligenza *Wechsler Adult Intelligence Scale* (WAIS) è stato costruito in modo tale da produrre dei dati che si distribuiscono in un modo noto: il QI segue la distribuzione normale di parametri $\mu = 100$ e $\sigma = 15$. In generale, però, i parametri di un modello statistico sono sconosciuti.</span>
+<span id="cb18-423"><a href="#cb18-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-424"><a href="#cb18-424" aria-hidden="true" tabindex="-1"></a><span class="fu">### L'incertezza della stima</span></span>
+<span id="cb18-425"><a href="#cb18-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-426"><a href="#cb18-426" aria-hidden="true" tabindex="-1"></a>Dato che i parametri sono, in genere, sconosciuti, è necessario stimarli. Non è sufficiente, però, ottenere una stima puntuale di un parametro. È anche necessario quantificare l'incertezza della stima. L'incertezza della stima viene descritta dall'approccio frequentista nei termini di un *intervallo di confidenza*. L'intervallo di confidenza si costruisce mediante l'errore standard.</span>
+<span id="cb18-427"><a href="#cb18-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-428"><a href="#cb18-428" aria-hidden="true" tabindex="-1"></a>L'errore standard è la deviazione standard stimata della stima di un parametro e quantifica il grado della nostra incertezza sulla quantità di interesse. Chiariamo questa idea facendo riferimento alla la @fig-histmeaniq. Tale figura riporta la distribuzione di un grande numero di medie campionarie, laddove la media di ciascun campione può essere considerata come una stima della media $\mu$ della popolazione. La deviazione standard di queste stime, chiamata *errore standard*, ci fornisce una misura dell'incertezza della nostra stima. In altre parole, quantifica la variabilità dei valori delle stime del parametro $\mu$ che sono calcolate sulla base di campioni diversi. Come abbiamo visto nella simulazione del TLC, l'errore standard ha la proprietà di diminuire all'aumentare della dimensione del campione.</span>
+<span id="cb18-429"><a href="#cb18-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-430"><a href="#cb18-430" aria-hidden="true" tabindex="-1"></a>L'errore standard viene utilizzato per calcolare l'intervallo di confidenza. L'*intervallo di confidenza* rappresenta un intervallo di valori di un parametro o quantità di interesse che sono approssimativamente coerenti con i dati, data la distribuzione campionaria presunta. All'intervallo di confidenza possiamo dunque assegnare la seguente interpretazione. Supponiamo che il modello statistico sia corretto e supponiamo di ripetere tante volte il processo di campionamento. Se per ogni campione estratto dalla popolazione calcoliamo una stima del parametro, allora gli intervalli di confidenza del 50% e del 95% includeranno il vero valore del parametro il 50% e il 95% delle volte.</span>
+<span id="cb18-431"><a href="#cb18-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-432"><a href="#cb18-432" aria-hidden="true" tabindex="-1"></a>Sotto l'ipotesi che la distribuzione campionaria segua la distribuzione normale, per campioni di grandi dimensioni l'intervallo di confidenza al 95% si costruisce nel modo seguente: $$</span>
+<span id="cb18-433"><a href="#cb18-433" aria-hidden="true" tabindex="-1"></a>\text{stima del parametro} \pm 2 \text{ errori standard.}</span>
+<span id="cb18-434"><a href="#cb18-434" aria-hidden="true" tabindex="-1"></a>$$ Dalla distribuzione normale sappiamo che una stima del parametro $\pm$ 1 errore standard corrisponde ad un intervallo del 68% e una stima del parametro $\pm$ $\frac{2}{3}$ di un errore standard corrisponde ad un intervallo del 50%. Un intervallo del 50% è particolarmente facile da interpretare dato che il vero valore del parametro ha la stessa probabilità di essere incluso o escluso dall'intervallo. Un intervallo del 95% basato sulla distribuzione normale è circa tre volte più ampio di un intervallo del 50%.</span>
+<span id="cb18-435"><a href="#cb18-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-436"><a href="#cb18-436" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali {.unnumbered}</span></span>
+<span id="cb18-437"><a href="#cb18-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-438"><a href="#cb18-438" aria-hidden="true" tabindex="-1"></a>I risultati precedenti consentono le seguenti conclusioni. Se $X_1, \dots, X_n$ è un insieme di variabili aleatorie i.i.d., tutte con media $\mu$ e varianza $\sigma^2$, allora $$</span>
+<span id="cb18-439"><a href="#cb18-439" aria-hidden="true" tabindex="-1"></a>\mathbb{E}(\bar{X}) = \mu, \quad var(\bar{X}) = \frac{\sigma^2}{n}.</span>
+<span id="cb18-440"><a href="#cb18-440" aria-hidden="true" tabindex="-1"></a>$$ Se le $X_i$ seguono la distribuzione normale, ne segue che $\bar{X} \sim \mathcal{N}(\mu, \sigma/\sqrt{n})$, in quanto qualunque combinazione lineare di variabili aleatorie Normali è ancora una variabile aleatoria Normale. Invece, se le $X_i$ non seguono la distribuzione normale, il Teorema del limite centrale ci consente comunque di dire che $\bar{X}$ tende a $\mathcal{N}(\mu, \sigma/\sqrt{n})$ al crescere di $n$. I risultati precedenti sono estremamente importanti perché specificano completamente la distribuzione della media campionaria e vengono utilizzati dall'approccio frequentista per l'inferenza sulla media di una popolazione.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

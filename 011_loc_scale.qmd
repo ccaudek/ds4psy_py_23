@@ -1,0 +1,347 @@
+# Indici di posizione e di scala {#sec-loc-scale}
+
+```{r, include = FALSE}
+source("_common.R")
+```
+
+L'analisi grafica esaminata in precedenza costituisce la base di partenza di qualsivoglia analisi quantitativa dei dati. Tramite opportune rappresentazioni grafiche possiamo individuare alcune caratteristiche importanti di una distribuzione: per esempio, è possibile capire se la distribuzione è simmetrica o asimmetrica; oppure se è unimodale o multimodale. Successivamente, è necessario calcolare degli indici numerici che descrivano in modo sintetico le caratteristiche di base dei dati. In questo capitolo verranno introdotti i principali indicatori della statistica descrittiva.
+
+## Indici di tendenza centrale
+
+Tra le misure di tendenza centrale, ovvero tra gli indici che ci informano sui valori attorno ai quali sono prevalentemente concentrati i dati di un campione, quella più comunemente usata è la media.
+
+::: callout-tip
+Per un'introduzione "soft" alla nozione di tendenza centrale di una distribuzione statistica si segua il [link](https://tinystats.github.io/teacups-giraffes-and-statistics/03_mean.html).
+:::
+
+### Media
+
+Tutti conosciamo la media aritmetica di $\{x_1, x_2, \dots, x_n\}$, ovvero il numero reale $\bar{x}$ definito da
+
+$$
+\begin{equation}
+\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i.
+\end{equation}
+$$ {#eq-mean}
+
+::: callout-tip
+Nella @eq-mean ho usato la notazione delle sommatorie per descrivere una somma di valori. Questa notazione è molto usata in statistica e viene descritta in Appendice.
+:::
+
+La media gode della seguente importante proprietà: la somma degli scarti tra ciascuna modalità $x_i$ e la media aritmetica $\bar{x}$ è nulla, cioè
+
+$$
+\begin{equation}
+\sum_{i=1}^n (x_i - \bar{x}) = 0.\notag
+\end{equation}
+$$ {#eq-diffmeansumzero}
+
+Infatti,
+
+$$
+\begin{aligned}
+\sum_{i=1}^n (x_i - \bar{x}) &= \sum_i x_i - \sum_i \bar{x}\notag\\
+&= \sum_i x_i - n \bar{x}\notag\\
+&= \sum_i x_i - \sum_i x_i = 0.\notag
+\end{aligned}
+$$
+
+Ciò ci consente di pensare alla media come al baricentro della distribuzione.
+
+Un'altra proprietà della media è la seguente. La somma dei quadrati degli scarti tra ciascuna modalità $x_i$ e una costante arbitraria $a$, cioè
+
+$$
+\begin{equation}
+\varphi(a) = \sum_{i=1}^n (x_i - a)^2,\notag
+\end{equation}
+$$ {#eq-minsq}
+
+è minima per $a = \bar{x}$.
+
+::: callout-note
+Il concetto statistico di media ha suscitato molte battute. Per esempio, il fatto che, in media, ciascuno di noi ha un numero di gambe circa pari a 1.9999999. Oppure, il fatto che, in media, ciascuno di noi ha un testicolo. Ma la media ha altri problemi, oltre al fatto di ispirare battute simili alle precedenti. In particolare, dobbiamo notare che la media non è sempre l'indice che meglio rappresenta la tendenza centrale di una distribuzione. In particolare, ciò non accade quando la distribuzione è asimmetrica, o in presenza di valori anomali (*outlier*) -- si veda il pannello di sinistra della @fig-raincloud. In tali circostanze, la tendenza centrale della distribuzione è meglio rappresentata dalla mediana o dalla media spuntata (si veda più sotto).
+:::
+
+::: {#exr-mean}
+Si calcoli la media dei valori BDI-II separatamente per ciascuno dei due gruppi di soggetti esaminati da @zetschefuture2019.
+
+```{r}
+df <- rio::import(
+  here("data", "data.mood.csv"),
+  header = TRUE
+)
+bysubj <- df %>%
+  group_by(group, esm_id) %>%
+  summarise(
+    bdi = mean(bdi)
+  ) %>%
+  na.omit()
+
+bysubj %>%
+  group_by(group) %>%
+  summarise(
+    avg_bdi = mean(bdi)
+  )
+
+# Oppure, usando le fuzioni di rstatix:
+bysubj %>% 
+  group_by(group) |> 
+  rstatix::get_summary_stats(bdi, type = "common")
+```
+:::
+
+### Media spuntata
+
+La *media spuntata* $\bar{x}_t$ (*trimmed mean*) non è altro che la media dei dati calcolata considerando solo il 90% (o altra percentuale) dei dati centrali. Per calcolare $\bar{x}_t$ si ordinando i dati secondo una sequenza crescente, $x_1 \leq x_2 \leq x_3 \leq \dots \leq x_n$, per poi eliminare il primo 5% e l'ultimo 5% dei dati della serie così ordinata. La media spuntata è data dalla media aritmetica dei dati rimanenti.
+
+::: {#exr-trimmed-mean}
+Si calcoli la media spuntata dei valori BDI-II per i due gruppi di soggetti di @zetschefuture2019 escludendo il 10% dei valori più estremi in ciascun gruppo.
+
+```{r}
+bysubj %>%
+  group_by(group) %>%
+  summarise(
+    avg_trim_bdi = mean(bdi, trim = 0.1)
+  )
+```
+:::
+
+### Moda e mediana
+
+In precedenza abbiamo già incontrato altri due popolari indici di tendenza centrale: la *moda* (*Mo*), ovvero il valore centrale della classe con la frequenza massima (può succedere che una distribuzione abbia più mode; in tal caso si dice *multimodale* e questo operatore perde il suo significato di indice di tendenza centrale) e la *mediana* $\tilde{x}$.
+
+::: {#exr-quantile-1}
+Si calcolino i quantili di ordine 0.25, 0.5 e 0.75 dei valori BDI-II per i due gruppi di soggetti di @zetschefuture2019.
+
+```{r}
+bysubj %>%
+  group_by(group) %>%
+  summarise(
+    q25 = quantile(bdi, probs = 0.25),
+    q50 = quantile(bdi, probs = 0.50),
+    q75 = quantile(bdi, probs = 0.75)
+  )
+```
+:::
+
+::: callout-note
+Si noti che solitamente i software restituiscono un valore *interpolato* del $p$-esimo quantile $q_p$ $(0 < p < 1)$, il quale viene calcolato mediante specifiche procedure. Il risultato fornito dai software, dunque, non sarà identico a quello trovato utilizzando la definizione non interpolata di quantile che abbiamo presentato in precedenza. Se, per qualche ragione, vogliamo conoscere l'algoritmo usato per la determinazione dei quantili interpolati, dobbiamo leggere la documentazione del software.
+:::
+
+## Indici di dispersione
+
+Le medie e gli indici di posizione descritti in precedenza forniscono delle sintesi dei dati che mettono in evidenza la tendenza centrale delle osservazioni. Tali indici, tuttavia, non considerano un aspetto importante della distribuzione dei dati, ovvero la variabilità dei valori numerici della variabile statistica. È dunque necessario sintetizzare la distribuzione di una variabile statistica oltre che con le misure di posizione anche tramite l'utilizzo di indicatori che valutino la dispersione delle unità statistice.
+
+::: callout-tip
+Per un'introduzione "soft" al tema degli indici di dispersione si segua il [link](https://tinystats.github.io/teacups-giraffes-and-statistics/04_variance.html).
+:::
+
+### Indici basati sull'ordinamento dei dati
+
+È possibile calcolare degli indici di variabilità basati sull'ordinamento dei dati. L'indice più ovvio è l'*intervallo di variazione*, ovvero la distanza tra il valore massimo e il valore minimo di una distribuzione di modalità, mentre in precedenza abbiamo già incontrato la *differenza interquartile*. Questi due indici, però, hanno il limite di essere calcolati sulla base di due soli valori della distribuzione ($x_{\text{max}}$ e $x_{\text{min}}$, oppure $x_{0.25}$ e $x_{0.75}$). Pertanto non utilizzano tutte le informazioni che sono disponibili. Inoltre, l'intervallo di variazione ha il limite di essere pesantemente influenzato dalla presenza di valori anomali.
+
+### Varianza
+
+Dati i limiti delle statistiche precedenti è più comune misurare la variabilità di una variabile statistica come la dispersione dei dati attorno ad un indice di tendenza centrale. Infatti, la misura di variabilità di gran lunga più usata per valutare la variabilità di una variabile statistica è senza dubbio la varianza. La varianza
+
+$$
+\begin{equation}
+S^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})^2
+\end{equation}
+$$ {#eq-var-descr}
+
+è la media dei quadrati degli scarti $x_i - \bar{x}$ tra ogni valore e la media della distribuzione.
+
+La varianza è una misura di dispersione più complessa di quelle esaminate in precedenza. È appropriata solo nel caso di distribuzioni simmetriche e, anch'essa, è fortemente influenzata dai valori anomali. Inoltre, è espressa in un'unità di misura che è il quadrato dell'unità di misura dei dati originari e quindi ad essa non può essere assegnata un'interpretazione intuitiva.
+
+::: {#exr-var-1}
+Si calcoli la varianza dei valori BDI-II per i dati di @zetschefuture2019.
+
+Applicando la formula precedente, per tutto il campione abbiamo
+
+```{r}
+sum((bysubj$bdi - mean(bysubj$bdi))^2) / length(bysubj$bdi)
+
+# ovvero
+var(bysubj$bdi) * (length(bysubj$bdi) - 1) / length(bysubj$bdi)
+```
+:::
+
+#### Stima della varianza della popolazione
+
+Si noti il denominatore della formula della varianza. Nell'@eq-var-descr ho usato $n$ (l'ampiezza campionaria, ovvero il numero di osservazioni del campione). In questo modo ottengo la varianza quale *statistica descrittiva* del campione. In alternativa, è possibile usare $n-1$ al denominatore:
+
+$$
+\begin{equation}
+s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2
+\end{equation}
+$$ {#eq-var-stimatore}
+
+In questo secondo modo si trova la varianza quale *stimatore* della varianza della popolazione. Si può dimostrare che l'@eq-var-stimatore fornisce una stima corretta (ovvero, non distorta) della varianza della popolazione da cui abbiamo ottenuto il campione, mentre invece la @eq-var-descr fornisce (in media) una stima troppo piccola della varianza della popolazione. Si presti attenzione alla notazione: $S^2$ per la varianza quale statistica descrittiva, $s^2$ per la varianza quale stimatore.
+
+::: {#exr-sim-var-stim}
+Per illustrare il punto precedente svolgiamo una simulazione.
+
+```{r}
+# Con la seguente istruzione rendo i risultati riproducibili.
+set.seed(123)
+
+# Definisco la funzione `my_var()` per il calcolo della varianza quale statistica descrittiva:
+my_var <- function(x) {
+  sum((x - mean(x))^2) / length(x)
+}
+
+# Decido di ripetere il processo di campionamento 100,000 volte.
+n_rep <- 1e5
+
+# Defisco un vettore di 100,000 elementi, ciascuno inizializzato come `NA`:
+var_descr <- rep(NA, n_rep)
+
+# Definisco l'ampiezza campionaria:
+n <- 10
+
+# Estraggo un campione di 10 osservazioni dalla popolazione del quoziente di intelligenza (per definizione avente media di 100 e deviazione standard di $15^2$). Chiamo `x` tale campione casuale di 10 osservazioni estratte a caso dalla popolazione del QI. Per tale campione calcolo la varianza quale statistica descrittiva e salvo il valore così ottenuto nell'elemento $i$-esimo del vettore `var_descr`.
+for(i in 1:n_rep) {
+  x <- rnorm(n, 100, 15)
+  var_descr[i] <- my_var(x)
+}
+
+# Calcolo poi la media dei 100,000 valori così ottenuti:
+mean(var_descr)
+```
+
+Si noti che il valore medio della stima della varianza ottenuta con l'@eq-var-descr è troppo piccolo rispetto al valore corretto di $15^2 = 225$.
+
+Ripeto ora la simulazione usando la formula della varianza con $n-1$ al denominatore:
+
+```{r}
+var_stim <- rep(NA, n_rep)
+
+n <- 10
+for(i in 1:n_rep) {
+  x <- rnorm(n, 100, 15)
+  var_stim[i] <- var(x)
+}
+
+mean(var_stim)
+```
+
+In questo secondo caso, il *valore atteso* della stima della varianza trovata con $n-1$ al denominatore è molto simile al valore corretto di 225.
+
+Di default, la funzione R `var()` usa $n-1$ al denominatore.
+:::
+
+### Precisione
+
+Si definisce *precisione* l'inverso della varianza:
+
+$$
+\begin{equation}
+\tau = \frac{1}{\sigma^2}.
+\end{equation}
+$$ {#eq-precision}
+
+Alcuni ritengono che la precisione sia più "intuitiva" della varianza perché dice quanto sono concentrati i valori attorno alla media piuttosto che quanto sono dispersi. In altri termini, si potrebbe argomentare che siamo più interessati a quanto sia precisa una misurazione piuttosto che a quanto sia imprecisa. Più sono dispersi i valori attorno alla media (alta varianza), meno sono precisi (poca precisione); minore è la varianza, maggiore è la precisione.
+
+::: callout-note
+La precisione è uno dei due parametri naturali della distribuzione gaussiana. Nei termini della @eq-precision, la distribuzione gaussiana (si veda il Capitolo @distr-rv-cont) può essere espressa nel modo seguente
+
+$$
+{\displaystyle f(y)=\sqrt{\frac{\tau}{2\pi}} e^{-{\frac {1}{2}}\tau\left({y-\mu }\right)^{2}}},
+$$
+
+anziché come
+
+$$
+{\displaystyle f(y)={\frac {1}{\sigma {\sqrt {2\pi }}}}e^{-{\frac {1}{2}}\left({\frac {y-\mu }{\sigma }}\right)^{2}}}.
+$$
+:::
+
+### Deviazione standard
+
+Dato che l'unità di misura della varianza coincide con il quadrato dell'unità di misura dei dati, la varianza è difficile da interpretare. Questo problema si può risolvere prendendo la radice quadrata della varianza, ottenendo così una misura espressa nell'unità di misura originaria dei dati. Una tale misura si chiama *deviazione standard* (o *scarto quadratico medio*, o *scarto tipo*)[^011_loc_scale-1]:
+
+[^011_loc_scale-1]: Il termine *standard deviation* è stato introdotto in statistica da Pearson nel 1894 assieme alla lettera greca $\sigma$ che lo rappresenta. Il termine italiano "deviazione standard" ne è la traduzione più utilizzata nel linguaggio comune; il termine dell'[Ente Nazionale Italiano di Unificazione](https://it.wikipedia.org/wiki/Ente_nazionale_italiano_di_unificazione) è tuttavia "scarto tipo", definito come la radice quadrata positiva della varianza.
+
+$$
+s^2 = \sqrt{(n-1)^{-1} \sum_{i=1}^n (x_i - \bar{x})^2}
+$$ {#eq-sd-stimatore}
+
+Quando tutte le osservazioni sono uguali, $s = 0$, altrimenti $s > 0$.
+
+Come nel caso della varianza, anche la deviazione standard $s$ dovrebbe essere usata soltanto quando la media è adeguata per descrivere il centro della distribuzione, ovvero, nel caso di distribuzioni simmetriche. Come nel caso della media $\bar{x}$, anche la deviazione standard è fortemente influenzata dai dati anomali, ovvero dalla presenza di uno o di pochi dati che sono molto più distanti dalla media rispetto agli altri valori della distribuzione.
+
+::: {#exr-sd-1}
+Si calcoli la deviazione standard per i valori BDI-II del campione di @zetschefuture2019.
+
+Applicando l'@eq-sd-stimatore, per tutto il campione abbiamo
+
+```{r}
+sd(bysubj$bdi)
+```
+:::
+
+#### Interpretazione
+
+Alla deviazione standard può essere assegnata una semplice interpretazione: la deviazione standard è *simile* (ma non identica) allo scarto semplice medio campionario, ovvero alla media aritmetica dei valori assoluti degli scarti dalla media. La deviazione standard ci dice, dunque, quanto sono distanti, in media, le singole osservazioni dal centro della distribuzione. Un'interpretazione più precisa del significato dello scarto tipo è fornita nel paragrafo successivo.
+
+::: {#exr-sd-2}
+Si verifichi l'interpretazione della deviazione standard fornita sopra usando i valori BDI-II del campione di @zetschefuture2019.
+
+Per questi dati la deviazione standard è
+
+```{r}
+sd(bysubj$bdi)
+```
+
+Lo scarto semplice medio campionario è
+
+```{r}
+mean(abs(bysubj$bdi - mean(bysubj$bdi)))
+```
+:::
+
+### Deviazione mediana assoluta
+
+Una misura robusta della dispersione statistica di un campione è la *deviazione mediana assoluta* (*Median Absolute Deviation*, MAD) definita come la mediana del valore assoluto delle deviazioni dei dati dalla mediana, ovvero:
+
+$$
+{\displaystyle \operatorname {MAD} =\operatorname {median} \left(\ \left|X_{i}-\operatorname {median} (X)\right|\ \right)}
+$$ {#eq-mad-def}
+
+Nel caso di una distribuzione dei dati unimodale simmetrica di forma campanulare (ovvero, normale) si ha che
+
+$$
+{\displaystyle \text{deviazione standard} \approx 1.4826\ \operatorname {MAD} .\,}
+$$
+
+Pertanto, solitamente i software restituiscono il valore MAD moltiplicato per una tale costante.
+
+::: {#exr-mad-1}
+I dati di @zetschefuture2019 seguono una distribuzione bimodale, per cui il vincolo precedente non si applica. Verifichiamo dunque il principio precedente usando un campione di dati estratto da una popolazione normale.
+
+```{r}
+x <- rnorm(1e5, 100, 15)
+1.4826 * median(abs(x - median(x)))
+```
+:::
+
+### Indici di variabilità relativi
+
+A volte può essere interessante effettuare un confronto fra due misure di variabilità di grandezze incommensurabili, ovvero di caratteri rilevati mediante differenti unità di misura. In questi casi, le misure di variabilità precedentemente descritte si rivelano inadeguate in quanto dipendono dall'unità di misura adottata. Diventa dunque necessario ricorrere a particolari numeri adimensionali detti *indici relativi di variabilità*. Il più importante di tali indici è il *coefficiente di variazione*, ovvero il numero puro
+
+$$
+C_v = \frac{\sigma}{\bar{x}}
+$$ {#eq-cv-def}
+
+ottenuto dal rapporto tra la deviazione standard e la media dei dati.
+
+Un altro indice relativo di variabilità è la differenza interquartile rapportata al primo quartile, oppure al terzo quartile, oppure alla mediana, cioè:
+
+$$
+\frac{x_{0.75} - x_{0.25}}{x_{0.25}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.75}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.50}}.
+$$
+
+## Commenti e considerazioni finali {.unnumbered}
+
+Le statistiche descrittive ci forniscono degli indici sintetici che riassumono i dati, ovvero le nostre misurazioni dell'intera popolazione o di un campione estratto da una popolazione. Le statistiche descrittive comprendono gli indici di tendenza centrale e gli indici di dispersione. Gli indici di tendenza centrale includono la media, la mediana e la moda, mentre gli indici di dispersione includono la deviazione standard, la varianza, la curtosi e l'asimmetria (questi ultimi due indici sono definiti in relazione alla distribuzione Normale e verranno dunque discussi in quel contesto).

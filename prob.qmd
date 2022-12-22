@@ -1,0 +1,7 @@
+# Parte 2: Il calcolo delle probabilità {#sec-prob}
+
+In questa seconda parte introdotti i concetti di base della teoria delle probabilità.
+
+Nel capitolo [@sec-intro-prob-1] verrà presentata la legge dei grandi numeri, il concetto di variabile casuale e la funzione di massa di probabilità.
+
+<!-- e, nell'ultima parte della dispensa verrà discusso l'argomento più difficile, quello dell'inferenza. Prima di affrontare il secondo tema, l'analisi descrittiva dei dati, sarà necessario introdurre il linguaggio di programmazione statistica R (un'introduzione a R è fornita in Appendice). Inoltre, prima di potere discutere l'inferenza, dovranno essere introdotti i concetti di base della teoria delle probabilità, in quanto l'inferenza non è che l'applicazione della teoria delle probabilità all'analisi dei dati. -->

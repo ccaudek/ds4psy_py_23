@@ -1,0 +1,440 @@
+# Manipolazione e visualizzazione dei dati in $\mathsf{R}$ {#sec-intro-dplyr}
+
+```{r, include = FALSE}
+source("_common.R")
+```
+
+In questo capitolo esamineremo le fuzionalità di $\mathsf{R}$ per la manipolazione e la visualizzazione dei dati. Nello specifico, esamineremo le funzioni fornite dal pacchetto `dplyr`.
+
+## Codifica dei dati grezzi
+
+Si chiamano "dati grezzi" quelli che provengono dal mondo circostanze, i dati raccolti per mezzo di esperimenti, interviste, questionari, ecc. Questi dati (detti *dataset*) raramente vengono forniti con una struttura logica precisa. Per poterli elaborare mediante software è necessario prima trasformarli in maniera tale che abbiano una struttura logica organizzata. La struttura che solitamente si utilizza è quella tabellare (detta *matrice dei dati*), ovvero si dispongono i dati in una tabella nella quale ciascuna riga corrisponde ad un'osservazione e ciascuna colonna corrisponde ad una variabile rilevata. In $\mathsf{R}$ una tale struttura è chiamata *data frame* o *tibble* (il *tibble* è solo un modo diverso di stampare un data frame sulla console).
+
+## Trattamento dei dati con `dplyr`
+
+Utilizzando i pacchetti del `tidyverse` (`tidyverse` è un insieme, o *bundle*, di pacchetti `R`), le operazioni di trasformazione dei dati risultano molto semplificate. Per la manipolazione dei dati vengono usati i seguenti pacchetti del `tidyverse`:
+
+-   `dplyr`
+-   `tidyr` (tibbles, dataframe e tabelle)
+-   `stringr` (stringhe)
+
+Il pacchetto `dplyr` (al momento uno dei pacchetti più famosi e utilizzati per la gestione dei dati) offre una serie di funzionalità che consentono di eseguire le operazioni più comuni di manipolazione dei dati in una maniera più semplice rispetto a quanto succeda quando usiamo le funzioni base di `R`.
+
+Il pacchetto `dplyr` include sei funzioni base: `filter()`, `select()`, `mutate()`, `arrange()`, `group_by()` e `summarise()`. Queste sei funzioni costituiscono i *verbi* del linguaggio di manipolazione dei dati. A questi sei verbi si aggiunge il pipe `%>%` (oppure `|>`) che serve a concatenare più operazioni. In particolare, considerando una matrice osservazioni per variabili, `select()` e `mutate()` si occupano di organizzare le variabili, `filter()` e `arrange()` i casi, e `group_by()` e `summarise()` i gruppi.
+
+Per introdurre le funzionalità di `dplyr`, utilizzeremo i dati `msleep` forniti dal pacchetto `ggplot2`. Tali dati descrivono le ore di sonno medie di 83 specie di mammiferi [@savage2007scaling]. Carichiamo il *boundle* `tidyverse` (che contiene `ggplot2`) e leggiamo nella memoria di lavoro l'oggetto `msleep`:
+
+```{r}
+library("tidyverse")
+data(msleep)
+dim(msleep)
+```
+
+#### Operatore pipe
+
+Prima di presentare le funzionalità di `dplyr`, introduciamo l'operatore pipe `%>%` del pacchetto `magrittr` -- ma ora presente anche in base $\mathsf{R}$ nella versione `|>`. L'operatore pipe, `%>%` o `|>`, serve a concatenare varie funzioni insieme, in modo da inserire un'operazione dietro l'altra. Una spiegazione intuitiva dell'operatore pipe è stata fornita in un tweet di `@andrewheiss`. Consideriamo la seguente istruzione in pseudo-codice $\mathsf{R}$:
+
+```{r, eval=FALSE}
+leave_house(
+  get_dressed(
+    get_out_of_bed(
+      wake_up(me, time = "8:00"), 
+      side = "correct"), 
+    pants = TRUE, 
+    shirt = TRUE), 
+  car = TRUE, 
+  bike = FALSE
+)
+```
+
+Il listato precedente descrive una serie di (pseudo) funzioni concatenate, le quali costituiscono gli argomenti di altre funzioni. Scritto così, il codice è molto difficile da capire. Possiamo però ottenere lo stesso risultato utilizzando l'operatore pipe che facilita enormememnte la leggibilità del codice:
+
+```{r, eval=FALSE}
+me |> 
+  wake_up(time = "8:00") |> 
+  get_out_of_bed(side = "correct") |> 
+  get_dressed(pants = TRUE, shirt = TRUE) |> 
+  leave_house(car = TRUE, bike = FALSE)
+```
+
+In questa seconda versione del (pseudo) codice $\mathsf{R}$ si capisce molto meglio ciò che vogliamo fare. Il `tibble` `me` viene passato alla funzione `wake_up()`. La funzione `wake_up()` ha come argomento l'ora del giorno: `time = "8:00"`. Una volta "svegliati" (wake up) dobbiamo scendere dal letto. Quindi l'output di `wake_up()` viene passato alla funzione `get_out_of_bed()` la quale ha come argomento `side = "correct"` perché vogliamo scendere dal letto dalla parte giusta. E così via.
+
+Questo pseudo-codice chiarisce il significato dell'operatore pipe. L'operatore `|>` è "syntactic sugar" per una serie di chiamate di funzioni concatenate, ovvero, detto in altre parole, consente di definire la relazione tra una serie di funzioni nelle quali il risultato (output) di una funzione viene utilizzato come l'input di una funzione successiva.
+
+## Esaminare i dati
+
+Iniziamo a trasformare il data frame `msleep` in un `tibble`.
+
+```{r}
+msleep <- tibble(msleep)
+```
+
+I nomi delle colonne del tibble (ovvero, i nomi delle variabili del campione) si ottengono con la funzione `names()`.
+
+```{r}
+names(msleep)
+```
+
+I valori iniziali di ciascuna colonna del tibble possono essere visualizzati usando la funzone `glimpse()`.
+
+```{r}
+glimpse(msleep)
+```
+
+Per le variabili qualitative, possiamo creare una distribuzione di frequenze assolute mediante la funzione `table()`.
+
+```{r}
+table(msleep$vore)
+```
+
+Usando `table()` possiamo anche creare una tabella di contingenza.
+
+```{r}
+table(msleep$vore, msleep$conservation)
+```
+
+Si ricordi che, quando si usa `table()` per creare una tabella di contingenza, i dati mancanti (`NA`) vengono esclusi.
+
+## Estrarre una singola colonna con `pull()`
+
+Estraiamo da `msleep` la variabile `sleep_total` usando il verbo `pull()`:
+
+```{r}
+msleep |> 
+  pull(sleep_total)
+```
+
+In maniera equivalente, possiamo usare l'operatore `$` di base $\mathsf{R}$:
+
+```{r}
+msleep$sleep_total
+```
+
+Possiamo ordinare i dati con `sort()`.
+
+```{r}
+msleep$sleep_total |> 
+  sort() 
+```
+
+Oppure, in ordine decrescente:
+
+```{r}
+msleep$sleep_total |> 
+  sort(decreasing = TRUE) 
+```
+
+Possiamo attribuire la colonna estratta dal tibble ad un oggetto nella memoria di lavoro di $\mathsf{R}$ usando l'operatore di attribuzione `<-`.
+
+```{r}
+sl_tot <- msleep |> 
+  pull(sleep_total)
+```
+
+Essendo `sl_tot` presente nella emoria di lavoro di $\mathsf{R}$, possiamo passarlo a qualsiasi altra funzione di $\mathsf{R}$. Per esempio, possiamo calcolare la media di `sl_tot` usando la funzione `mean()`
+
+```{r}
+mean(sl_tot)
+```
+
+oppure la deviazione standard usando la funzione `sd()`
+
+```{r}
+sd(sl_tot)
+```
+
+## Selezionare più colonne con `select()`
+
+Se vogliamo selezionare da `msleep` un insieme di variabili, ad esempio `name`, `vore` e `sleep_total`, possiamo usare il verbo `select()`
+
+```{r}
+dt <- msleep |> 
+  dplyr::select(name, vore, sleep_total)
+dt
+```
+
+laddove la sequenza di istruzioni precedenti significa che abbiamo passato `msleep` alla funzione `select()` contenuta nel pacchetto `dplyr` e l'output di `select()` è stato salvato (usando l'operatore di assegnazione, `<-`) nell'oggetto `dt`. Alla funzione `select()` abbiamo passato gli argomenti `name`, `vore` e `sleep_total`.
+
+## Selezionare le righe che soddisfano una condizione
+
+Il verbo `filter()` consente di selezionare da un `tibble` un sottoinsieme di righe (osservazioni). Per esempio, possiamo selezionare tutte le osservazioni nella variabile `vore` contrassegnate come `carni` (ovvero, tutti i carnivori):
+
+```{r}
+dt %>%
+  dplyr::filter(vore == "carni")
+```
+
+Per utilizzare il verbo `filter()` in modo efficace è neccessario usare gli operatori relazionali
+
+```{=tex}
+\begin{array}{l l}
+\hline
+\text{Operazione logica}   & \text{Operatore}  \\
+\hline
+      \text{uguale}             &  == \\
+      \text{diverso}            &  !=  \\
+      \text{minore}             &  <  \\
+      \text{maggiore}           &  >  \\
+      \text{minore o uguale}      & <=  \\
+      \text{maggiore o uguale}  & >=  \\
+\hline
+\end{array}
+```
+e gli operatori logici di $\mathsf{R}$.
+
+```{=tex}
+\begin{array}{l l}
+\hline
+\text{Operazione logica}   & \text{Operatore}  \\
+\hline
+      \text{AND}      &  \&    \\
+      \text{OR }      &  | \\
+      \text{NOT}     &  !   \\
+\hline
+\end{array}
+```
+Per un approfondimento, si veda il Capitolo [Comparisons](https://r4ds.had.co.nz/transform.html) di *R for Data Science*.
+
+## Creare una nuova variabile con `mutate()`
+
+Talvolta vogliamo creare una nuova variabile, per esempio, sommando o dividendo due variabili, oppure calcolandone la media. A questo scopo si usa il verbo `mutate()`. Per esempio, se vogliamo esprimere i valori di `sleep_total` in minuti, moltiplichiamo per 60:
+
+```{r}
+dt |> 
+  mutate(
+    sleep_minutes = sleep_total * 60
+  ) |> 
+  dplyr::select(sleep_total, sleep_minutes)
+```
+
+## Ordinare i dati con `arrange()`
+
+Il verbo `arrange()` ordina i dati in base ai valori di una o più variabili. Per esempio, possiamo ordinare la variabile `sleep_total` dal valore più alto al più basso in questo modo:
+
+```{r}
+dt |> 
+  arrange(
+    desc(sleep_total)
+  )
+```
+
+## Raggruppare i dati con `group_by()`
+
+Il verbo `group_by()` raggruppa insieme i valori in base a una o più variabili. Lo vedremo in uso in seguito insieme a `summarise()`.
+
+Nota: con `dplyr()`, le operazioni raggruppate vengono iniziate con la funzione `group_by()`. È una buona norma utilizzare `ungroup()` alla fine di una serie di operazioni raggruppate, altrimenti i raggruppamenti verranno mantenuti nelle analisi successiva, il che non è sempre auspicabile.
+
+## Sommario dei dati con `summarise()`
+
+Il verbo `summarise()` collassa il dataset in una singola riga dove viene riportato il risultato della statistica richiesta. Per esempio, la media del tempo totale del sonno è
+
+```{r}
+dt |> 
+  summarise(
+    m_sleep = mean(sleep_total, na.rm = TRUE)
+  ) 
+```
+
+## Operazioni raggruppate
+
+Sopra abbiamo visto come i mammiferi considerati dormano, in media, 10.4 ore al giorno. Troviamo ora il sonno medio in funzione di `vore`:
+
+```{r}
+dt |> 
+  group_by(vore) |> 
+  summarise(
+    m_sleep = mean(sleep_total, na.rm = TRUE), 
+    n = n()
+  )
+```
+
+Si noti che, nel caso di 7 osservazioni, il valore di `vore` non era specificato. Per tali osservazioni, dunque, la classe di appartenenza è `NA`.
+
+## Applicare una funzione su più colonne: `across()`
+
+È spesso utile eseguire la stessa operazione su più colonne, ma copiare e incollare è sia noioso che soggetto a errori:
+
+```{r, eval=FALSE}
+df |> 
+  group_by(g1, g2) %>%
+  summarise(
+    a = mean(a),
+    b = mean(b),
+    c = mean(c),
+    d = mean(d)
+  )
+```
+
+In tali circostanze è possibile usare la funzione `across()` che consente di riscrivere il codice precedente in modo più succinto:
+
+```{r, eval=FALSE}
+df |> 
+  group_by(g1, g2) %>% 
+  summarise(across(a:d, mean))
+```
+
+Per i dati presenti, ad esempio, possiamo avere:
+
+```{r}
+msleep |> 
+  group_by(vore) |> 
+  summarise(across(starts_with("sleep"), ~ mean(.x, na.rm = TRUE)))
+```
+
+## Dati categoriali in $\mathsf{R}$
+
+Consideriamo una variabile che descrive il genere e include le categorie `male`, `female` e `non-conforming`. In $\mathsf{R}$, ci sono due modi per memorizzare queste informazioni. Uno è usare la classe *character strings* e l'altro è usare la classe *factor*. Non ci addentrimo qui nelle sottigliezze di questa distinzione, motivata in gran parte per le necessità della programmazione con le funzioni di `tidyverse`. Per gli scopi di questo insegnamento sarà sufficiente codificare le variabili qualitative usando la classe *factor*. Una volta codificati i dati qualitativi utilizzando la classe *factor*, si pongono spesso due problemi:
+
+1.  modificare le etichette dei livelli (ovvero, le modalità) di un fattore,
+2.  riordinare i livelli di un fattore.
+
+## Modificare le etichette dei livelli di un fattore
+
+Esaminiamo l'esempio seguente.
+
+```{r}
+f_1 <- c("old_3", "old_4", "old_1", "old_1", "old_2")
+f_1 <- factor(f_1)
+y <- 1:5
+df <- tibble(f_1, y)
+df
+```
+
+Supponiamo ora di volere che i livelli del fattore `f_1` abbiano le etichette `new_1`, `new_2`, ecc. Per ottenere questo risultato usiamo la funzione `forcats::fct_recode()`:
+
+```{r}
+df <- df |> 
+  mutate(f_1 =
+    forcats::fct_recode(
+      f_1, 
+      "poco" = "old_1", 
+      "medio" = "old_2", 
+      "tanto" = "old_3", 
+      "massimo" = "old_4"
+      )
+   )
+df
+```
+
+## Riordinare i livelli di un fattore
+
+Spesso i livelli dei fattori hanno un ordinamento naturale. Quindi, gli utenti devono avere un modo per imporre l'ordine desiderato sulla codifica delle loro variabili qualitative. Se per qualche motivo vogliamo ordinare i livelli `f_1` in ordine inverso, ad esempio, possiamo procedere nel modo seguente.
+
+```{r}
+df$f_1 <- factor(df$f_1,
+  levels = c(
+    "massimo", "tanto", "medio", "poco" 
+  )
+)
+summary(df$f_1)
+```
+
+Per approfondire le problematiche della manipolazione di variabili qualitative in $\mathsf{R}$, si veda @mcnamara2018wrangling.
+
+## Creare grafici con `ggplot2()`
+
+Il pacchetto `ggplot2()` è un potente strumento per rappresentare graficamente i dati. Le iniziali del nome, `gg`, si riferiscono alla "Grammar of Graphics", che è un modo di pensare le figure come una serie di layer stratificati. Originariamente descritta da @wilkinson2012grammar, la grammatica dei grafici è stata aggiornata e applicata in `R` da Hadley Wickham, il creatore del pacchetto.
+
+La funzione da cui si parte per inizializzare un grafico è `ggplot()`. La funzione `ggplot()` richiede due argomenti. Il primo è l'oggetto di tipo data.frame che contiene i dati da visualizzare -- in alternativa al primo argomento, un dataframe può essere passato a `ggplot()` mediante l'operatore pipe. Il secondo è una particolare lista che viene generata dalla funzione `aes()`, la quale determina l'aspetto (*aesthetic*) del grafico. La funzione `aes()` richiede necessariamente di specificare "x" e "y", ovvero i nomi delle colonne del data.frame che è stato utilizzato quale primo argomento di `ggplot()` (o che è stato passato da pipe), le quali rappresentano le variabili da porre rispettivamente sugli assi orizzontale e verticale.
+
+La definizione della tipologia di grafico e i vari parametri sono poi definiti successivamente, aggiungendo all'oggetto creato da `ggplot()` tutte le componenti necessarie. Saranno quindi altre funzioni, come `geom_bar()`, `geom_line()` o `geom_point()` a occuparsi di aggiungere al livello di base barre, linee, punti, e così via. Infine, tramite altre funzioni, ad esempio `labs()`, sarà possibile definire i dettagli più fini.
+
+Gli elementi grafici (bare, punti, segmenti, ...) usati da `ggplot2` sono chiamati `geoms`. Mediante queste funzioni è possibile costruire diverse tipologie di grafici:
+
+-   `geom_bar()`: crea un layer con delle barre;
+-   `geom_point()`: crea un layer con dei punti (diagramma a dispersione);
+-   `geom_line()`: crea un layer con una linea retta;
+-   `geom_histogram()`: crea un layer con un istogramma;
+-   `geom_boxplot()`: crea un layer con un box-plot;
+-   `geom_errorbar()`: crea un layer con barre che rappresentano intervalli di confidenza;
+-   `geom_hline()` e `geom_vline()` : crea un layer con una linea orizzontale o verticale definita dall'utente.
+
+Un comando generico ha la seguente forma:
+
+```{r, eval=FALSE}
+my_graph <- my_data |> 
+  ggplot(aes(x_var, y_var)) +
+  geom_...()
+```
+
+La prima volta che si usa il pacchetto `ggplot2` è necessario installarlo. Per fare questo possiamo installare `tidyverse` che, oltre a caricare `ggplot2`, carica anche altre utili funzioni per l'analisi dei dati. Ogni volta che si inizia una sessione R è necessario attivare i pacchetti che si vogliono usare, ma non è necessario istallarli una nuova volta. Se è necessario specificare il pacchetto nel quale è contenuta la funzione che vogliamo utilizzare, usiamo la sintassi `package::function()`. Per esempio, l'istruzione `ggplot2::ggplot()` rende esplicito che stiamo usando la funzione `ggplot()` contenuta nel pacchetto `ggplot2`.
+
+## Diagramma a dispersione
+
+Consideriamo nuovamenti i dati contenuti nel `tibble` `msleep` e poniamoci il problema di rappresentare graficamente la relazione tra il numero medio di ore di sonno giornaliero (`sleep_total`) e il peso dell'animale (`bodywt`). Usando le impostazioni di default di `ggplot2`, con le istruzioni seguenti, otteniamo il grafico fornito dalla figura seguente.
+
+```{r}
+data("msleep")
+p <- msleep |> 
+  ggplot(
+    aes(x = bodywt, y = sleep_total)
+  ) +
+  geom_point()
+print(p)
+```
+
+Coloriamo ora in maniera diversa i punti che rappresentano animali carnivori, erbivori, ecc.
+
+```{r}
+p <- msleep |> 
+  ggplot(
+    aes(x = bodywt, y = sleep_total, col = vore)
+  ) +
+  geom_point()
+print(p)
+```
+
+È chiaro, senza fare alcuna analisi statistica, che la relazione tra le due variabili non è lineare. Trasformando in maniera logaritmica i valori dell'asse $x$ la relazione si linearizza.
+
+```{r}
+p <- msleep |> 
+  ggplot(
+    aes(x = log(bodywt), y = sleep_total, col = vore)
+  ) +
+  geom_point()
+print(p)
+```
+
+Infine, aggiustiamo il "tema" del grafico (si noti l'utilizzo di una tavolozza di colori adatta ai daltonici mediante il pacchetto `viridis`), aggiungiamo le etichette sugli assi e il titolo.
+
+```{r}
+library("viridis")
+msleep |> 
+  ggplot(
+    aes(x = log(bodywt), y = sleep_total, col = vore)
+  ) +
+  geom_point(size = 2, alpha = .8) +
+  labs(
+    x = "Peso corporeo (log)",
+    y = "Ore di sonno",
+    title = "Il sonno in 83 specie di mammiferi",
+    subtitle = "Un esempio di visualizzazione con ggplot()",
+    caption = "Fonte: Savage e West (2007)"
+  ) +
+  scale_fill_viridis(discrete = TRUE, option = "viridis") +
+  theme_minimal() +
+  theme(legend.title = element_blank()) 
+```
+
+La visualizzazione può essere migliorata cambiando le etichette della legenda del grafico. Per fare questo è necessario intervenire sui dati prima di usare `ggplot()` -- per esempio, come abbiamo fatto in precedenza con la funzione `forcats::fct_recode()`.
+
+## Istogramma
+
+Creiamo ora un istogramma che rappresenta la distribuzione del (logaritmo del) peso medio del cervello delle 83 specie di mammiferi considerate da @savage2007quantitative. L'argomento `aes(y = ..density..)` in `geom_histogram()` produce le frequenze relative. L'opzione di default (senza questo argomento) porta `ggplot()` a rappresentare le frequenze assolute.
+
+```{r}
+msleep |> 
+  ggplot(
+    aes(log(brainwt))
+  ) +
+  geom_histogram(aes(y = ..density..)) +
+  labs(
+    x = "Peso del cervello (log)",
+    y = "Frequenza relativa"
+  ) +
+  theme(legend.title = element_blank())
+```
+
+## Commenti e considerazioni finali {.unnumbered}
+
+Per minimizzare gli errori di sintassi (dimenticare una virgola, non chiudere una parentesi, ecc.) -- ovvero, gli errori più frequenti quando si scrive il codice in $\mathsf{R}$ -- è necessario utilizzare uno stile di programmazione. Uno stile di programmazione è un insieme di regole per la gestione dell'indentazione dei blocchi di codice, per la creazione dei nomi dei file e delle variabili e per le convenzioni tipografiche che vengono usate. Scrivere il codice in $\mathsf{R}$ con stile consente di creare listati più leggibili e semplici da modificare, minimizza la possibilità di errore, e consente correzioni e modifiche più rapide. Vi sono molteplici stili di programmazione che possono essere utilizzati dall'utente, anche se è bene attenersi a quelle che sono le convenzioni maggiormente diffuse, allo scopo di favorire la comunicazione. In ogni caso, l'importante è di essere coerenti, ovvero di adottare le stesse convenzioni in tutte le parti del codice che si scrive. Ad esempio, se si sceglie di usare lo stile `snake_case` per il nome composto di una variabile (es., `personality_trait`), non è appropriato usare lo stile *lower Camel case* per un'altra variabile (es., `socialStatus`). Dato che questo argomento è stato trattato ampiamente in varie sedi, mi limito qui a rimandare ad uno [stile di programmazione](http://style.tidyverse.org/) molto popolare, quello proposto da Hadley Wickham, il creatore di `tidyverse`. La soluzione più semplice è quella installare `stiler`, che è uno RStudio Addin, e formattare il codice in maniera automatica utilizzando lo stile proposto da Hadley Wickham. Si possono ottenere informazioni su `stiler` seguendo questo [link](https://github.com/r-lib/styler).

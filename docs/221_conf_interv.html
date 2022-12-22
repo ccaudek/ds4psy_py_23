@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Data Science per psicologi - 39&nbsp; Intervallo fiduciale</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./225_distr_camp_mean.html" rel="next">
+<link href="./220_intro_frequentist.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Data Science per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/data_science/" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Benvenuti</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">Prefazione</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./basics.html" class="sidebar-item-text sidebar-link">Parte 1: Nozioni di base</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./001_key_notions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Concetti chiave</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./005_measurement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./007_freq_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./011_loc_scale.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./012_correlation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./013_penguins.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Manipolazione e visualizzazione dei dati in <span class="math inline">\(\mathsf{R}\)</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">Parte 2: Il calcolo delle probabilità</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./015_prob_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">La logica dell’incerto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./016_conditional_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probabilità condizionata: significato, teoremi, eventi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./017_bayes_theorem.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./018_expval_var.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Indici di posizione, di varianza e di associazione di variabili casuali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./019_joint_prob.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./020_density_func.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La densità di probabilità</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./distr.html" class="sidebar-item-text sidebar-link">Parte 3: Distribuzioni di v.c. discrete e continue</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./022_discr_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./023_cont_rv_distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./024_likelihood.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">La funzione di verosimiglianza</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./bayes_inference.html" class="sidebar-item-text sidebar-link">Parte 4: Inferenza bayesiana</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./025_intro_bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Credibilità, modelli e parametri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./026_subj_prop.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./029_conjugate_families.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./030_balance_prior_post.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./036_posterior_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Approssimazione della distribuzione a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./040_beta_binomial_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello beta-binomiale in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./041_mcmc_diagnostics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./045_summarize_posterior.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./046_bayesian_prediction.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./050_normal_normal_mod.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Inferenza sul parametro <span class="math inline">\(\mu\)</span> (media di una v.c. Normale)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./regression.html" class="sidebar-item-text sidebar-link">Parte 5: Regressione lineare</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./051_reglin1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./052_reglin2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./053_reglin3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Modello di regressione in linguaggio Stan</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./054_reglin4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Inferenza sul modello lineare</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./055_reglin5.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi indipendenti</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./056_pred_check.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Predictive checks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./060_anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Confronto tra le medie di tre o più gruppi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./070_mod_hier.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello gerarchico</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./071_mod_hier_sim.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Modello gerarchico: simulazioni</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./entropy.html" class="sidebar-item-text sidebar-link">Parte 6: Entropia</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./090_entropy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Entropia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./091_kl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">La divergenza di Kullback-Leibler</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./092_info_criterion.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Criterio di informazione e convalida incrociata</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./frequentist_inference.html" class="sidebar-item-text sidebar-link">Parte 7: Inferenza frequentista</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./220_intro_frequentist.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Legge dei grandi numeri</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./221_conf_interv.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./225_distr_camp_mean.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./226_test_ipotesi.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Significatività statistica</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./227_ttest.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Inferenza sulle medie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./228_limiti_stat_frequentista.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./999_refs.html" class="sidebar-item-text sidebar-link">Riferimenti bibliografici</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Appendici</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a01_math_symbols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Simbologia di base</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a02_number_sets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a03_set_theory.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Insiemi</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a04_summation_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a05_calculus_notation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a10_markov_chains.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Le catene di Markov</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a15_stan_lang.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Programmare in Stan</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+   
+  <ul>
+<li><a href="#la-variabilit%C3%A0-campionaria" id="toc-la-variabilità-campionaria" class="nav-link active" data-scroll-target="#la-variabilit%C3%A0-campionaria"><span class="toc-section-number">39.1</span>  La variabilità campionaria</a></li>
+  <li><a href="#lerrore-standard" id="toc-lerrore-standard" class="nav-link" data-scroll-target="#lerrore-standard"><span class="toc-section-number">39.2</span>  L’errore standard</a></li>
+  <li><a href="#sec-int_conf" id="toc-sec-int_conf" class="nav-link" data-scroll-target="#sec-int_conf"><span class="toc-section-number">39.3</span>  Che cos’è l’intervallo fiduciale?</a></li>
+  <li><a href="#come-si-calcola-lintervallo-fiduciale" id="toc-come-si-calcola-lintervallo-fiduciale" class="nav-link" data-scroll-target="#come-si-calcola-lintervallo-fiduciale"><span class="toc-section-number">39.4</span>  Come si calcola l’intervallo fiduciale?</a></li>
+  <li><a href="#il-livello-di-copertura" id="toc-il-livello-di-copertura" class="nav-link" data-scroll-target="#il-livello-di-copertura"><span class="toc-section-number">39.5</span>  Il livello di copertura</a></li>
+  <li>
+<a href="#sec-interpret-ci" id="toc-sec-interpret-ci" class="nav-link" data-scroll-target="#sec-interpret-ci"><span class="toc-section-number">39.6</span>  Interpretazione}</a>
+  <ul class="collapse">
+<li><a href="#fraintendimenti" id="toc-fraintendimenti" class="nav-link" data-scroll-target="#fraintendimenti"><span class="toc-section-number">39.6.1</span>  Fraintendimenti</a></li>
+  </ul>
+</li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali">Commenti e considerazioni finali</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-interv-conf" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Intervallo fiduciale</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><section id="la-variabilità-campionaria" class="level2" data-number="39.1"><h2 data-number="39.1" class="anchored" data-anchor-id="la-variabilità-campionaria">
+<span class="header-section-number">39.1</span> La variabilità campionaria</h2>
+<p>Consideriamo, quale esempio, l’esperimento casuale che corrisponde all’estrazione casuale di un campione di <span class="math inline">\(n\)</span> osservazioni da una popolazione e del calcolo della media di quel campione. Dato che si immagina che l’esperimento casuale venga ripetuto infinite volte, dobbiamo immaginare l’esistenza di infiniti campioni casuali di <span class="math inline">\(n\)</span> osservazioni. Dato che ciascuno di tali campioni è costituito da osservazioni diverse, ognuno di essi avrà una media diversa. Tale fenomeno è detto <em>variabilità campionaria</em>. Se usiamo il linguaggio dell’approccio frequentista diremo che la distribuzione dei tutti gli infiniti possibili valori della statistica in questione (nel caso dell’esempio, la media del campione) nell’universo dei campioni si chiama <em>distribuzione campionaria</em>.</p>
+<p>Se lo psicologo usa la media del campione quale stima della media della popolazione, ovviamente commetterà un errore, dato che la statistica campionaria è sempre diversa dal parametro. Il problema dello psicologo è quello di valutare l’entità di tale errore, ovvero quello di valutare il livello di incertezza inerente alla sua stima.</p>
+<p>Per valutare l’incertezza della stima lo psicologo fa riferimento alla variabilità campionaria. Se la deviazione standard della distribuzione campionaria della statistica è piccola, questo significa che ogni campione casuale di ampiezza <span class="math inline">\(n\)</span> produrrà una statistica <span class="math inline">\(\bar{X}\)</span> simile al parametro <span class="math inline">\(\mu\)</span> della popolazione. In tali condizioni (utilizzando i dati di un singolo campione) ci sarà una piccola incertezza relativamente al valore del parametro, perché, in media, <span class="math inline">\(\bar{X}\)</span> è simile a <span class="math inline">\(\mu\)</span>. Se invece la deviazione standard della distribuzione campionaria di <span class="math inline">\(\bar{X}\)</span> è grande, i campioni casuali di ampiezza <span class="math inline">\(n\)</span> produrranno, in media, una statistica <span class="math inline">\(\bar{X}\)</span> molto lontana dal parametro <span class="math inline">\(\mu\)</span>. Utilizzando i dati di un singolo campione, in tali condizioni lo psicologo sarà molto incerto relativamente al vero valore del parametro (in quanto, in media, <span class="math inline">\(\bar{X}\)</span> è molto diverso da <span class="math inline">\(\mu\)</span>).</p>
+<p>La deviazione standard della distribuzione campionaria, detta <em>errore standard</em>, viene dunque utilizzata per quantificare l’incertezza relativamente alla stima di un parametro. Solitamente, l’approccio frequentista quantifica l’incertezza della stima nei termini di una funzione dell’errore standard chiamata <em>intervallo fiduciale</em>. Lo scopo di questo capitolo è quello di introdurre la nozione di errore standard in modo tale da potere fornire un’interpretazione alla nozione di intervallo fiduciale.</p>
+</section><section id="lerrore-standard" class="level2" data-number="39.2"><h2 data-number="39.2" class="anchored" data-anchor-id="lerrore-standard">
+<span class="header-section-number">39.2</span> L’errore standard</h2>
+<p>Per fare un esempio, chiediamoci come sia possibile misurare la variabilità della proporzione di studenti promossi, se prendiamo in considerazione tutti i possibili appelli d’esame di Psicometria a Firenze (quelli passati, quelli presenti e anche quelli futuri). Da ciò che è stato presentato in precedenza, sappiamo che la statistica più utile per quantificare la variabilità di una variabile è la deviazione standard. Questo fatto fornisce la risposta anche alla domanda che ci siamo posti ora: in linea di principio, potremmo usare la deviazione standard per descrivere di quanto variano, in media, i valori delle proporzioni di studenti promossi in tutti i possibili appelli d’esame di Psicometria a Firenze. Un problema che dobbiamo affrontare, però, riguarda il fatto che la distribuzione di valori a cui facciamo riferimento è una distribuzione di valori virtuali, non è un insieme di dati che abbiamo osservato. Per calcolare la deviazione standard, dunque, dobbiamo procedere in modo diverso da quanto abbiamo fatto in precedenza. Iniziamo con un po’ di terminologia.</p>
+<div id="def-stderr" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 39.1 </strong></span>Si dice <em>errore standard</em> la deviazione standard dei valori una statistica campionaria nell’universo dei campioni.</p>
+</div>
+<p>L’errore standard è molto importante perché descrive l’accuratezza della nostra stima. Se l’errore standard è piccolo questo ci dice che, se osserviamo un campione diverso da quello corrente, allora ci aspettiamo che la statistica in esame abbia un valore simile a quello corrente. Un grande errore standard, invece, ci dice che non dobbiamo assegnare troppa fiducia alla stima ottenuta nel campione a disposizione perché, in un altro campione, si otterrà una stima molto diversa, e, in media, i valori ottenuti in campioni diversi saranno lontani dal vero valore del parametro sconosciuto (ovvero, nell’esempio considerato, dalla media di tutte le proporzioni che si possono ottenere).</p>
+<p>Il calcolo dell’errore standard è solitamente lasciato ad un software. Ma come si arriva ad una quantificazione dell’errore standard? Forniamo qui solo una descrizione intuitiva della procedura che viene seguita e forniamo la seguente definizione.</p>
+<div id="def-stderr2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 39.2 </strong></span>L’errore standard può essere inteso come una misura (del reciproco) della curvatura della verosimiglianza in corrispondenza della stima di massima verosimiglianza per un parametro <span class="math inline">\(\theta\)</span>.</p>
+</div>
+<p>Per capire come si traduce in pratica la <a href="#def-stderr2">Definizione&nbsp;<span>39.2</span></a>, esaminiamo la <a href="#fig-like-se">Figura&nbsp;<span>39.1</span></a>. Nel pannello di sinistra è riprodotta la funzione di verosimiglianza nel caso di 7 successi in 10 prove Bernoulliane. Nel pannello centrale è riportata la verosimiglianza per 70 successi in 100 prove e nel pannello di destra abbiamo la verosimiglianza nel caso di 700 successi in 1000 prove.</p>
+<div id="fig-like-se" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><embed src="images/likelihood_and_SE.pdf" class="img-fluid" style="width:80.0%"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;39.1: Funzione di verosimiglianza nel caso di 7 successi in 10 prove Bernoulliane (pannello di sinistra), di 70 successi in 100 prove (pannello centrale) e di 700 successi in 1000 prove (pannello di destra).</figcaption><p></p>
+</figure>
+</div>
+<p>Quello che la <a href="#fig-like-se">Figura&nbsp;<span>39.1</span></a> ci dice è che, al crescere del numero di prove, diminuisce la nostra incertezza relativamente al valore del parametro <span class="math inline">\(\pi\)</span> (probabilità di successo, ovvero, la media di tutte le proporzioni campionarie). Nel caso di un piccolo numero di prove, la verosimiglianza ha una piccola curvatura e ci fornisce una modesta quantità di informazione concernente il parametro non osservabile <span class="math inline">\(\pi\)</span> – in altri termini, la verosimiglianza definisce un intervallo piuttosto ampio di valori <span class="math inline">\(\pi\)</span> la cui plausibilità relativa è piuttosto grande. Con un grande numero di prove, invece, la verosimiglianza ha un picco molto più marcato che associa livelli relativamente alti di plausibilità ad un intervallo molto più piccolo di valori <span class="math inline">\(\pi\)</span>. In altre parole, maggiore è la curvatura della verosimiglianza, maggiore è la quantità di informazione che il campione fornisce rispetto al valore del parametro sconosciuto che vogliamo stimare.</p>
+<p>In termini formali, la curvatura è la derivata seconda di una funzione e, appunto, calcolando la derivata seconda della funzione di verosimiglianza possiamo trovare l’errore standard di una statistica. Nel caso presente, l’errore standard della proporzione campionaria è</p>
+<span class="math display">\[\begin{equation}
+\sigma_{\hat{\pi}} = \sqrt{
+\frac{p (1-p)}{n},
+}
+\end{equation}\]</span>
+<p>dove <span class="math inline">\(p\)</span> è la proporzione campionaria e <span class="math inline">\(n\)</span> è il numero di osservazioni. Questa quantità si interpreta come qualunque deviazione standard: nello specifico, ci dice quanto varia in media la proporzione campionari se consideriamo campioni diversi. Si noti che, avendo <span class="math inline">\(n\)</span> al denominatore, la formula riproduce l’intuizione che abbiamo descritto mediante la <a href="#fig-like-se">Figura&nbsp;<span>39.1</span></a>: quando <span class="math inline">\(n\)</span> è grande l’errore standard è piccolo e, viceversa, quando <span class="math inline">\(n\)</span> è piccolo l’errore standard è grande. In altri termini, quando l’errore standard di una stima è piccolo, possiamo attribuire un grande livello di fiducia al valore della stima del parametro. Invece, un grande errore standard ci suggerisce ad essere cauti in qualunque inferenza che potremmo trarre dalla stima che abbiamo ottenuto.</p>
+</section><section id="sec-int_conf" class="level2" data-number="39.3"><h2 data-number="39.3" class="anchored" data-anchor-id="sec-int_conf">
+<span class="header-section-number">39.3</span> Che cos’è l’intervallo fiduciale?</h2>
+<p>L’approccio frequentista non si limita al calcolo dell’errore standard ma affronta il problema di quantificare il grado di incertezza associato alle stime campionarie utilizzando un altro concetto, ovvero la nozione di <em>intervallo di fiducia</em>. Vale la pena di sottolineare che il principale significato del termine inglese <em>confidence</em> non è <em>confidenza</em> bensì <em>fiducia</em>. L’intervallo di fiducia è una semplice trasformazione dell’errore standard e tale nozione può essere chiarita nel modo seguente.</p>
+<p>La stima <span class="math inline">\(\hat{\theta}\)</span> di un parametro <span class="math inline">\(\theta\)</span> si determina esaminando i dati forniti da un campione casuale. Sappiamo che il valore empirico <span class="math inline">\(\hat{\theta}\)</span> non coincide mai con il vero valore del parametro (dato che il campione è diverso dalla popolazione). Conoscendo la distribuzione di <span class="math inline">\(\hat{\theta}\)</span> diventa però possibile valutare l’errore commesso e definire l’intervallo <span class="math inline">\([\theta_{min} \leq \hat{\theta} \leq \theta_{max}]\)</span> che, <em>a lungo termine</em>, comprende il valore del parametro incognito <span class="math inline">\(\theta\)</span> con una probabilità <span class="math inline">\(\gamma \in [0, 1]\)</span> prossima ad 1. Questo intervallo si chiama intervallo fiduciale.</p>
+<div id="def-int-fiduciale" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 39.3 </strong></span>Si dice intervallo fiduciale l’intervallo <span class="math inline">\([\theta_{min}, \theta_{max}]\)</span> tale che <span class="math display">\[\begin{equation}
+P(\theta_{min} \leq \theta \leq \theta_{max}) \geq \gamma, \qquad \forall \theta \in \Theta,\notag
+\end{equation}\]</span> dove <span class="math inline">\(\Theta\)</span> indica l’insieme dei valori possibili del parametro <span class="math inline">\(\theta\)</span>.</p>
+</div>
+<p>Gli estremi dell’intervallo di fiducia sono chiamati limiti fiduciari e la probabilità <span class="math inline">\(\gamma\)</span> è chiamata livello fiduciario; espressa in percentuale, essa esprime il livello di significatività della stima effettuata.</p>
+</section><section id="come-si-calcola-lintervallo-fiduciale" class="level2" data-number="39.4"><h2 data-number="39.4" class="anchored" data-anchor-id="come-si-calcola-lintervallo-fiduciale">
+<span class="header-section-number">39.4</span> Come si calcola l’intervallo fiduciale?</h2>
+<p>In alcuni casi, la distribuzione delle statistiche campionarie approssima la Normale e, in tali casi, l’intervallo fiduciale al 95% è dato da</p>
+<span class="math display">\[\begin{equation}
+\hat{\theta} \pm 1.96 \cdot \text{SE}, \notag
+\end{equation}\]</span>
+<p>ovvero, dalla stima del parametro <span class="math inline">\(\pm\)</span> 1.96 volte l’errore standard.</p>
+<p>Conoscendo l’errore standard, è dunque molto semplice calcolare l’intervallo fiduciale. Meno semplice, invece, è interpretare l’intervallo fiduciale nel modo corretto. Per capire quale sia l’interpretazione corretta dell’intervallo fiduciale, iniziamo a definire il concetto di livello di copertura.</p>
+</section><section id="il-livello-di-copertura" class="level2" data-number="39.5"><h2 data-number="39.5" class="anchored" data-anchor-id="il-livello-di-copertura">
+<span class="header-section-number">39.5</span> Il livello di copertura</h2>
+<p>Si indica con <span class="math inline">\(1-\alpha\)</span> il <em>livello di copertura</em> fornito dall’intervallo fiduciale. Il termine probabilità di copertura si riferisce alla probabilità che la procedura per la costruzione degli intervalli di fiducia produca un intervallo che contiene (o copre) il valore reale del parametro di interesse. Esiste infatti sempre una probabilità pari ad <span class="math inline">\(\alpha\)</span> che i dati campionari producano un intervallo che non contiene il valore reale del parametro di interesse.</p>
+<p>Ricordiamo che l’approccio frequentista interpreta la probabilità di un evento come la proporzione di volte in cui tale evento si verifica avendo osservato molte ripetizioni indipendenti di un esperimento casuale. Nel caso presente, l’evento in questione è la risposta alla domanda “l’intervallo fiduciale contiene il valore del parametro?” mentre l’esperimento casuale corrisponde al calcolo dell’intervallo fiduciale per la statistica in question in un campione casuale di ampiezza <span class="math inline">\(n\)</span>. L’interpretazione frequentista della nozione di livello di copertura può essere chiarita mediante la seguente simulazione.</p>
+<p>Prendiamo in considerazione la distribuzione dell’altezza degli adulti maschi nella popolazione. Sappiamo che l’altezza degli individui segue la distribuzione normale. Sappiamo inoltre che, per esempio, l’altezza media di un italiano adulto maschio è di <span class="math inline">\(175\)</span> cm, con una varianza di <span class="math inline">\(49\)</span> cm<span class="math inline">\(^2\)</span>. Utilizziamo queste informazioni per realizzare la seguente simulazione in R. Nella simulazione prevediamo 100 ripetizioni dell’esperimento casuale che consiste nell’estrazione di un campione di ampiezza <span class="math inline">\(n = 20\)</span> dalla popolazione distribuita come <span class="math inline">\(\mathcal{N}(175, 7)\)</span>. Per ciascun campione casuale così trovato utilizzeremo poi la funzione <code><a href="https://rdrr.io/r/stats/t.test.html">t.test()</a></code> per calcolare l’intervallo fiduciale al 95%. Salveremo quindi nella matrice <code>sampling_distribution</code> il limite inferiore e il limite superiore dell’intervallo fiduciale trovato in ciascuno dei 100 campioni.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1235</span><span class="op">)</span></span>
+<span><span class="va">nrep</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">sampling_distribution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="va">nrep</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">point_estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">nrep</span><span class="op">)</span></span>
+<span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">175</span></span>
+<span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nrep</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">sample_size</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span></span>
+<span>  <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">y</span>, conf.level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span>  <span class="va">sampling_distribution</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span><span class="op">$</span><span class="va">conf.int</span></span>
+<span>  <span class="va">point_estimate</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span><span class="op">$</span><span class="va">estimate</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Creiamo poi un data.frame a cui aggiungiamo una colonna che riporta i valori delle medie campionarie.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">sampling_distribution</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lcl"</span>, <span class="st">"ucl"</span><span class="op">)</span></span>
+<span><span class="va">sampling_distribution</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">sampling_distribution</span><span class="op">)</span></span>
+<span><span class="va">sampling_distribution</span><span class="op">$</span><span class="va">mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">point_estimate</span><span class="op">)</span></span>
+<span><span class="va">sampling_distribution</span><span class="op">$</span><span class="va">replicate</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="va">nrep</span></span>
+<span><span class="va">sampling_distribution</span><span class="op">$</span><span class="va">captured</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span></span>
+<span>  <span class="va">sampling_distribution</span><span class="op">$</span><span class="va">lcl</span> <span class="op">&lt;=</span> <span class="va">mu</span> <span class="op">&amp;</span> <span class="va">sampling_distribution</span><span class="op">$</span><span class="va">ucl</span> <span class="op">&gt;=</span> <span class="va">mu</span>, </span>
+<span>  <span class="fl">1</span>, <span class="fl">0</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">sampling_distribution</span><span class="op">$</span><span class="va">captured</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'No'</span>, <span class="st">'Si'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Utilizzando <code>ggplot()</code> creiamo la <a href="#fig-copertura-ci">Figura&nbsp;<span>39.2</span></a> che riporta i 100 intervalli fiduciali al 95% che abbiamo ottenuto, uno per ciascuno dei 100 diversi campioni casuali estratti dalla distribuzione delle altezze.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">sampling_distribution</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span></span>
+<span>    <span class="fu">aes</span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">point_estimate</span>, y <span class="op">=</span> <span class="va">replicate</span>, color <span class="op">=</span> <span class="va">captured</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="va">replicate</span>, yend <span class="op">=</span> <span class="va">replicate</span>, x <span class="op">=</span> <span class="va">lcl</span>, xend <span class="op">=</span> <span class="va">ucl</span>,</span>
+<span>    color <span class="op">=</span> <span class="va">captured</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span></span>
+<span>    xintercept <span class="op">=</span> <span class="fl">175</span>, linetype <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"white"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Stima puntuale"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Campioni simulati"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">guides</span><span class="op">(</span>color<span class="op">=</span><span class="fu">guide_legend</span><span class="op">(</span><span class="st">"Parametro contenuto nell'intervallo"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-copertura-ci" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="221_conf_interv_files/figure-html/fig-copertura-ci-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figura&nbsp;39.2: Livello di copertura empirico per 100 campioni causali estratti da <span class="math inline">\(\mathcal{N}(175, 7)\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-copertura-ci">Figura&nbsp;<span>39.2</span></a> riporta i 100 intervalli fiduciali del 95% calcolati nella simulazione descritta sopra e distingue tra intervalli fiduciali che contengono il valore del parametro e intervalli che non lo contengono. Se ripetiamo la simulazione 10000 volte troviamo un livello di copertura (ovvero, una proporzione di intervalli fiduciali del 95% che contengono il parametro) pari a 0.9468. Questo valore è molto prossimo al livello nominale <span class="math inline">\(1 - \alpha = 0.95\)</span>.</p>
+</section><section id="sec-interpret-ci" class="level2" data-number="39.6"><h2 data-number="39.6" class="anchored" data-anchor-id="sec-interpret-ci">
+<span class="header-section-number">39.6</span> Interpretazione}</h2>
+<p>Studenti e ricercatori tendono ad interpretare gli intervalli fiduciali dicendo che “c’è una probabilità del 95% che la vera media della popolazione si trovi all’interno dell’intervallo fiduciale”. Questa è un’interpretazione semplice e cattura l’idea del senso comune secondo la quale una probabilità di 0.95 significa: “sono sicuro al 95%”. Sfortunatamente, l’interpretazione precedente è sbagliata. La precedente interpretazione richiede che la probabilità venga descritta in termini soggettivi e corrisponde a dire: “sono fiducioso al 95% che l’intervallo così costruito contenga la media della popolazione, perché questa è la mia opinione”. Nella vita di tutti i giorni un tale punto di vista va benissimo, ma parlare di opinioni soggettive e di fiducia è un’idea Bayesiana. Non c’è niente di male con l’idea che la nozione “probabilità del 95%” possa riferirsi a un’opinione personale. Tuttavia, gli intervalli fiduciali sono una procedura statistica di stampo frequentista, non Bayesiano. Se usiamo degli strumenti statistici frequentisti per costruire l’intervallo fiduciale non possiamo attribuire ad esso un’interpretazione Bayesiana, ma dobbiamo interpretare tale intervallo di valori in maniera coerente con l’impianto teorico frequentista – anche perché gli intervalli di fiducia frequentisti e gli intervalli di credibilità Bayesiani sono numericamente diversi!</p>
+<p>Se l’interpretazione presentata sopra non è corretta, allora qual è l’interpretazione corretta dell’intervallo fiduciale? Dobbiamo ricordare ciò che abbiamo detto sulla probabilità frequentista: in base all’approccio frequentista la probabilità di un evento è alla proporzione di volte con la quale un evento si è verificato in una sequenza di esperimenti casuali. È necessario ripetere tante volte un esperimento casuale, anche solo in maniera ipotetica (come nella simulazione descritta sopra), altrimenti non è possibile parlare di probabilità. L’interpretazione frequentista di un intervallo fiduciale deve avere a che fare con la ripetizione di un esperimento casuale e può essere formulata nel modo seguente.</p>
+<div id="def-interpr-conf-int" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 39.4 </strong></span>Se ripetessimo tante volte l’esperimento casuale che consiste nell’estrarre un campione casuale dalla popolazione e nel calcolare l’intervallo fiduciale al 95%, allora nel 95% dei casi gli intervalli così calcolati conterrebbero il vero valore del parametro.</p>
+</div>
+<p>Più in generale, se si estraggono successivamente più campioni indipendenti dalla stessa popolazione e se si determinano i relativi intervalli fiduciali seguendo la procedura indicata dalla statistica frequentista, allora il <span class="math inline">\(100 (1-\alpha)\)</span>% degli intervalli così calcolati conterrà il vero valore del parametro incognito.</p>
+<p>Questa idea è illustrata nella <a href="#fig-copertura-ci">Figura&nbsp;<span>39.2</span></a> che mostra 100 intervalli fiduciali costruiti per stimare l’altezza media di un italiano adulto maschio sulla base di campioni casuali di ampiezza <span class="math inline">\(n = 30\)</span>. Alcuni di questi intervalli fiduciali contengono il valore del parametro, altri non lo contengono. Se la simulazione venisse ripetuta infinite volte si scoprirebbe che esattamente il 95% degli intervalli così calcolati conterrebbe il valore del parametro (e il 5% non lo conterrebbe), dato che, per costruire gli intervalli fiduciali abbiamo usato <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+<p>Questa è l’interpretazione corretta che deve essere attribuita alla nozione di intervallo fiduciale al livello <span class="math inline">\(100 (1-\alpha)\)</span>%. È però risaputo come i ricercatori (non solo gli studenti!) spesso attribuiscono agli intervalli fiduciali un’interpretazione errata, come abbiamo descritto sopra. Non poche volte nelle riviste specialistiche si leggono affermazioni del tipo: “la probabilità che la media della popolazione <span class="math inline">\(\mu\)</span> sia contenuta nell’intervallo <span class="math inline">\([\hat{a}, \hat{b}]\)</span> è 0.95”, mentre in realtà si dovrebbe scrivere: “la procedura tramite la quale l’intervallo <span class="math inline">\([\hat{a}, \hat{b}]\)</span> è stato calcolato include <span class="math inline">\(\mu\)</span> nel 95% dei casi”.</p>
+<section id="fraintendimenti" class="level3" data-number="39.6.1"><h3 data-number="39.6.1" class="anchored" data-anchor-id="fraintendimenti">
+<span class="header-section-number">39.6.1</span> Fraintendimenti</h3>
+<p><span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> notano che, essendo ampiamente riconosciuti i limiti del test dell’ipotesi nulla, per l’inferenza statistica viene spesso consigliato l’utilizzo degli intervalli di fiducia. Per esempio, l’<em>American Psychological Association Publication Manual</em> fa riferimento agli intervalli di fiducia affermando che essi rappresentano <em>in general, the best reporting strategy</em> (APA, 2001, p.&nbsp;22; APA, 2009, p.&nbsp;34). <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> fanno notare, però, che tali raccomdandazioni hanno dei limiti, in quanto non tengono in considerazione la difficoltà che hanno i ricercatori a fornire agli intervalli di fiducia l’interpretazione corretta. A sostegno di questo punto di vista, <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> hanno svolto uno studio nel quale si sono posti due domande:</p>
+<ul>
+<li>in che misura gli intervalli di fiducia vengono interpretati in maniera sbagliata da studenti e ricercatori?</li>
+<li>le interpretazioni errate degli intervalli di fiducia diminuiscono con l’esperienza nell’ambito della ricerca?</li>
+</ul>
+<p>Prima di presentare lo studio, <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> ricordano quale sia l’interpretazione corretta degli intervalli di fiducia. Il lettore può mettere in relazione la seguente citazione con ciò che è stato discusso in precedenza.</p>
+<blockquote class="blockquote">
+<p>A CI is a numerical interval constructed around the estimate of a parameter. Such an interval does not, however, directly indicate a property of the parameter; instead, it indicates a property of the procedure, as is typical for a frequentist technique. Specifically, we may find that a particular procedure, when used repeatedly across a series of hypothetical data sets (i.e., the sample space), yields intervals that contain the true parameter value in 95% of the cases. When such a procedure is applied to a particular data set, the resulting interval is said to be a 95% CI. The key point is that the CIs do not provide for a statement about the parameter as it relates to the particular sample at hand; instead, they provide for a statement about the performance of the procedure of drawing such intervals in repeated use. Hence, it is incorrect to interpret a CI as the probability that the true value is within the interval (, Berger &amp; Wolpert, 1988). As is the case with <span class="math inline">\(p\)</span>-values, CIs do not allow one to make probability statements about parameters or hypotheses.</p>
+</blockquote>
+<p>Nello studio, <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> hanno sottoposto il questionario riportato di seguito ad un campione di 596 partecipanti. Il campione includeva 442 studenti di psicologia del primo anno che seguivano un corso introduttivo di statistica presso l’università di Amsterdam, 34 studenti di master e 120 ricercatori (cioè dottorandi e docenti universitari).</p>
+<blockquote class="blockquote">
+<p>Professor Bumbledorf conducts an experiment, analyzes the data, and reports: “The 95% confidence interval for the mean ranges from 0.1 to 0.4.” Please mark each of the statements below as ‘true’ or ‘false’.</p>
+</blockquote>
+<blockquote class="blockquote">
+<ol type="1">
+<li>The probability that the true mean is greater than 0 is at least 95%.</li>
+<li>The probability that the true mean equals 0 is smaller than 5%.</li>
+<li>The “null hypothesis” that the true mean equals 0 is likely to be incorrect.</li>
+<li>There is a 95% probability that the true mean lies between 0.1 and 0.4.</li>
+<li>We can be 95% confident that the true mean lies between 0.1 and 0.4.</li>
+<li>If we were to repeat the experiment over and over, then 95% of the time the true mean falls between 0.1 and 0.4.</li>
+</ol>
+</blockquote>
+<p>Le sei affermazioni precedenti sono tutte errate. I risultati dello studio di <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span> mostrano però che i partecipanti si sono dichiarati d’accordo con il seguente numero medio di item (su 6): 3.51 (99% CI = [3.35, 3.68]) per gli studenti del primo anno, 3.24 (99% CI = [2.40, 4.07]) per gli studenti di master e 3.45 (99% CI = [3.08, 3.82]) per i ricercatori. Gli intervalli di fiducia al 95% si sovrappongono per le tre categorie di rispondenti il che significa che, a tale livello di fiducia, non c’è ragione di ritenere che vi siano delle differenze tra i tre gruppi di rispondenti. In altre parole, questi dati suggeriscono che i ricercatori tendono a condividere con gli studenti di psicologia del primo anno le stesse opinioni (errate!) relativamente agli intervallo fiduciali.</p>
+<p>Le interpretazioni errate degli intervalli di fiducia sono dunque molto diffuse e l’esperienza pratica nel mondo della ricerca non contribuisce ad una comprensione migliore di tale concetto. In generale, i risultati della ricerca di <span class="citation" data-cites="hoekstra2014robust">Hoekstra et al. (<a href="999_refs.html#ref-hoekstra2014robust" role="doc-biblioref">2014</a>)</span>, e di altre che hanno prodotto risultati simili, mettono in discussione l’utilità degli intervalli fiduciali frequentisti (dato che molto poche persone hanno una comprensione adeguata di tale concetto), favorendo invece l’uso degli “intervallo di credibilità” Bayesiani ai quali è più facile fornire un’interpretazione corretta, perché tale interpretazione coincide con le nostre intuizioni.</p>
+</section></section><section id="commenti-e-considerazioni-finali" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="commenti-e-considerazioni-finali">Commenti e considerazioni finali</h2>
+<p>Gli intervalli fiduciali vengono spesso fraintesi. Il grado di fiducia del 95% riguarda la certezza che <em>nel lungo periodo</em> il 95% degli intervalli fiduciali includerà il parametro sconosciuto: nulla si può dire di uno specifico intervallo fiduciale, il quale può includere o non includere il parametro, ma il ricercatore non può saperlo. Inoltre, si può dire che non esiste alcuna relazione tra la varianza di un campione e la sua media. Pertanto non possiamo dedurre che un intervallo di fiducia più stretto sia anche più preciso. In un contesto frequentista, la precisione fa solo riferimento al livello di copertura nel lungo termine che viene fornita dalla procedura di generazione degli intervalli di fiducia: non riguarda il singolo intervallo che è stato osservato. Infatti, un intervallo di fiducia può essere molto stretto ma anche molto lontano dal vero valore del parametro sconosciuto.</p>
+
+
+<!-- -->
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="doc-bibliography" style="display: none">
+<div id="ref-hoekstra2014robust" class="csl-entry" role="doc-biblioentry">
+Hoekstra, R., Morey, R. D., Rouder, J. N., &amp; Wagenmakers, E.-J. (2014). Robust misinterpretation of confidence intervals. <em>Psychonomic Bulletin &amp; Review</em>, <em>21</em>(5), 1157–1164.
+</div>
+</div>
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./220_intro_frequentist.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Legge dei grandi numeri</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./225_distr_camp_mean.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzione campionaria</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Intervallo fiduciale {#sec-interv-conf}</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include = FALSE}</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## La variabilità campionaria</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>Consideriamo, quale esempio, l'esperimento casuale che corrisponde all'estrazione casuale di un campione di $n$ osservazioni da una popolazione e del calcolo della media di quel campione. Dato che si immagina che l'esperimento casuale venga ripetuto infinite volte, dobbiamo immaginare l'esistenza di infiniti campioni casuali di $n$ osservazioni. Dato che ciascuno di tali campioni è costituito da osservazioni diverse, ognuno di essi avrà una media diversa. Tale fenomeno è detto *variabilità campionaria*. Se usiamo il linguaggio dell'approccio frequentista diremo che la distribuzione dei tutti gli infiniti possibili valori della statistica in questione (nel caso dell'esempio, la media del campione) nell'universo dei campioni si chiama *distribuzione campionaria*.</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Se lo psicologo usa la media del campione quale stima della media della popolazione, ovviamente commetterà un errore, dato che la statistica campionaria è sempre diversa dal parametro. Il problema dello psicologo è quello di valutare l'entità di tale errore, ovvero quello di valutare il livello di incertezza inerente alla sua stima.</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>Per valutare l'incertezza della stima lo psicologo fa riferimento alla variabilità campionaria. Se la deviazione standard della distribuzione campionaria della statistica è piccola, questo significa che ogni campione casuale di ampiezza $n$ produrrà una statistica $\bar{X}$ simile al parametro $\mu$ della popolazione. In tali condizioni (utilizzando i dati di un singolo campione) ci sarà una piccola incertezza relativamente al valore del parametro, perché, in media, $\bar{X}$ è simile a $\mu$. Se invece la deviazione standard della distribuzione campionaria di $\bar{X}$ è grande, i campioni casuali di ampiezza $n$ produrranno, in media, una statistica $\bar{X}$ molto lontana dal parametro $\mu$. Utilizzando i dati di un singolo campione, in tali condizioni lo psicologo sarà molto incerto relativamente al vero valore del parametro (in quanto, in media, $\bar{X}$ è molto diverso da $\mu$).</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>La deviazione standard della distribuzione campionaria, detta *errore standard*, viene dunque utilizzata per quantificare l'incertezza relativamente alla stima di un parametro. Solitamente, l'approccio frequentista quantifica l'incertezza della stima nei termini di una funzione dell'errore standard chiamata *intervallo fiduciale*. Lo scopo di questo capitolo è quello di introdurre la nozione di errore standard in modo tale da potere fornire un'interpretazione alla nozione di intervallo fiduciale.</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## L'errore standard</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>Per fare un esempio, chiediamoci come sia possibile misurare la variabilità della proporzione di studenti promossi, se prendiamo in considerazione tutti i possibili appelli d'esame di Psicometria a Firenze (quelli passati, quelli presenti e anche quelli futuri). Da ciò che è stato presentato in precedenza, sappiamo che la statistica più utile per quantificare la variabilità di una variabile è la deviazione standard. Questo fatto fornisce la risposta anche alla domanda che ci siamo posti ora: in linea di principio, potremmo usare la deviazione standard per descrivere di quanto variano, in media, i valori delle proporzioni di studenti promossi in tutti i possibili appelli d'esame di Psicometria a Firenze. Un problema che dobbiamo affrontare, però, riguarda il fatto che la distribuzione di valori a cui facciamo riferimento è una distribuzione di valori virtuali, non è un insieme di dati che abbiamo osservato. Per calcolare la deviazione standard, dunque, dobbiamo procedere in modo diverso da quanto abbiamo fatto in precedenza. Iniziamo con un po' di terminologia.</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>::: {#def-stderr}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>Si dice *errore standard* la deviazione standard dei valori una statistica campionaria nell'universo dei campioni.</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>L'errore standard è molto importante perché descrive l'accuratezza della nostra stima. Se l'errore standard è piccolo questo ci dice che, se osserviamo un campione diverso da quello corrente, allora ci aspettiamo che la statistica in esame abbia un valore simile a quello corrente. Un grande errore standard, invece, ci dice che non dobbiamo assegnare troppa fiducia alla stima ottenuta nel campione a disposizione perché, in un altro campione, si otterrà una stima molto diversa, e, in media, i valori ottenuti in campioni diversi saranno lontani dal vero valore del parametro sconosciuto (ovvero, nell'esempio considerato, dalla media di tutte le proporzioni che si possono ottenere).</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>Il calcolo dell'errore standard è solitamente lasciato ad un software. Ma come si arriva ad una quantificazione dell'errore standard? Forniamo qui solo una descrizione intuitiva della procedura che viene seguita e forniamo la seguente definizione.</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>::: {#def-stderr2}</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>L'errore standard può essere inteso come una misura (del reciproco) della curvatura della verosimiglianza in corrispondenza della stima di massima verosimiglianza per un parametro $\theta$.</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>Per capire come si traduce in pratica la @def-stderr2, esaminiamo la @fig-like-se. Nel pannello di sinistra è riprodotta la funzione di verosimiglianza nel caso di 7 successi in 10 prove Bernoulliane. Nel pannello centrale è riportata la verosimiglianza per 70 successi in 100 prove e nel pannello di destra abbiamo la verosimiglianza nel caso di 700 successi in 1000 prove.</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>::: {#fig-like-se}</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/likelihood_and_SE.pdf)</span>{width="80%"}</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>Funzione di verosimiglianza nel caso di 7 successi in 10 prove Bernoulliane (pannello di sinistra), di 70 successi in 100 prove (pannello centrale) e di 700 successi in 1000 prove (pannello di destra).</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>Quello che la @fig-like-se ci dice è che, al crescere del numero di prove, diminuisce la nostra incertezza relativamente al valore del parametro $\pi$ (probabilità di successo, ovvero, la media di tutte le proporzioni campionarie). Nel caso di un piccolo numero di prove, la verosimiglianza ha una piccola curvatura e ci fornisce una modesta quantità di informazione concernente il parametro non osservabile $\pi$ -- in altri termini, la verosimiglianza definisce un intervallo piuttosto ampio di valori $\pi$ la cui plausibilità relativa è piuttosto grande. Con un grande numero di prove, invece, la verosimiglianza ha un picco molto più marcato che associa livelli relativamente alti di plausibilità ad un intervallo molto più piccolo di valori $\pi$. In altre parole, maggiore è la curvatura della verosimiglianza, maggiore è la quantità di informazione che il campione fornisce rispetto al valore del parametro sconosciuto che vogliamo stimare.</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>In termini formali, la curvatura è la derivata seconda di una funzione e, appunto, calcolando la derivata seconda della funzione di verosimiglianza possiamo trovare l'errore standard di una statistica. Nel caso presente, l'errore standard della proporzione campionaria è</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{=tex}</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{equation}</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="in">\sigma_{\hat{\pi}} = \sqrt{</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="in">\frac{p (1-p)}{n},</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="in">\end{equation}</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>dove $p$ è la proporzione campionaria e $n$ è il numero di osservazioni. Questa quantità si interpreta come qualunque deviazione standard: nello specifico, ci dice quanto varia in media la proporzione campionari se consideriamo campioni diversi. Si noti che, avendo $n$ al denominatore, la formula riproduce l'intuizione che abbiamo descritto mediante la @fig-like-se: quando $n$ è grande l'errore standard è piccolo e, viceversa, quando $n$ è piccolo l'errore standard è grande. In altri termini, quando l'errore standard di una stima è piccolo, possiamo attribuire un grande livello di fiducia al valore della stima del parametro. Invece, un grande errore standard ci suggerisce ad essere cauti in qualunque inferenza che potremmo trarre dalla stima che abbiamo ottenuto.</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="fu">## Che cos'è l'intervallo fiduciale? {#sec-int_conf}</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>L'approccio frequentista non si limita al calcolo dell'errore standard ma affronta il problema di quantificare il grado di incertezza associato alle stime campionarie utilizzando un altro concetto, ovvero la nozione di *intervallo di fiducia*. Vale la pena di sottolineare che il principale significato del termine inglese *confidence* non è *confidenza* bensì *fiducia*. L'intervallo di fiducia è una semplice trasformazione dell'errore standard e tale nozione può essere chiarita nel modo seguente.</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>La stima $\hat{\theta}$ di un parametro $\theta$ si determina esaminando i dati forniti da un campione casuale. Sappiamo che il valore empirico $\hat{\theta}$ non coincide mai con il vero valore del parametro (dato che il campione è diverso dalla popolazione). Conoscendo la distribuzione di $\hat{\theta}$ diventa però possibile valutare l'errore commesso e definire l'intervallo $<span class="co">[</span><span class="ot">\theta_{min} \leq \hat{\theta} \leq \theta_{max}</span><span class="co">]</span>$ che, *a lungo termine*, comprende il valore del parametro incognito $\theta$ con una probabilità $\gamma \in <span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span>$ prossima ad 1. Questo intervallo si chiama intervallo fiduciale.</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>::: {#def-int-fiduciale}</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>Si dice intervallo fiduciale l'intervallo $<span class="co">[</span><span class="ot">\theta_{min}, \theta_{max}</span><span class="co">]</span>$ tale che \begin{equation}</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>P(\theta_{min} \leq \theta \leq \theta_{max}) \geq \gamma, \qquad \forall \theta \in \Theta,\notag</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>\end{equation} dove $\Theta$ indica l'insieme dei valori possibili del parametro $\theta$.</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>Gli estremi dell'intervallo di fiducia sono chiamati limiti fiduciari e la probabilità $\gamma$ è chiamata livello fiduciario; espressa in percentuale, essa esprime il livello di significatività della stima effettuata.</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Come si calcola l'intervallo fiduciale?</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>In alcuni casi, la distribuzione delle statistiche campionarie approssima la Normale e, in tali casi, l'intervallo fiduciale al 95% è dato da</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{=tex}</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{equation}</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="in">\hat{\theta} \pm 1.96 \cdot \text{SE}, \notag</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="in">\end{equation}</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>ovvero, dalla stima del parametro $\pm$ 1.96 volte l'errore standard.</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>Conoscendo l'errore standard, è dunque molto semplice calcolare l'intervallo fiduciale. Meno semplice, invece, è interpretare l'intervallo fiduciale nel modo corretto. Per capire quale sia l'interpretazione corretta dell'intervallo fiduciale, iniziamo a definire il concetto di livello di copertura.</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## Il livello di copertura</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>Si indica con $1-\alpha$ il *livello di copertura* fornito dall'intervallo fiduciale. Il termine probabilità di copertura si riferisce alla probabilità che la procedura per la costruzione degli intervalli di fiducia produca un intervallo che contiene (o copre) il valore reale del parametro di interesse. Esiste infatti sempre una probabilità pari ad $\alpha$ che i dati campionari producano un intervallo che non contiene il valore reale del parametro di interesse.</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>Ricordiamo che l'approccio frequentista interpreta la probabilità di un evento come la proporzione di volte in cui tale evento si verifica avendo osservato molte ripetizioni indipendenti di un esperimento casuale. Nel caso presente, l'evento in questione è la risposta alla domanda "l'intervallo fiduciale contiene il valore del parametro?" mentre l'esperimento casuale corrisponde al calcolo dell'intervallo fiduciale per la statistica in question in un campione casuale di ampiezza $n$. L'interpretazione frequentista della nozione di livello di copertura può essere chiarita mediante la seguente simulazione.</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>Prendiamo in considerazione la distribuzione dell'altezza degli adulti maschi nella popolazione. Sappiamo che l'altezza degli individui segue la distribuzione normale. Sappiamo inoltre che, per esempio, l'altezza media di un italiano adulto maschio è di $175$ cm, con una varianza di $49$ cm$^2$. Utilizziamo queste informazioni per realizzare la seguente simulazione in R. Nella simulazione prevediamo 100 ripetizioni dell'esperimento casuale che consiste nell'estrazione di un campione di ampiezza $n = 20$ dalla popolazione distribuita come $\mathcal{N}(175, 7)$. Per ciascun campione casuale così trovato utilizzeremo poi la funzione <span class="in">`t.test()`</span> per calcolare l'intervallo fiduciale al 95%. Salveremo quindi nella matrice <span class="in">`sampling_distribution`</span> il limite inferiore e il limite superiore dell'intervallo fiduciale trovato in ciascuno dei 100 campioni.</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1235</span>)</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>nrep <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>sampling_distribution <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> nrep, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>point_estimate <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, nrep)</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="dv">175</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nrep) {</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(sample_size, mu, sigma)</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> <span class="fu">t.test</span>(y, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  sampling_distribution[i, ] <span class="ot">&lt;-</span> temp<span class="sc">$</span>conf.int</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  point_estimate[i] <span class="ot">&lt;-</span> temp<span class="sc">$</span>estimate</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>Creiamo poi un data.frame a cui aggiungiamo una colonna che riporta i valori delle medie campionarie.</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sampling_distribution) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lcl"</span>, <span class="st">"ucl"</span>)</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>sampling_distribution <span class="ot">&lt;-</span> </span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(sampling_distribution)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>sampling_distribution<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(point_estimate)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>sampling_distribution<span class="sc">$</span>replicate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>nrep</span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>sampling_distribution<span class="sc">$</span>captured <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>  sampling_distribution<span class="sc">$</span>lcl <span class="sc">&lt;=</span> mu <span class="sc">&amp;</span> sampling_distribution<span class="sc">$</span>ucl <span class="sc">&gt;=</span> mu, </span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">0</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(sampling_distribution<span class="sc">$</span>captured) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'No'</span>, <span class="st">'Si'</span>)</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>Utilizzando <span class="in">`ggplot()`</span> creiamo la @fig-copertura-ci che riporta i 100 intervalli fiduciali al 95% che abbiamo ottenuto, uno per ciascuno dei 100 diversi campioni casuali estratti dalla distribuzione delle altezze.</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-copertura-ci, fig.cap="Livello di copertura empirico per 100 campioni causali estratti da $\\mathcal{N}(175, 7)$."}</span></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(sampling_distribution) <span class="sc">+</span></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> point_estimate, <span class="at">y =</span> replicate, <span class="at">color =</span> captured)</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> replicate, <span class="at">yend =</span> replicate, <span class="at">x =</span> lcl, <span class="at">xend =</span> ucl,</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> captured</span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>    <span class="at">xintercept =</span> <span class="dv">175</span>, <span class="at">linetype =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"white"</span></span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Stima puntuale"</span>,</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Campioni simulati"</span></span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color=</span><span class="fu">guide_legend</span>(<span class="st">"Parametro contenuto nell'intervallo"</span>)) <span class="sc">+</span></span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>La @fig-copertura-ci riporta i 100 intervalli fiduciali del 95% calcolati nella simulazione descritta sopra e distingue tra intervalli fiduciali che contengono il valore del parametro e intervalli che non lo contengono. Se ripetiamo la simulazione 10000 volte troviamo un livello di copertura (ovvero, una proporzione di intervalli fiduciali del 95% che contengono il parametro) pari a 0.9468. Questo valore è molto prossimo al livello nominale $1 - \alpha = 0.95$.</span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interpretazione} {#sec-interpret-ci}</span></span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a>Studenti e ricercatori tendono ad interpretare gli intervalli fiduciali dicendo che "c'è una probabilità del 95% che la vera media della popolazione si trovi all'interno dell'intervallo fiduciale". Questa è un'interpretazione semplice e cattura l'idea del senso comune secondo la quale una probabilità di 0.95 significa: "sono sicuro al 95%". Sfortunatamente, l'interpretazione precedente è sbagliata. La precedente interpretazione richiede che la probabilità venga descritta in termini soggettivi e corrisponde a dire: "sono fiducioso al 95% che l'intervallo così costruito contenga la media della popolazione, perché questa è la mia opinione". Nella vita di tutti i giorni un tale punto di vista va benissimo, ma parlare di opinioni soggettive e di fiducia è un'idea Bayesiana. Non c'è niente di male con l'idea che la nozione "probabilità del 95%" possa riferirsi a un'opinione personale. Tuttavia, gli intervalli fiduciali sono una procedura statistica di stampo frequentista, non Bayesiano. Se usiamo degli strumenti statistici frequentisti per costruire l'intervallo fiduciale non possiamo attribuire ad esso un'interpretazione Bayesiana, ma dobbiamo interpretare tale intervallo di valori in maniera coerente con l'impianto teorico frequentista -- anche perché gli intervalli di fiducia frequentisti e gli intervalli di credibilità Bayesiani sono numericamente diversi!</span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>Se l'interpretazione presentata sopra non è corretta, allora qual è l'interpretazione corretta dell'intervallo fiduciale? Dobbiamo ricordare ciò che abbiamo detto sulla probabilità frequentista: in base all'approccio frequentista la probabilità di un evento è alla proporzione di volte con la quale un evento si è verificato in una sequenza di esperimenti casuali. È necessario ripetere tante volte un esperimento casuale, anche solo in maniera ipotetica (come nella simulazione descritta sopra), altrimenti non è possibile parlare di probabilità. L'interpretazione frequentista di un intervallo fiduciale deve avere a che fare con la ripetizione di un esperimento casuale e può essere formulata nel modo seguente.</span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a>::: {#def-interpr-conf-int}</span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a>Se ripetessimo tante volte l'esperimento casuale che consiste nell'estrarre un campione casuale dalla popolazione e nel calcolare l'intervallo fiduciale al 95%, allora nel 95% dei casi gli intervalli così calcolati conterrebbero il vero valore del parametro.</span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a>Più in generale, se si estraggono successivamente più campioni indipendenti dalla stessa popolazione e se si determinano i relativi intervalli fiduciali seguendo la procedura indicata dalla statistica frequentista, allora il $100 (1-\alpha)$% degli intervalli così calcolati conterrà il vero valore del parametro incognito.</span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a>Questa idea è illustrata nella @fig-copertura-ci che mostra 100 intervalli fiduciali costruiti per stimare l'altezza media di un italiano adulto maschio sulla base di campioni casuali di ampiezza $n = 30$. Alcuni di questi intervalli fiduciali contengono il valore del parametro, altri non lo contengono. Se la simulazione venisse ripetuta infinite volte si scoprirebbe che esattamente il 95% degli intervalli così calcolati conterrebbe il valore del parametro (e il 5% non lo conterrebbe), dato che, per costruire gli intervalli fiduciali abbiamo usato $\alpha = 0.05$.</span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>Questa è l'interpretazione corretta che deve essere attribuita alla nozione di intervallo fiduciale al livello $100 (1-\alpha)$%. È però risaputo come i ricercatori (non solo gli studenti!) spesso attribuiscono agli intervalli fiduciali un'interpretazione errata, come abbiamo descritto sopra. Non poche volte nelle riviste specialistiche si leggono affermazioni del tipo: "la probabilità che la media della popolazione $\mu$ sia contenuta nell'intervallo $<span class="co">[</span><span class="ot">\hat{a}, \hat{b}</span><span class="co">]</span>$ è 0.95", mentre in realtà si dovrebbe scrivere: "la procedura tramite la quale l'intervallo $<span class="co">[</span><span class="ot">\hat{a}, \hat{b}</span><span class="co">]</span>$ è stato calcolato include $\mu$ nel 95% dei casi".</span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fraintendimenti</span></span>
+<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a>@hoekstra2014robust notano che, essendo ampiamente riconosciuti i limiti del test dell'ipotesi nulla, per l'inferenza statistica viene spesso consigliato l'utilizzo degli intervalli di fiducia. Per esempio, l'*American Psychological Association Publication Manual* fa riferimento agli intervalli di fiducia affermando che essi rappresentano *in general, the best reporting strategy* (APA, 2001, p. 22; APA, 2009, p. 34). @hoekstra2014robust fanno notare, però, che tali raccomdandazioni hanno dei limiti, in quanto non tengono in considerazione la difficoltà che hanno i ricercatori a fornire agli intervalli di fiducia l'interpretazione corretta. A sostegno di questo punto di vista, @hoekstra2014robust hanno svolto uno studio nel quale si sono posti due domande:</span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>in che misura gli intervalli di fiducia vengono interpretati in maniera sbagliata da studenti e ricercatori?</span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>le interpretazioni errate degli intervalli di fiducia diminuiscono con l'esperienza nell'ambito della ricerca?</span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>Prima di presentare lo studio, @hoekstra2014robust ricordano quale sia l'interpretazione corretta degli intervalli di fiducia. Il lettore può mettere in relazione la seguente citazione con ciò che è stato discusso in precedenza.</span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; A CI is a numerical interval constructed around the estimate of a parameter. Such an interval does not, however, directly indicate a property of the parameter; instead, it indicates a property of the procedure, as is typical for a frequentist technique. Specifically, we may find that a particular procedure, when used repeatedly across a series of hypothetical data sets (i.e., the sample space), yields intervals that contain the true parameter value in 95% of the cases. When such a procedure is applied to a particular data set, the resulting interval is said to be a 95% CI. The key point is that the CIs do not provide for a statement about the parameter as it relates to the particular sample at hand; instead, they provide for a statement about the performance of the procedure of drawing such intervals in repeated use. Hence, it is incorrect to interpret a CI as the probability that the true value is within the interval (\emph{e.g.}, Berger &amp; Wolpert, 1988). As is the case with $p$-values, CIs do not allow one to make probability statements about parameters or hypotheses.</span></span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>Nello studio, @hoekstra2014robust hanno sottoposto il questionario riportato di seguito ad un campione di 596 partecipanti. Il campione includeva 442 studenti di psicologia del primo anno che seguivano un corso introduttivo di statistica presso l'università di Amsterdam, 34 studenti di master e 120 ricercatori (cioè dottorandi e docenti universitari).</span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Professor Bumbledorf conducts an experiment, analyzes the data, and reports: "The 95% confidence interval for the mean ranges from 0.1 to 0.4." Please mark each of the statements below as 'true' or 'false'.</span></span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 1.  The probability that the true mean is greater than 0 is at least 95%.</span></span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 2.  The probability that the true mean equals 0 is smaller than 5%.</span></span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 3.  The "null hypothesis" that the true mean equals 0 is likely to be incorrect.</span></span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 4.  There is a 95% probability that the true mean lies between 0.1 and 0.4.</span></span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 5.  We can be 95% confident that the true mean lies between 0.1 and 0.4.</span></span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 6.  If we were to repeat the experiment over and over, then 95% of the time the true mean falls between 0.1 and 0.4.</span></span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a>Le sei affermazioni precedenti sono tutte errate. I risultati dello studio di @hoekstra2014robust mostrano però che i partecipanti si sono dichiarati d'accordo con il seguente numero medio di item (su 6): 3.51 (99% CI = <span class="sc">\[</span>3.35, 3.68<span class="sc">\]</span>) per gli studenti del primo anno, 3.24 (99% CI = <span class="sc">\[</span>2.40, 4.07<span class="sc">\]</span>) per gli studenti di master e 3.45 (99% CI = <span class="sc">\[</span>3.08, 3.82<span class="sc">\]</span>) per i ricercatori. Gli intervalli di fiducia al 95% si sovrappongono per le tre categorie di rispondenti il che significa che, a tale livello di fiducia, non c'è ragione di ritenere che vi siano delle differenze tra i tre gruppi di rispondenti. In altre parole, questi dati suggeriscono che i ricercatori tendono a condividere con gli studenti di psicologia del primo anno le stesse opinioni (errate!) relativamente agli intervallo fiduciali.</span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>Le interpretazioni errate degli intervalli di fiducia sono dunque molto diffuse e l'esperienza pratica nel mondo della ricerca non contribuisce ad una comprensione migliore di tale concetto. In generale, i risultati della ricerca di @hoekstra2014robust, e di altre che hanno prodotto risultati simili, mettono in discussione l'utilità degli intervalli fiduciali frequentisti (dato che molto poche persone hanno una comprensione adeguata di tale concetto), favorendo invece l'uso degli "intervallo di credibilità" Bayesiani ai quali è più facile fornire un'interpretazione corretta, perché tale interpretazione coincide con le nostre intuizioni.</span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali {.unnumbered}</span></span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>Gli intervalli fiduciali vengono spesso fraintesi. Il grado di fiducia del 95% riguarda la certezza che *nel lungo periodo* il 95% degli intervalli fiduciali includerà il parametro sconosciuto: nulla si può dire di uno specifico intervallo fiduciale, il quale può includere o non includere il parametro, ma il ricercatore non può saperlo. Inoltre, si può dire che non esiste alcuna relazione tra la varianza di un campione e la sua media. Pertanto non possiamo dedurre che un intervallo di fiducia più stretto sia anche più preciso. In un contesto frequentista, la precisione fa solo riferimento al livello di copertura nel lungo termine che viene fornita dalla procedura di generazione degli intervalli di fiducia: non riguarda il singolo intervallo che è stato osservato. Infatti, un intervallo di fiducia può essere molto stretto ma anche molto lontano dal vero valore del parametro sconosciuto.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

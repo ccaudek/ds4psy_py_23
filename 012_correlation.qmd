@@ -14,49 +14,38 @@ Il diagramma di dispersione è la rappresentazione grafica delle coppie di punti
 
 È chiaro che i valori delle scale BDI-II e CES-D non possono essere identici, e questo per due motivi: (1) la presenza degli errori di misurazione e (2) l'unità di misura delle due variabili. L'errore di misurazione corrompe sempre, almeno in parte, qualunque operazione di misurazione. E questo è vero specialmente in psicologia dove l'*attendibilità* (cioè, la precisione degli strumenti di misurazione è minore che in altre discipline (quali la fisica, ad esempio). Il secondo motivo per cui i valori delle scale BDI-II e CES-D non possono essere uguali è che l'unità di misura delle due scale è arbitraria. Infatti, qual è l'unità di misura della depressione? Chi può dirlo! Ma, al di là delle differenze derivanti dall'errore di misurazione e dalla differente unità di misura, ci aspettiamo che, se le due scale misurano entrambe lo stesso costrutto (la depressione), allora i valori prodotti dalle due scale dovranno essere tra loro *linearmente associati*. Per capire cosa si intende con "associazione lineare" iniziamo a guardare i dati. Per fare questo utilizziamo un diagramma a dispersione.
 
-```{r, fig-zetsche-scatter, fig.cap = "Associazione tra le variabili BDI-II e CES-D nello studio di Zetsche et al. (2019). In grigio sono rappresentate le osservazioni del gruppo di controllo; in nero quelle dei pazienti."}
-df <- rio::import(
-  here("data", "data.mood.csv"),
-  header = TRUE
-)
-bysubj <- df %>%
-  group_by(esm_id, group) %>%
-  summarise(
-    bdi = mean(bdi),
-    cesd = mean(cesd_sum)
-  ) %>%
-  na.omit() %>%
-  ungroup()
-m_cesd <- bysubj %>%
-  dplyr::pull(cesd) %>%
-  mean()
-m_bdi <- bysubj %>%
-  dplyr::pull(bdi) %>%
-  mean()
-FONT_SIZE <- 9
-bysubj %>%
-  ggplot(
-    aes(x = bdi, y = cesd, color = group)
-  ) +
-  geom_point(size = 3, alpha = .9) +
-  geom_hline(yintercept = m_cesd, linetype = "dashed", 
-             color = "gray") +
-  geom_vline(xintercept = m_bdi, linetype = "dashed", 
-             color = "gray") +
-  geom_text(x = -1, y = 16, label = "I", color = "gray", 
-            size = FONT_SIZE) +
-  geom_text(x = 0, y = 46, label = "IV", color = "gray", 
-            size = FONT_SIZE) +
-  geom_text(x = 18, y = 46, label = "III", color = "gray", 
-            size = FONT_SIZE) +
-  geom_text(x = 18, y = 16, label = "II", color = "gray", 
-            size = FONT_SIZE) +
-  labs(
-    x = "BDI-II",
-    y = "CESD"
-  ) +
-  theme(legend.position = "none") +
-  scale_colour_grey(start = 0.7, end = 0)
+```{python}
+# Pandas for managing datasets
+import pandas as pd
+# Matplotlib for additional customization
+from matplotlib import pyplot as plt
+# Seaborn for plotting and styling
+import seaborn as sns
+from scipy import stats
+import numpy as np
+
+# Set theme
+sns.set_palette("colorblind")
+
+import os
+# cwd = os.getcwd()
+# print(cwd)
+```
+
+```{python}
+df = pd.read_csv('data/data.mood.csv',index_col=0)
+df = df[['esm_id','group','bdi', 'cesd_sum']]
+df = df.drop_duplicates(keep='first')
+df = df[pd.notnull(df['bdi'])]
+```
+
+```{python, fig-zetsche-scatter, fig.cap = "Associazione tra le variabili BDI-II e CES-D nello studio di Zetsche et al. (2019). In grigio sono rappresentate le osservazioni del gruppo di controllo; in nero quelle dei pazienti."}
+plt.scatter(df['bdi'], df['cesd_sum'])
+plt.rcParams.update({'figure.figsize':(10,10), 'figure.dpi':100})
+plt.xlabel('BDI-II')
+plt.ylabel('CESD')
+plt.axvline(np.mean(df.bdi), alpha=0.2)
+plt.axhline(np.mean(df.cesd_sum), alpha=0.2)
 ```
 
 Dalla @fig-zetsche-scatter notiamo che i dati mostrano una tendenza a disporsi attorno ad una retta -- nel gergo statistico, questo fatto viene espresso dicendo che i punteggi CES-D tendono ad essere *linearmente associati* ai punteggi BDI-II. È ovvio, tuttavia, che tale relazione lineare è lungi dall'essere perfetta -- se fosse perfetta, tutti i punti del diagramma a dispersione si disporrebbero esattamente lungo una retta. Si pone dunque il problema di trovare un indice numerico che descriva di quanto la nube di punti si discosta da una perfetta relazione lineare tra le due variabili, ovvero che descriva la direzione e la forza della relazione lineare tra le due variabili. Ci sono vari indici statistici che possono essere utilizzati a questo scopo.
@@ -143,11 +132,8 @@ Si ricordi che, nel caso di una variabile ordinale, non è possibile sintetizzar
 ::: {#exr-spearman-cor-1}
 Per due variabili arbitrarie di livello ordinale, si trovi la correlazione di Spearman.
 
-```{r}
-x <- factor(c("b", "c", "a", "d"), order = TRUE)
-y <- factor(c("c", "b", "a", "d"), order = TRUE)
-
-cor(as.numeric(x), as.numeric(y), method="spearman")
+```{python}
+stats.spearmanr([1,2,3,4,5], [5,6,7,8,7])
 ```
 :::
 
@@ -156,45 +142,19 @@ cor(as.numeric(x), as.numeric(y), method="spearman")
 Un ultimo aspetto da mettere in evidenza a proposito della correlazione riguarda il fatto che la correlazione descrive la direzione e l'intensità della relazione lineare tra due variabili. Relazioni non lineari tra le variabili, anche se sono molto forti, non vengono catturate dalla correlazione. È importante rendersi conto che una correlazione pari a zero non significa che non c'è relazione tra le due variabili, ma solo che tra esse non c'è una relazione *lineare*.
 
 ::: exercise
-La @fig-zerocorr fornisce due esempi di correlazione nulla in presenza di una chiara relazione (non lineare) tra due variabili.
+La @fig-zerocorr fornisce tredici esempi di correlazione nulla in presenza di una chiara relazione (non lineare) tra due variabili.
 
-```{r fig-zerocorr, echo=FALSE, fig.cap = "Due insiemi di dati (fittizi) per i quali i coefficienti di correlazione di Pearson sono entrambi 0. Ma questo non significa che non vi sia alcuna relazione tra le variabili."}
-library("datasauRus")
-slant <- ggplot(
-  datasaurus_dozen_wide,
-  aes(x = slant_down_x, y = slant_down_y),
-  colour = dataset
-)
-slant <- slant +
-  geom_point()
-slant <- slant +
-  theme_void()
-slant <- slant +
-  theme(
-    legend.position = "none",
-    panel.border = 
-      element_rect(colour = "black", fill = NA, size = 1),
-    plot.margin = margin(0, 2, 0, 2), aspect.ratio = 1
-  )
+```{python}
+datasaurus_data = pd.read_csv('data/datasaurus.csv')
+datasaurus_data
+```
 
-dino <- ggplot(
-  datasaurus_dozen_wide,
-  aes(x = dino_x, y = dino_y),
-  colour = dataset
-) +
-  geom_point()
+```{python}
+datasaurus_data.groupby('dataset').agg({'x': ['count','mean', 'std'],'y': ['count','mean', 'std']})
+```
 
-dino <- dino +
-  theme_void()
-dino <- dino +
-  theme(
-    legend.position = "none",
-    panel.border = 
-      element_rect(colour = "black", fill = NA, size = 1),
-    plot.margin = margin(0, 2, 0, 2), aspect.ratio = 1
-  )
-
-slant + dino
+```{python, fig-zerocorr, echo=FALSE, fig.cap = "Tredici insiemi di dati (fittizi) per i quali i coefficienti di correlazione di Pearson sono sempre uguali a 0. Ma questo non significa che non vi sia alcuna relazione tra le variabili."}
+sns.relplot(data=datasaurus_data, x='x', y='y', col='dataset', col_wrap=4)
 ```
 :::
 

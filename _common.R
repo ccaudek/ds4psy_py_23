@@ -14,8 +14,8 @@ suppressPackageStartupMessages({
 set.seed(84735)
 SEED <- 84735 # set random seed for reproducibility
 
-theme_set(bayesplot::theme_default(base_size = 12, base_family = "sans"))
-bayesplot::color_scheme_set("gray")
+# theme_set(bayesplot::theme_default(base_size = 12, base_family = "sans"))
+# bayesplot::color_scheme_set("gray")
 
 # knitr chunk options ----------------------------------------------------------
 
@@ -38,4 +38,4 @@ knitr::opts_chunk$set(
 
 # dplyr options ----------------------------------------------------------------
 
-options(dplyr.print_min = 8, dplyr.print_max = 8)
+# options(dplyr.print_min = 8, dplyr.print_max = 8)

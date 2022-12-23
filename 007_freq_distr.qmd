@@ -4,6 +4,23 @@
 source("_common.R")
 ```
 
+```{python}
+# Pandas for managing datasets
+import pandas as pd
+# Matplotlib for additional customization
+from matplotlib import pyplot as plt
+# Seaborn for plotting and styling
+import seaborn as sns
+
+# Set theme
+# sns.set_theme(style="ticks")
+sns.set_palette("colorblind")
+
+import os
+# cwd = os.getcwd()
+# print(cwd)
+```
+
 Le analisi esplorative dei dati e la statistica descrittiva costituiscono la prima fase dell'analisi dei dati psicologici. Consentono di capire come i dati sono distribuiti, ci aiutano ad individuare le osservazioni anomale e gli errori di tabulazione. Consentono di riassumere le distribuzioni dei dati mediante indici sintetici. Consentono di visualizzare e di studiare le relazioni tra le variabili. In questo Capitolo, dopo avere presentato gli obiettivi dell'analisi esplorative dei dati, discuteremo il problema della descrizione numerica e della rappresentazione grafica delle distribuzioni di frequenza.
 
 ## Introduzione all'esplorazione dei dati {#chapter-descript}
@@ -39,29 +56,65 @@ Iniziamo a porci una semplice domanda: vogliamo conoscere il livello di depressi
 ::: solution
 Iniziamo dunque a leggere i dati in $\mathsf{R}$. Se il file `data.mood.csv` si trova nella cartella `data` contenuta nella *working directory*, allora possiamo usare le istruzioni seguenti.
 
-```{r}
-library("rio")
-df <- rio::import(
-  here("data", "data.mood.csv"),
-  header = TRUE
-)
+```{python}
+df = pd.read_csv('data/data.mood.csv',index_col=0)
 ```
 
-C'è un solo valore BDI-II per ciascun soggetto ma tale valore viene ripetuto tante volte quante volte sono le righe del `data.frame` associate ad ogni soggetto (ciascuna riga corrisponde ad una prova diversa su altre variabili). È dunque necessario trasformare il `data.frame` in modo tale da avere un'unica riga per ciascun soggetto, ovvero un unico valore BDI-II per soggetto. Questo risultato si ottiene usando le funzioni `group_by()` e `summarize()`.
+Stampo il nome delle colonne del DataFrame.
 
-```{r}
-bysubj <- df %>%
-  group_by(esm_id) %>%
-  summarize(
-    bdi = mean(bdi)
-  ) %>%
-  na.omit()
+```{python}
+list(df.columns)
 ```
 
-Otteniamo così `r length(unique(bysubj$esm_id))` valori sulla scala del BDI-II (un soggetto è stato escludo dagli autori dalle analisi statistiche). Per semplicità, presentiamo i valori BDI-II ordinati dal più piccolo al più grande.
+Seleziono unicamente le colonne di interesse.
 
-```{r}
-sort(bysubj$bdi)
+```{python}
+df = df[['esm_id','group','bdi']]
+df.head()
+```
+
+C'è un solo valore BDI-II per ciascun soggetto ma tale valore viene ripetuto tante volte quante volte sono le righe del DataFrame associate ad ogni soggetto (ciascuna riga corrisponde ad una prova diversa su altre variabili).
+
+```{python}
+df.shape
+```
+
+È dunque necessario trasformare il DataFrame in modo tale da avere un'unica riga per ciascun soggetto, ovvero un unico valore BDI-II per soggetto.
+
+```{python}
+df = df.drop_duplicates(keep='first')
+df.shape
+```
+
+```{python}
+df.head()
+```
+
+Esaminiamo i dati.
+
+```{python}
+df.groupby('group')['bdi'].describe().round(1)
+```
+
+Per semplicità, presentiamo i valori BDI-II ordinati dal più piccolo al più grande.
+
+```{python}
+print(*df['bdi'].sort_values())
+```
+
+```{python}
+df.shape
+```
+
+Escludo il dato mancante.
+
+```{python}
+df = df[pd.notnull(df['bdi'])]
+df.shape
+```
+
+```{python}
+print(*df['bdi'].sort_values())
 ```
 :::
 
@@ -115,47 +168,21 @@ cat('
 ')
 ```
 
-Poniamoci ora il problema di costruire la tabella precedente utilizzando $\mathsf{R}$. Usando la funzione `cut()` possiamo suddividere il *campo di variazione* (ovvero, la differenza tra il valore massimo ed il valore minimo di una distribuzione) di una variabile `x` in una serie di intervalli; possiamo inoltre attribuire ciascuna oservazione `x` ad uno e un solo intervallo. Per specificare degli intervalli aperti a destra scegliamo `TRUE` quale valore dell'argomento `include.lowest`. Le istruzioni sono le seguenti.
+Poniamoci ora il problema di costruire la tabella precedente utilizzando Python.
 
-```{r}
-bysubj$bdi_level <- cut(
-  bysubj$bdi,
-  breaks = c(0, 13.5, 19.5, 28.5, 63),
-  include.lowest = TRUE,
-  labels = c(
-    "minimal", "mild", "moderate", "severe"
-  )
-)
+Aggiungo a `df` una colonna che contiene una variabile categoriale che classifica ciascuna osservazione in una delle quattro classi definite sopra.
+
+```{python}
+df['bdi_class'] = pd.cut(df['bdi'], [0, 13.5, 19.5, 28.5, 45], include_lowest=True)
+print(df)
 ```
 
-Così facendo otteniamo il risultato seguente.
+Verifico.
 
-```{r}
-tibble(
-  bdi2 = bysubj$bdi, bdi_level = bysubj$bdi_level
-) |> 
-  as.data.frame()
+```{python}
+my_tab = pd.crosstab(index=df["bdi_class"], columns="count") 
+my_tab
 ```
-
-Se ora passiamo a `table()` la variabile `bysubj$bdi_level` otteniamo un elenco che associa la frequenza assoluta a ciascuna delle classi che abbiamo definito e a cui abbiamo associato le etichette `minimal`, `mild`, `moderate`, `severe` -- ovvero, otteniamo la distribuzione di frequenza assoluta dei valori BDI-II dei 66 soggetti del campione di @zetschefuture2019.
-
-```{r}
-table(bysubj$bdi_level)
-```
-
-\noindent La distribuzione di frequenza relativa si ottiene dividendo ciascuna frequenza assoluta per il numero totale di osservazioni:
-
-```{r}
-tbl <- table(bysubj$bdi_level) / sum(table(bysubj$bdi_level))
-tbl |> round(2)
-```
-
-| Limiti delle classi | Frequenza assoluta | Frequenza relativa |
-|---------------------|--------------------|--------------------|
-| $[0, 13.5)$         | 36                 | 36/66              |
-| $[13.5, 19.5)$      | 1                  | 1/66               |
-| $[19.5, 28.5)$      | 12                 | 12/66              |
-| $[28.5, 63]$        | 17                 | 17/66              |
 :::
 
 [^007_freq_distr-1]: In una sezione successiva di questo capitolo discuteremo i principi che, secondo Edward Tufte, devono guidare la Data Science. Parlando delle rappresentazioni grafiche dei dati, Edward Tufte ci dice che la prima cosa da fare è "mostrare i dati". Questa può sembrare una tautologia, considerato che questo è lo scopo della statistica descrittiva: trasformare i dati attraverso vari indici riassuntivi o rappresentazioni grafiche, in modo tale da renderli *comprensibili*. Tuttavia, spesso le tecniche statistiche vengono usate per *nascondere* e non per *mostrare* i dati. L'uso delle frequenze relative offre un chiaro esempio di questo. Di questi tempi capita spesso di incontrare, sulla stampa, notizie a proposito un nuovo farmaco che, in una prova clinica, ha mostrato risultati incoraggianti che suggeriscono la sua efficacia come possibile trattamento del COVID-19. Alle volte i risultati della sperimentazione clinica sono riportati nei termini di una *frequenza relativa*. Ad esempio, immaginiamo di leggere che l'uso del farmaco ha portato ad una riduzione del 21% dei ricoveri o dei decessi. Sembra tanto. Ma è necessario guardare i dati, ovvero, quello che molto spesso, *non* viene riportato dai comunicati stampa. Infatti, una riduzione del 21% può corrispondere ad un cambiamento dal 5% al 4%. E una riduzione del 44% può corrispondere ad una differenza di 10 contro 18, o di 5 contro 9, o di 15 contro 27. In altri termini, una proporzione, anche grande, può corrispondere ad una differenza *assoluta* piuttosto piccola: un piccolo passo in avanti, ma non necessariamente un grande cambiamento! Per questa ragione, per catturare il significato dei dati è necessario guardare i dati da diversi punti di vista, utilizzando diverse statistiche descrittive, senza limitarci alla statistica scelta dagli autori dell'articolo *per gli scopi* degli autori dell'articolo, ovvero per raccontare la storia più conveniente per gli autori della ricerca, ma non necessariamente "tutta la storia". La scelta della statistica descrittiva da utilizzare per riassumere i dati dipende dagli scopi che si vogliono raggiungere: il nostro scopo è quello di capire se il farmaco funziona; lo scopo delle compagnie farmaceutiche è quello di vendere il farmaco. Sono obiettivi molto diversi.
@@ -175,45 +202,44 @@ $$
 che misura la *densità della frequenza relativa* della variabile $X$ nella classe $\Delta_i$, ovvero il rapporto fra la frequenza relativa $f_i$ e l'ampiezza ($b_i - a_i$) della classe. In questo modo il rettangolo dell'istogramma associato alla classe $\Delta_i$ avrà un'area proporzionale alla frequenza relativa $f_i$. Si noti che l'area totale dell'istogramma delle frequenze relative è data della somma delle aree dei singoli rettangoli e quindi vale 1.0.
 
 ::: {#exr-freq-distrib-2}
-Si utilizzi $\mathsf{R}$ per costruire un istogramma per i valori BDI-II riportati da @zetschefuture2019.
+Si utilizzi Python per costruire un istogramma per i valori BDI-II riportati da @zetschefuture2019.
 :::
 
 ::: solution
-Con i quattro intervalli individuati dai cut-off del BDI-II otteniamo la rappresentazione riportata nella @fig-hist1zetsche. Per chiarezza, precisiamo che `ggplot()` utilizza di default intervalli aperti a destra. Nel caso della prima barra dell'istogramma, l'ampiezza dell'intervallo è pari a 13.5 e l'area della barra (ovvero, la frequenza relativa) è uguale a 36/66. Dunque l'altezza della barra è uguale a $(36 / 66) / 13.5 = 0.040$. Lo stesso procedimento si applica per il calcolo dell'altezza degli altri rettangoli.
+Con i quattro intervalli individuati dai cut-off del BDI-II creo ora una prima versione dell'istogramma -- si notino le frequenze assolute sull'asse delle ordinate.
 
-```{r fig-hist1zetsche, fig.cap="Istogramma per i valori BDI-II riportati da @zetschefuture2019."}
-bysubj %>%
-  ggplot(aes(x = bdi)) +
-  geom_histogram(
-    aes(y = ..density..),
-    breaks = c(0, 13.5, 19.5, 28.5, 44.1)
-    # il valore BDI-II massimo è 44
-  ) +
-  scale_x_continuous(
-    breaks = c(0, 13.5, 19.5, 28.5, 44.1)
-  ) +
-  labs(
-    x = "BDI-II",
-    y = "Densità di frequenza"
-  )
+```{python}
+bdi_bins = [0, 13.5, 19.5, 28.5, 44]
+sns.histplot(data = df, x = "bdi", stat = "count", bins=bdi_bins)
+```
+
+Una versione alternativa dello stesso grafico è la seguente.
+
+```{python}
+ax = sns.histplot(df['bdi'], bins=bdi_bins)
+
+for p in ax.patches:
+  ax.annotate(f'{p.get_height():.0f}\n', 
+  (p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='center', color='crimson')
+plt.show()
+```
+
+Poniamo ora, sull'asse *x*, le densità.
+
+```{python}
+sns.histplot(data = df, x = "bdi", stat = "density", bins=bdi_bins)
+```
+
+In generale, però, è molto più comune usare classi aventi tutte la medesima ampiezza.
+
+```{python, fig-hist1zetsche, fig.cap="Istogramma per i valori BDI-II riportati da @zetschefuture2019."}
+sns.histplot(data = df, x = "bdi", stat = "density")
 ```
 
 Anche se nel caso presente è sensato usare ampiezze diverse per gli intervalli delle classi, in generale gli istogrammi si costruiscono utilizzando intervalli riportati sulle ascisse con un'ampiezza uguale. Questo è il caso dell'istogramma della @fig-hist2zetsche.
 
-```{r fig-hist2zetsche, fig.cap="Una rappresentazione più comune per l'istogramma dei valori BDI-II nella quale gli intervalli delle classi hanno ampiezze uguali."}
-bysubj %>%
-  ggplot(aes(x = bdi)) +
-  geom_histogram(
-    aes(y = ..density..),
-    breaks = seq(0, 44.1, length.out = 7)
-  ) +
-  scale_x_continuous(
-    breaks = c(0.00, 7.35, 14.70, 22.05, 29.40, 36.75, 44.10)
-  ) +
-  labs(
-    x = "BDI-II",
-    y = "Densità di frequanza"
-  )
+```{python fig-hist2zetsche, fig.cap="Una rappresentazione più comune per l'istogramma dei valori BDI-II nella quale gli intervalli delle classi hanno ampiezze uguali."}
+sns.histplot(data = df, x = "bdi", stat = "density")
 ```
 :::
 
@@ -228,24 +254,9 @@ L'interpretazione che possiamo attribuire al kernel density plot è simile a que
 ::: {#exr-freq-distrib-3}
 All'istogramma dei valori BDI-II di @zetschefuture2019 si sovrapponga un kernel density plot.
 
-```{r fig-zetschehist3, fig.cap="Kernel density plot e corrispondente istogramma per i valori BDI-II."}
-bysubj %>%
-  ggplot(aes(x = bdi)) +
-  geom_histogram(
-    aes(y = ..density..),
-    breaks = seq(0, 44.1, length.out = 7)
-  ) +
-  geom_density(
-    aes(x = bdi),
-    adjust = 0.5,
-    size = 0.8,
-    #fill = colors[2],
-    alpha = 0.5
-  ) +
-  labs(
-    x = "BDI-II",
-    y = "Densità di frequenza"
-  )
+```{python, fig-zetschehist3, fig.cap="Kernel density plot e corrispondente istogramma per i valori BDI-II."}
+sns.displot(data=df, x="bdi", hue="group", stat="density", kde=True);
+plt.xlabel('BDI-II')
 ```
 :::
 
@@ -275,122 +286,164 @@ Gli indici di posizione, tra le altre cose, hanno un ruolo importante, ovvero ve
 Per fare un esempio, consideriamo i nove soggetti del campione clinico di @zetschefuture2019 che hanno riportato un unico episodio di depressione maggiore. Per tali soggetti i valori ordinati del BDI-II (per semplicità li chiameremo $x$) sono i seguenti: 19, 26, 27, 28, 28, 33, 33, 41, 43. Per il calcolo del secondo quartile (non interpolato), ovvero per il calcolo della mediana, dobbiamo considerare la quantità $np = 9 \cdot 0.5 = 4.5$, non intero. Quindi, $q_1 = x_{4 + 1} = 27$. Per il calcolo del quantile (non interpolato) di ordine $p = 2/3$ dobbiamo considerare la quantità $np = 9 \cdot 2/3 = 6$, intero. Quindi, $q_{\frac{2}{3}} = \frac{1}{2} (x_{6} + x_{7}) = \frac{1}{2} (33 + 33) = 33$.
 :::
 
+::: {#exr-quantiles-1}
+Usiamo `numpy` per trovare la soluzione dell'esercizio precedente.
+
+```{python}
+import numpy as np
+
+x = [19, 26, 27, 28, 28, 33, 33, 41, 43]
+np.quantile(x, 2/3)
+```
+:::
+
 ## Mostrare i dati
 
 ### Diagramma a scatola
 
-Il *diagramma a scatola* (o box plot) è uno strumento grafico utile al fine di ottenere informazioni circa la dispersione e l'eventuale simmetria o asimmetria di una distribuzione. Per costruire un box-plot si rappresenta sul piano cartesiano un rettangolo (cioè la "scatola") di altezza arbitraria la cui base corrisponde alla dist intanza interquartile (IQR = $q_{0.75} - q_{0.25}$). La linea interna alla scatola rappresenta la mediana $q_{0.5}$. Si tracciano poi ai lati della scatola due segmenti di retta i cui estremi sono detti "valore adiacente" inferiore e superiore. Il valore adiacente inferiore è il valore più piccolo tra le osservazioni che risulta maggiore o uguale al primo quartile meno la distanza corrispondente a 1.5 volte la distanza interquartile. Il valore adiacente superiore è il valore più grande tra le osservazioni che risulta minore o uguale a $Q_3+1.5$ IQR. I valori esterni ai valori adiacenti (chiamati *valori anomali*) vengono rappresentati individualmente nel box-plot per meglio evidenziarne la presenza e la posizione.
+Il *diagramma a scatola* (o box plot) è uno strumento grafico utile al fine di ottenere informazioni circa la dispersione e l'eventuale simmetria o asimmetria di una distribuzione. Per costruire un box-plot si rappresenta sul piano cartesiano un rettangolo (cioè la "scatola") di altezza arbitraria la cui base corrisponde alla dist intanza interquartile (IQR = $q_{0.75} - q_{0.25}$). La linea interna alla scatola rappresenta la mediana $q_{0.5}$. Si tracciano poi ai lati della scatola due segmenti di retta i cui estremi sono detti "valore adiacente" inferiore e superiore. Il valore adiacente inferiore è il valore più piccolo tra le osservazioni che risulta maggiore o uguale al primo quartile meno la distanza corrispondente a 1.5 volte la distanza interquartile. Il valore adiacente superiore è il valore più grande tra le osservazioni che risulta minore o uguale a $Q_3+1.5$ IQR. I valori esterni ai valori adiacenti (chiamati *valori anomali*) vengono rappresentati individualmente nel box plot per meglio evidenziarne la presenza e la posizione.
 
 ```{r fig-boxplot, echo=FALSE, fig.cap="Box-plot: $M$ è la mediana, $\\bar{x}$ è la media aritmetica e IQR è la distanza interquartile (~$Q_3 - Q_1$~).", fig.align="center", out.width = "95%"}
 knitr::include_graphics("images/boxplot.png")
 ```
 
 ::: {#exr-freq-distrib-6}
-Si utilizzi un box-plot per rappresentare graficamente la distribuzione dei punteggi BDI-II nel gruppo dei pazienti e nel gruppo di controllo per i dati di @zetschefuture2019.
+Si utilizzi un box-plot per rappresentare graficamente la distribuzione dei punteggi BDI-II nel gruppo dei pazienti e nel gruppo di controllo usandi i dati di @zetschefuture2019.
 
-Nella @fig-violin-zetsche sinistra sono rappresentati i dati grezzi nella forma di un "dotplot". Un dotplot visualizza sia un istogramma di punti dati grezzi sia la frequenza relativva delle osservazioni raccolte in classi. La linea curva che circonda (simmetricamente) le osservazioni è l'*istogramma lisciato* (kernel density plot) che abbiamo descritto in precedenza. Tale rappresentazione va sotto il nome di *violin plot*. Nella @fig-violin-zetsche destra sono mostrati gli stessi dati: il *violin plot* è lo stesso di prima, ma al suo interno è stato collocato un box-plot.
+```{python, fig-boxplot-zetsche, fig.cap = "Un box plot per i valori BDI-II di ciascuno dei due gruppi di soggetti esaminati da Zetsche et al. (2019)."}
+sns.boxplot(x='group', y='bdi', hue="group", data=df)
+```
 
-```{r fig-violin-zetsche, fig.cap = "Due versioni di un violin plot per i valori BDI-II di ciascuno dei due gruppi di soggetti esaminati da Zetsche et al. (2019)."}
-bysubj <- df %>%
-  group_by(esm_id, group) %>%
-  summarise(
-    bdi = mean(bdi),
-    nr_of_episodes = mean(nr_of_episodes, na.rm = TRUE)
-  ) %>%
-  na.omit() %>%
-  ungroup()
+Un risultato migliore si può ottienere mostrando anche i dati grezzi.
 
-bysubj$group <- forcats::fct_recode(
-  bysubj$group,
-  "Controlli\n sani" = "ctl",
-  "Depressione\n maggiore" = "mdd"
-)
-
-p1 <- bysubj %>%
-  ggplot(aes(x = group, y = bdi)) +
-  geom_violin(trim = FALSE) +
-  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.7) +
-  labs(
-    x = "",
-    y = "BDI-II"
-  )
-p2 <- bysubj %>%
-  ggplot(aes(x = group, y = bdi)) +
-  geom_violin(trim = FALSE) +
-  geom_boxplot(width = 0.05) +
-  labs(
-    x = "",
-    y = "BDI-II"
-  )
-p1 + p2
+```{python}
+plt.figure(figsize=(9,4))
+sns.boxplot(y="group", x="bdi", data=df);
+sns.stripplot(y="group", x="bdi", color='black', alpha=0.3, data=df);
+plt.ylabel("Group")
+plt.xlabel("BDI-II")
 ```
 :::
 
-### Sina plot
+### Grafico a violino
 
-Si noti che i box plot non sono necessariamente la rappresentazione migliore della distribuzione di una variabile. Infatti, richiedono la comprensione di concetti complessi (quali i quantili e la differenza interquantile) che non sono necessari se vogliamo presentare in maniera grafica la distribuzione della variabile e, in generale, non sono compresi da un pubblico di non specialisti. Inoltre, i box plot nascondono informazioni che di solito sono importanti (quali le differenze individuali, i valori anomali e pattern imprevisti all'interno dei dati). Sarebbe dunque preferibile presentare direttamente i dati grezzi, ovvero mostrare le singole osservazioni divise in classi.
+I grafici a violino (violin plot) prendono lo spunto dai box-plot ma riportano il profilo di densità dei valori osservati sotto forma di kernel density plot. La forma tipica di questi grafici, quella che dà loro il nome, deriva dal fatto che il kernel density plot dei dati è riportato simmetricamente da entrambi i lati della distribuzione. Ad un violin plot possono essere sovrapposti al bisogno un boxplot o un grafico a punti (dotplot), a testimonianza del fatto che è possibile integrare diverse visualizzazioni dei dati.
 
-Nella @fig-sina-zetsche viene presentato un cosiddetto "sina plot". In tale rappresentazione grafica vengono mostrate le singole osservazioni divise in classi. Ai punti viene aggiunto un jitter, così da evitare sovrapposizioni. L'ampiezza del jitter lungo l'asse $x$ è determinata dalla distribuzione della densità dei dati all'interno di ciascuna classe; quindi il grafico mostra lo stesso contorno di un *violin plot*, ma trasmette informazioni sia sul numero di punti dati, sia sulla distribuzione della densità, sui valori anomali e sulla distribuzione dei dati in un formato molto semplice, comprensibile e sintetico.
-
-::: {#exr-freq-distrib-7}
-Si generi un sina plot per i dati della @fig-violin-zetsche. Si aggiunga alla figura una rappresentazione della mediana.
-
-```{r fig-sina-zetsche, fig.cap = "Sina plot per i valori BDI-II dei due gruppi di soggetti esaminati da Zetsche et al. (2019) con l'indicazione della mediana per ciascun gruppo."}
-zetsche_summary <- bysubj %>%
-  group_by(group) %>%
-  summarize(
-    bdi_mean = mean(bdi),
-    bdi_sd = sd(bdi),
-    bdi_median = median(bdi)
-  ) %>%
-  ungroup()
-
-bysubj %>%
-  ggplot(
-    aes(x = group, y = bdi, color = group)
-  ) +
-  ggforce::geom_sina(aes(color = group, size = 1, alpha = .5)) +
-  geom_errorbar(
-    aes(y = bdi_median, ymin = bdi_median, ymax = bdi_median),
-    data = zetsche_summary, width = 0.3, size = 1
-  ) +
-  labs(
-    x = "",
-    y = "BDI-II",
-    color = "Gruppo"
-  ) +
-  theme(legend.position = "none") +
-  scale_colour_grey(start = 0.7, end = 0)
+```{python, fig-violinplot-zetsche, fig.cap = "Un violin plot per i valori BDI-II di ciascuno dei due gruppi di soggetti esaminati da Zetsche et al. (2019). La linea curva simmetrica è l'istogramma lisciato (*kernel density plot*) che abbiamo descritto in precedenza. In questa rappresentazione del violin plot, al suo interno, è stato collocato un box plot. Per completezza, al violin plot abbiamo anche sovrapposto un grafico a punti (dotplot)."}
+plt.figure(figsize=(9,4))
+sns.violinplot(data=df, x="bdi", y="group");
+sns.stripplot(y="group", x="bdi", color='black', alpha=0.3, data=df);
+plt.ylabel("Group")
+plt.xlabel("BDI-II")
 ```
-:::
 
-### Raincloud plot
+<!-- Nella @fig-violinplot-zetsche, la linea curva simmetrica è l'istogramma lisciato (*kernel density plot*) che abbiamo descritto in precedenza. In questa rappresentazione del violin-plot, al suo interno, è stato anche collocato un box plot. Per completezza, al violin plot abbiamo anche sovrapposto un grafico a punti (dotplot). -->
 
-Si possono trovare dei limiti sia nella @fig-violin-zetsche che della @fig-sina-zetsche. È stato spesso messo in evidenza, infatti, che gli osservatori umani dimostrano una scarsa capacità nella stima statistica delle caratteristiche salienti di una distribuzione (quali le misure di tendenza centrale e di variabilità) a partire dai dati grezzi [@zylberberg2014variance]. Inoltre, l'utilità dei *sina plot* risulta limitata quando il numero di osservazioni è grande. Per quel che riguarda i "violin plot", si può anche dire che c'è probabilmente poco da guadagnare, statisticamente parlando, nel rispecchiamento del *kernel density plot* tracciato rispetto all'asse dei dati; un tale rispecchiamento viola infatti il principio della minimizzazione del "rapporto dati-inchiostro" [@tufte_visual_display].
+<!-- ### Sina plot -->
 
-Per superare i limiti delle due figure precedenti è stato proposto un grafico composito chiamato *raincloud plot*. In tale rappresentazione grafica vengono combinati (1) un *kernel density plot* (senza il ridondante rispecchiamento del *violin plot*), (2) i punti dei dati grezzi a cui è aggiunto un jitter che evita le sovrapposizioni e (3) una visualizzazione delle caratteristiche salienti della distribuzione nella forma di un boxplot tradizionale.
+<!-- Si noti che i box plot non sono necessariamente la rappresentazione migliore della distribuzione di una variabile. Infatti, richiedono la comprensione di concetti complessi (quali i quantili e la differenza interquantile) che non sono necessari se vogliamo presentare in maniera grafica la distribuzione della variabile e, in generale, non sono compresi da un pubblico di non specialisti. Inoltre, i box plot nascondono informazioni che di solito sono importanti (quali le differenze individuali, i valori anomali e pattern imprevisti all'interno dei dati). Sarebbe dunque preferibile presentare direttamente i dati grezzi, ovvero mostrare le singole osservazioni divise in classi. -->
 
-::: {#exr-raincloud}
-Esaminiamo un *raincloud plot* per i dati di @zetschefuture2019.
+<!-- Nella @fig-sina-zetsche viene presentato un cosiddetto "sina plot". In tale rappresentazione grafica vengono mostrate le singole osservazioni divise in classi. Ai punti viene aggiunto un jitter, così da evitare sovrapposizioni. L'ampiezza del jitter lungo l'asse $x$ è determinata dalla distribuzione della densità dei dati all'interno di ciascuna classe; quindi il grafico mostra lo stesso contorno di un *violin plot*, ma trasmette informazioni sia sul numero di punti dati, sia sulla distribuzione della densità, sui valori anomali e sulla distribuzione dei dati in un formato molto semplice, comprensibile e sintetico. -->
 
-```{r fig-raincloud, fig.cap = "Raincloud plot per i valori BDI-II dei due gruppi di soggetti esaminati da Zetsche et al. (2019)."}
+<!-- ::: {#exr-freq-distrib-7} -->
 
-bysubj |>
-  ggplot(aes(x = group, y = bdi)) +
-  ggdist::stat_halfeye(
-    adjust = .5, width = .5, .width = 0, justification = -.3, point_colour = NA) +
-  geom_boxplot(width = .1, outlier.shape = NA) +
-  gghalves::geom_half_point(side = "l", range_scale = .4, alpha = .5) +
-  labs(
-    x = "",
-    y = "BDI-II",
-    color = "Gruppo"
-  ) +
-  theme(legend.position = "none") +
-  scale_colour_grey(start = 0.7, end = 0)
+<!-- Si generi un sina plot per i dati della @fig-violin-zetsche. Si aggiunga alla figura una rappresentazione della mediana. -->
 
-```
-:::
+<!-- ```{r fig-sina-zetsche, fig.cap = "Sina plot per i valori BDI-II dei due gruppi di soggetti esaminati da Zetsche et al. (2019) con l'indicazione della mediana per ciascun gruppo."} -->
+
+<!-- zetsche_summary <- bysubj %>% -->
+
+<!--   group_by(group) %>% -->
+
+<!--   summarize( -->
+
+<!--     bdi_mean = mean(bdi), -->
+
+<!--     bdi_sd = sd(bdi), -->
+
+<!--     bdi_median = median(bdi) -->
+
+<!--   ) %>% -->
+
+<!--   ungroup() -->
+
+<!-- bysubj %>% -->
+
+<!--   ggplot( -->
+
+<!--     aes(x = group, y = bdi, color = group) -->
+
+<!--   ) + -->
+
+<!--   ggforce::geom_sina(aes(color = group, size = 1, alpha = .5)) + -->
+
+<!--   geom_errorbar( -->
+
+<!--     aes(y = bdi_median, ymin = bdi_median, ymax = bdi_median), -->
+
+<!--     data = zetsche_summary, width = 0.3, size = 1 -->
+
+<!--   ) + -->
+
+<!--   labs( -->
+
+<!--     x = "", -->
+
+<!--     y = "BDI-II", -->
+
+<!--     color = "Gruppo" -->
+
+<!--   ) + -->
+
+<!--   theme(legend.position = "none") + -->
+
+<!--   scale_colour_grey(start = 0.7, end = 0) -->
+
+<!-- ``` -->
+
+<!-- ::: -->
+
+<!-- ### Raincloud plot -->
+
+<!-- Si possono trovare dei limiti sia nella @fig-violin-zetsche che della @fig-sina-zetsche. È stato spesso messo in evidenza, infatti, che gli osservatori umani dimostrano una scarsa capacità nella stima statistica delle caratteristiche salienti di una distribuzione (quali le misure di tendenza centrale e di variabilità) a partire dai dati grezzi [@zylberberg2014variance]. Inoltre, l'utilità dei *sina plot* risulta limitata quando il numero di osservazioni è grande. Per quel che riguarda i "violin plot", si può anche dire che c'è probabilmente poco da guadagnare, statisticamente parlando, nel rispecchiamento del *kernel density plot* tracciato rispetto all'asse dei dati; un tale rispecchiamento viola infatti il principio della minimizzazione del "rapporto dati-inchiostro" [@tufte_visual_display]. -->
+
+<!-- Per superare i limiti delle due figure precedenti è stato proposto un grafico composito chiamato *raincloud plot*. In tale rappresentazione grafica vengono combinati (1) un *kernel density plot* (senza il ridondante rispecchiamento del *violin plot*), (2) i punti dei dati grezzi a cui è aggiunto un jitter che evita le sovrapposizioni e (3) una visualizzazione delle caratteristiche salienti della distribuzione nella forma di un boxplot tradizionale. -->
+
+<!-- ::: {#exr-raincloud} -->
+
+<!-- Esaminiamo un *raincloud plot* per i dati di @zetschefuture2019. -->
+
+<!-- ```{r fig-raincloud, fig.cap = "Raincloud plot per i valori BDI-II dei due gruppi di soggetti esaminati da Zetsche et al. (2019)."} -->
+
+<!-- bysubj |> -->
+
+<!--   ggplot(aes(x = group, y = bdi)) + -->
+
+<!--   ggdist::stat_halfeye( -->
+
+<!--     adjust = .5, width = .5, .width = 0, justification = -.3, point_colour = NA) + -->
+
+<!--   geom_boxplot(width = .1, outlier.shape = NA) + -->
+
+<!--   gghalves::geom_half_point(side = "l", range_scale = .4, alpha = .5) + -->
+
+<!--   labs( -->
+
+<!--     x = "", -->
+
+<!--     y = "BDI-II", -->
+
+<!--     color = "Gruppo" -->
+
+<!--   ) + -->
+
+<!--   theme(legend.position = "none") + -->
+
+<!--   scale_colour_grey(start = 0.7, end = 0) -->
+
+<!-- ``` -->
+
+<!-- ::: -->
 
 ### L'eccellenza grafica
 
@@ -406,7 +459,7 @@ Non c'è un unico modo "corretto" per la rappresentazione grafica dei dati. Cias
 8.  servire ad uno scopo preciso (descrizione, esplorazione, o la risposta a qualche domanda);
 9.  essere fortemente integrate con le descrizioni statistiche e verbali dei dati fornite nel testo.
 
-Per l'esempio discusso sopra, la @fig-violin-zetsche, la @fig-sina-zetsche e la @fig-raincloud mostrano tutte che la distribuzione dei dati è all'incirca simmetrica nel gruppo clinico mentre nel gruppo di controllo c'è un'asimmetria positiva. Tra le tre rappresentazioni grafiche, però, il rain cloud plot della @fig-raincloud offre la rappresentazione dei grafica dei dati più completa, compatta e comprensibile. Il seguente [link](https://www.biostat.wisc.edu/~kbroman/presentations/graphs2018.pdf) fornisce alcune illustrazioni dei principi elencati sopra.
+Per l'esempio discusso sopra, la @fig-boxplot-zetsche, la @fig-violinplot-zetsche mostrano entrambe che la distribuzione dei dati è all'incirca simmetrica nel gruppo clinico mentre nel gruppo di controllo c'è un'asimmetria positiva. Tra le due rappresentazioni grafiche, però, la @fig-violinplot-zetsche offre la rappresentazione dei grafica dei dati più completa, compatta e comprensibile. Il seguente [link](https://www.biostat.wisc.edu/~kbroman/presentations/graphs2018.pdf) fornisce alcune illustrazioni dei principi elencati sopra.
 
 ## Commenti e considerazioni finali {.unnumbered}
 

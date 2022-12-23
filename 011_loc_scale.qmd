@@ -10,6 +10,24 @@ L'analisi grafica esaminata in precedenza costituisce la base di partenza di qua
 
 Tra le misure di tendenza centrale, ovvero tra gli indici che ci informano sui valori attorno ai quali sono prevalentemente concentrati i dati di un campione, quella più comunemente usata è la media.
 
+```{python}
+# Pandas for managing datasets
+import pandas as pd
+# Matplotlib for additional customization
+from matplotlib import pyplot as plt
+# Seaborn for plotting and styling
+import seaborn as sns
+from scipy import stats
+import numpy as np
+
+# Set theme
+sns.set_palette("colorblind")
+
+import os
+# cwd = os.getcwd()
+# print(cwd)
+```
+
 ::: callout-tip
 Per un'introduzione "soft" alla nozione di tendenza centrale di una distribuzione statistica si segua il [link](https://tinystats.github.io/teacups-giraffes-and-statistics/03_mean.html).
 :::
@@ -65,28 +83,16 @@ Il concetto statistico di media ha suscitato molte battute. Per esempio, il fatt
 ::: {#exr-mean}
 Si calcoli la media dei valori BDI-II separatamente per ciascuno dei due gruppi di soggetti esaminati da @zetschefuture2019.
 
-```{r}
-df <- rio::import(
-  here("data", "data.mood.csv"),
-  header = TRUE
-)
-bysubj <- df %>%
-  group_by(group, esm_id) %>%
-  summarise(
-    bdi = mean(bdi)
-  ) %>%
-  na.omit()
+```{python}
+# Leggo i dati, seleziono le colonne appropriate, elimino i duplicati, rimuovo 
+# il dato mancante.
+df = pd.read_csv('data/data.mood.csv',index_col=0)
+df = df[['esm_id','group','bdi']]
+df = df.drop_duplicates(keep='first')
+df = df[pd.notnull(df['bdi'])]
 
-bysubj %>%
-  group_by(group) %>%
-  summarise(
-    avg_bdi = mean(bdi)
-  )
-
-# Oppure, usando le fuzioni di rstatix:
-bysubj %>% 
-  group_by(group) |> 
-  rstatix::get_summary_stats(bdi, type = "common")
+# Trovo le medie dei valori BDI-II dei due gruppi.
+df.groupby('group')['bdi'].describe().round(1)
 ```
 :::
 
@@ -95,14 +101,28 @@ bysubj %>%
 La *media spuntata* $\bar{x}_t$ (*trimmed mean*) non è altro che la media dei dati calcolata considerando solo il 90% (o altra percentuale) dei dati centrali. Per calcolare $\bar{x}_t$ si ordinando i dati secondo una sequenza crescente, $x_1 \leq x_2 \leq x_3 \leq \dots \leq x_n$, per poi eliminare il primo 5% e l'ultimo 5% dei dati della serie così ordinata. La media spuntata è data dalla media aritmetica dei dati rimanenti.
 
 ::: {#exr-trimmed-mean}
-Si calcoli la media spuntata dei valori BDI-II per i due gruppi di soggetti di @zetschefuture2019 escludendo il 10% dei valori più estremi in ciascun gruppo.
+Si calcoli la media spuntata dei valori BDI-II per i due gruppi di soggetti esaminati da @zetschefuture2019 escludendo il 10% dei valori più estremi.
 
-```{r}
-bysubj %>%
-  group_by(group) %>%
-  summarise(
-    avg_trim_bdi = mean(bdi, trim = 0.1)
-  )
+Iniziamo ad esaminare la numerosità di ciascun gruppo.
+
+```{python}
+df.groupby("group").size()
+```
+
+Possiamo selezionare i dati del gruppo `mdd` nel modo seguente.
+
+```{python}
+df[df["group"]=='mdd']
+```
+
+Calcoliamo ora la media spuntata dei due gruppi.
+
+```{python}
+bdi_mdd = df[df["group"]=='mdd'].bdi
+stats.trim_mean(bdi_mdd, 0.10)
+
+bdi_ctl = df[df["group"]=='ctl'].bdi
+stats.trim_mean(bdi_ctl, 0.10)
 ```
 :::
 
@@ -113,14 +133,17 @@ In precedenza abbiamo già incontrato altri due popolari indici di tendenza cent
 ::: {#exr-quantile-1}
 Si calcolino i quantili di ordine 0.25, 0.5 e 0.75 dei valori BDI-II per i due gruppi di soggetti di @zetschefuture2019.
 
-```{r}
-bysubj %>%
-  group_by(group) %>%
-  summarise(
-    q25 = quantile(bdi, probs = 0.25),
-    q50 = quantile(bdi, probs = 0.50),
-    q75 = quantile(bdi, probs = 0.75)
-  )
+```{python}
+#create functions to calculate 0.10 and 0.90 quantiles
+def q1(x):
+    return x.quantile(0.10)
+
+def q3(x):
+    return x.quantile(0.90)
+
+#calculate quantiles by group
+vals = {'bdi': [q1, q3]}
+df.groupby('group').agg(vals)
 ```
 :::
 
@@ -159,11 +182,16 @@ Si calcoli la varianza dei valori BDI-II per i dati di @zetschefuture2019.
 
 Applicando la formula precedente, per tutto il campione abbiamo
 
-```{r}
-sum((bysubj$bdi - mean(bysubj$bdi))^2) / length(bysubj$bdi)
+```{python}
+var_bdi = sum((df.bdi - np.mean(df.bdi))**2) / len(df.bdi)
+round(var_bdi, 4)
+```
 
-# ovvero
-var(bysubj$bdi) * (length(bysubj$bdi) - 1) / length(bysubj$bdi)
+Possiamo anche usare le funzioni di `numpy`.
+
+```{python}
+var_bdi = np.var(df.bdi)
+round(var_bdi, 4)
 ```
 :::
 
@@ -182,53 +210,119 @@ In questo secondo modo si trova la varianza quale *stimatore* della varianza del
 ::: {#exr-sim-var-stim}
 Per illustrare il punto precedente svolgiamo una simulazione.
 
-```{r}
-# Con la seguente istruzione rendo i risultati riproducibili.
-set.seed(123)
+```{python}
+import random
+import numpy as np
 
-# Definisco la funzione `my_var()` per il calcolo della varianza quale statistica descrittiva:
-my_var <- function(x) {
-  sum((x - mean(x))^2) / length(x)
-}
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
 
-# Decido di ripetere il processo di campionamento 100,000 volte.
-n_rep <- 1e5
+Estraggo un campione casuale di 10 osservazioni dalla popolazione del quoziente di intelligenza.
 
-# Defisco un vettore di 100,000 elementi, ciascuno inizializzato come `NA`:
-var_descr <- rep(NA, n_rep)
+```{python}
+x = np.random.normal(loc = 100, scale = 15, size = 10)
+print(x)
+```
 
-# Definisco l'ampiezza campionaria:
-n <- 10
+Calcolo la varianza con $n$ al denominatore. Si noti che la "vera" varianza del quoziente di intelligenza è $15^2$ = 225.
 
-# Estraggo un campione di 10 osservazioni dalla popolazione del quoziente di intelligenza (per definizione avente media di 100 e deviazione standard di $15^2$). Chiamo `x` tale campione casuale di 10 osservazioni estratte a caso dalla popolazione del QI. Per tale campione calcolo la varianza quale statistica descrittiva e salvo il valore così ottenuto nell'elemento $i$-esimo del vettore `var_descr`.
-for(i in 1:n_rep) {
-  x <- rnorm(n, 100, 15)
-  var_descr[i] <- my_var(x)
-}
+```{python}
+np.var(x)
+```
 
-# Calcolo poi la media dei 100,000 valori così ottenuti:
-mean(var_descr)
+Consideriamo ora 10 campioni casuali del QI.
+
+```{python}
+loc = 100
+scale = 15
+size = 4
+niter = 10
+random_samples = []
+
+for i in range(niter):
+    one_sample = np.random.normal(loc, scale, size)
+    random_samples.append(one_sample)
+```
+
+Il primo campione è
+
+```{python}
+random_samples[0]
+```
+
+Il decimo campione è
+
+```{python}
+random_samples[9]
+```
+
+Stampiamo tutti e 10 i campioni.
+
+```{python}
+rs = np.array(random_samples)
+rs
+```
+
+Per ciascun campione (ovvero, per ciascuna riga della matrice precedente), calcoliamo la varianza usando $n$ al denominatore. Otteniamo così 10 stime della varianza della popolazione del QI.
+
+```{python}
+x_var = np.var(rs, axis=1) # applichiamo la funzione su ciascuna riga
+print(x_var)
+```
+
+Ripetiamo ora la simulazione usando un numero di iterazioni maggiore.
+
+```{python}
+loc = 100
+scale = 15
+size = 4
+niter = 10000
+random_samples = []
+
+for i in range(niter):
+    one_sample = np.random.normal(loc, scale, size)
+    random_samples.append(one_sample)
+
+rs = np.array(random_samples)
+x_var = np.var(rs, axis=1)
+```
+
+Esaminiamo la distribuzione dei valori ottenuti.
+
+```{python}
+sns.histplot(x_var)
+```
+
+La stima più verosimile della varianza del QI è dato dalla media di questa distribuzione.
+
+```{python}
+np.mean(x_var)
 ```
 
 Si noti che il valore medio della stima della varianza ottenuta con l'@eq-var-descr è troppo piccolo rispetto al valore corretto di $15^2 = 225$.
 
-Ripeto ora la simulazione usando la formula della varianza con $n-1$ al denominatore:
+Ripeto ora la simulazione usando la formula della varianza con $n-1$ al denominatore.
 
-```{r}
-var_stim <- rep(NA, n_rep)
+```{python}
+random.seed(2023)
+loc = 100
+scale = 15
+size = 4
+niter = 10000
+random_samples = []
 
-n <- 10
-for(i in 1:n_rep) {
-  x <- rnorm(n, 100, 15)
-  var_stim[i] <- var(x)
-}
+for i in range(niter):
+    one_sample = np.random.normal(loc, scale, size)
+    random_samples.append(one_sample)
 
-mean(var_stim)
+rs = np.array(random_samples)
+x_var = np.var(rs, ddof=1, axis=1)
+
+np.mean(x_var)
 ```
 
 In questo secondo caso, il *valore atteso* della stima della varianza trovata con $n-1$ al denominatore è molto simile al valore corretto di 225.
-
-Di default, la funzione R `var()` usa $n-1$ al denominatore.
 :::
 
 ### Precisione
@@ -276,8 +370,14 @@ Si calcoli la deviazione standard per i valori BDI-II del campione di @zetschefu
 
 Applicando l'@eq-sd-stimatore, per tutto il campione abbiamo
 
-```{r}
-sd(bysubj$bdi)
+```{python}
+np.std(df.bdi)
+```
+
+Per ciascun gruppo, abbiamo:
+
+```{python}
+df.groupby('group')['bdi'].std()
 ```
 :::
 
@@ -290,14 +390,14 @@ Si verifichi l'interpretazione della deviazione standard fornita sopra usando i 
 
 Per questi dati la deviazione standard è
 
-```{r}
-sd(bysubj$bdi)
+```{python}
+np.std(df.bdi)
 ```
 
 Lo scarto semplice medio campionario è
 
-```{r}
-mean(abs(bysubj$bdi - mean(bysubj$bdi)))
+```{python}
+np.mean(np.abs(df.bdi - np.mean(df.bdi)))
 ```
 :::
 
@@ -320,9 +420,9 @@ Pertanto, solitamente i software restituiscono il valore MAD moltiplicato per un
 ::: {#exr-mad-1}
 I dati di @zetschefuture2019 seguono una distribuzione bimodale, per cui il vincolo precedente non si applica. Verifichiamo dunque il principio precedente usando un campione di dati estratto da una popolazione normale.
 
-```{r}
-x <- rnorm(1e5, 100, 15)
-1.4826 * median(abs(x - median(x)))
+```{python}
+x = np.random.normal(loc=100, scale=15, size=10000)
+1.4826 * np.median(np.abs(x - np.median(x)))
 ```
 :::
 

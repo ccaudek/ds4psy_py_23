@@ -3,6 +3,27 @@
 ```{r, include = FALSE}
 source("_common.R")
 library("kableExtra")
+library("tidyverse")
+```
+
+```{python}
+# Pandas for managing datasets
+import pandas as pd
+# Matplotlib for additional customization
+from matplotlib import pyplot as plt
+# Seaborn for plotting and styling
+import seaborn as sns
+from numpy import random
+import numpy as np
+from scipy.stats import bernoulli, binom
+
+# Set theme
+# sns.set_theme(style="ticks")
+sns.set_palette("colorblind")
+
+import os
+# cwd = os.getcwd()
+# print(cwd)
 ```
 
 In questa parte della dispensa verrà introdotta la teoria delle probabilità. Prima di entrare nei dettagli, cerchiamo di capire perché la probabilità sia così importante per la ricerca scientifica.
@@ -130,81 +151,73 @@ La caratteristica fondamentale di una variabile casuale è data dall'insieme del
 
 In questa dispensa verrà adottata l'interpretazione bayesiana delle probabilità. Tuttavia, le regole di base della teoria delle probabilità sono le stesse, indipendentemente dall'interpretazione adottata. Pertanto, negli esempi seguenti, possiamo utilizzare la simulazione per stimare le probabilità degli eventi in un modo diretto, ovvero mediante la generazione di molteplici osservazioni delle variabili casuali derivate dagli eventi di interesse.
 
-Ad esempio, per simulare in $\mathsf{R}$ il lancio di una moneta equilibrata iniziamo con il definire un vettore che contiene i risultati possibili del lancio della moneta (ovvero i valori possibili della variabile casuale $Y$):
+Simuliamo il lancio di una moneta equilibrata.
 
-```{r}
-coin <- c(0, 1)
+Definiamo una variabile casuale bernoulliana $X$ con $\pi$ (probabilità di successo) uguale a 0.5.
+
+```{python}
+p = 0.5
+X = bernoulli(p)
 ```
 
-L'estrazione casuale di uno di questi due possibili valori (ovvero, la simulazione di uno specifico lancio di una moneta) si realizza con la funzione `sample()`:
+Esaminiamo 20 realizzazioni di $X$.
 
-```{r}
-sample(coin, size = 1)
+```{python}
+x = X.rvs(20)
+print(x)
 ```
 
-In maniera equivalente, la stessa operazione si può realizzare mediante l'istruzione
+La stima della probabilità dell'evento $P(Y = 1)$ è data dalla frequenza relativa del numero di volte in cui abbiamo osservato l'evento di interesse ($Y = 1$).
 
-```{r}
-rbinom(1, 1, 0.5)
+```{python}
+np.mean(x)
 ```
 
-Supponiamo di ripetere questo esperimento casuale 100 volte e di registrare i risultati così ottenuti. La stima della probabilità dell'evento $P(Y = 1)$ è data dalla frequenza relativa del numero di volte in cui abbiamo osservato l'evento di interesse ($Y = 1$):
+Esaminiamo ora una simulazione nella quale facciamo variare l'ampiezza del campione usato per la stima empirica della probabilità. Nella simulazione vengono generati 10,000 campioni di ampiezza $n$. Di ciascuno di questi campioni casuali viene calcolata la media. Le 10,000 stime empiriche di $\pi$ vengono poi visualizzate con un istogramma.
 
-```{r}
-M <- 100
-y <- rep(NA, M)
-for (m in 1:M) {
-  y[m] = rbinom(1, 1, 0.5)
-}
-estimate = sum(y) / M
-
-cat("estimated P[Y = 1] =", estimate)
+```{python}
+def cointoss(p=0.5, size=10):
+    niter = 10000
+    X = bernoulli(p)
+    random_samples = []
+    for i in range(niter):
+        x = X.rvs(size)
+        random_samples.append(x)
+    
+    rs = np.array(random_samples)
+    p_estimates = np.mean(rs, axis=1)
+    sns.histplot(p_estimates, stat = "density");
+    plt.xlim([0, 1])
+    plt.show()
 ```
 
-Ripetiamo questa procedura 10 volte.
+Iniziamo con campioni di ampiezza $n$ = 10.
 
-```{r}
-flip_coin <- function(M) {
-  y <- rep(NA, M)
-  for (m in 1:M) {
-    y[m] = rbinom(1, 1, 0.5)
-  }
-  estimate <- sum(y) / M
-  cat("estimated P[Y = 1] =", estimate, "\n")
-}
+```{python}
+cointoss(size=10)
 ```
 
-```{r}
-for(i in 1:10) {
-  flip_coin(100)
-}
+Dato che la moneta è equilibrata, le stime empiriche della probabilità dell'evento $P(Y = 1)$ sono uguali, *in media*, al valore che ci aspettiamo, ovvero $P(Y = 1) = 0.5$, ma il risultato ottenuto varia di molto da campione a campione. Proviamo ora ad aumentare il numero di lanci in ciascun campione: $n$ = 100.
+
+```{python}
+cointoss(size=100)
 ```
 
-Dato che la moneta è equilibrata, la stima delle probabilità dell'evento $P(Y = 1)$ è simile a al valore che ci aspettiamo, ovvero $P(Y = 1) = 0.5$, ma il risultato ottenuto nelle simulazioni non è esatto. Proviamo ad aumentare il numero di lanci in ciascuna simulazione:
+In questo secondo caso, gli errori tendono ad essere più piccoli che nel caso precedente. Usiamo ora 1000 lanci in ciascun campione.
 
-```{r}
-for(i in 1:10) {
-  flip_coin(1000)
-}
+```{python}
+cointoss(size=1000)
 ```
 
-In questo secondo caso, gli errori tendono ad essere più piccoli che nel caso precedente. Cosa succede se in ciascuna simulazione esaminiamo i risultati di 10,000 lanci della moneta?
+Ora le stime empiriche che otteniamo in ciascun campione sono tutte molto vicine alla probabilità vera (cioè 0.5, perché la moneta è equilibrata).
 
-```{r}
-for(i in 1:10) {
-  flip_coin(1e4)
-}
-```
-
-Ora le stime ottenute sono molto vicine alla vera probabilità che vogliamo stimare (cioè 0.5, perché la moneta è equilibrata).
-
-I risultati delle simulazioni precedenti pongono dunque il problema di determinare quale sia il numero di lanci di cui abbiamo bisogno per assicurarci che le stime siano accurate (ovvero, vicine al valore corretto della probabilità)
+I risultati delle simulazioni precedenti pongono dunque il problema di determinare quale sia il numero di lanci di cui abbiamo bisogno per assicurarci che le stime empiriche di $\pi$ siano accurate (ovvero, vicine al valore corretto della probabilità teorica).
 
 ## La legge dei grandi numeri
 
 La visualizzazione mediante grafici contribuisce alla comprensione dei concetti della statistica e della teoria delle probabilità. Un modo per descrivere ciò che accade all'aumentare del numero $M$ di ripetizioni del lancio della moneta consiste nel registrare la stima della probabilità dell'evento $P(Y = 1)$ in funzione del numero di ripetizioni dell'esperimento casuale per ogni $m \in 1:M$. Possiamo ottenere un grafico dell'andamento della stima di $P(Y = 1)$ in funzione di $m$ nel modo seguente:
 
-```{r fig-legge-grandi-n-1, cache=TRUE, fig.cap="Stima della probabilità di successo in funzione del numero dei lanci di una moneta."}
+```{r, echo=FALSE, fig-legge-grandi-n-1, cache=TRUE, fig.cap="Stima della probabilità di successo in funzione del numero dei lanci di una moneta."}
 nrep <- 1e4
 estimate <- rep(NA, nrep)
 flip_coin <- function(m) {
@@ -215,7 +228,7 @@ flip_coin <- function(m) {
 for(i in 1:nrep) {
   estimate[i] <- flip_coin(i)
 }
-d <- tibble(
+d <- data.frame(
   n = 1:nrep, 
   estimate
 )
@@ -230,7 +243,7 @@ d %>%
 
 La @fig-legge-grandi-n-1, quando è espressa su una scala lineare, non rivela chiaramente l'andamento della simulazione. Imponiamo dunque una scala logaritmica sull'asse delle ascisse ($x$). Su scala logaritmica, i valori tra 1 e 10 vengono tracciati all'incirca con la stessa ampiezza che si osserva tra i valori 50 e 700, eccetera.
 
-```{r fig-legge-grandi-n-2, fig.cap="Stima della probabilità di successo in funzione del numero dei lanci di una moneta."}
+```{r, echo=FALSE, fig-legge-grandi-n-2, fig.cap="Stima della probabilità di successo in funzione del numero dei lanci di una moneta."}
 d %>%
   ggplot(aes(x = n, y = estimate)) +
   geom_line() +
@@ -263,63 +276,32 @@ $$
 
 Possiamo simulare i valori assunti dalla variabile casuale $Z$ simulando i valori di $Y_1, Y_2, Y_3$ per poi sommarli.
 
-```{r}
-y1 <- rbinom(1, 1, 0.5)
-y2 <- rbinom(1, 1, 0.5)
-y3 <- rbinom(1, 1, 0.5)
-c(y1, y2, y3)
-z <- sum(c(y1, y2, y3))
-cat("z =", z, "\n")
+```{python}
+size = 4
+np.sum(X.rvs(size))
 ```
 
-ovvero,
+Ripetiamo questa simulazione $M$ = 10,000 volte.
 
-```{r}
-y <- rep(NA, 3)
-for (i in 1:3) {
-  y[i] <- rbinom(1, 1, 0.5)
-}
-y
-z <- sum(y)
-cat("z =", z, "\n")
+```{python}
+size = 4
+niter = 10000
+random_samples = [X.rvs(size) for i in range(niter)]
+rs = np.array(random_samples)
+p_estimates = np.mean(rs, axis=1)
+
+len(p_estimates)
 ```
 
-oppure, ancora più semplicemente:
+e calcoliamo poi una stima della probabilità che la variabile casuale $Z$ assuma ciascuno dei possibili valori 0, 1, 2, 3. Nel caso di 4 monete equilibrate, abbiamo:
 
-```{r}
-y <- rbinom(3, 1, 0.5)
-y
-z <- sum(y)
-cat("z =", z, "\n")
+```{python}
+df = pd.DataFrame(p_estimates, columns=['p_est'])
+print(df)
 ```
 
-Ripetiamo questa simulazione $M$ = 1e5 volte:
-
-```{r}
-M <- 1e5
-z <- rep(NA, M)
-for(i in 1:M) {
-  y <- rbinom(3, 1, 0.5)
-  z[i] <- sum(y)
-}
-```
-
-e calcoliamo poi una stima della probabilità che la variabile casuale $Z$ assuma ciascuno dei possibili valori 0, 1, 2, 3:
-
-```{r}
-table(z) / M
-```
-
-Nel caso di 4 monete equilibrate, abbiamo:
-
-```{r}
-M <- 1e5
-z <- rep(NA, M)
-for(i in 1:M) {
-  y <- rbinom(4, 1, 0.5)
-  z[i] <- sum(y)
-}
-table(z) / M
+```{python}
+df['p_est'].value_counts() / niter
 ```
 
 Una variabile casuale le cui modalità possono essere costituite solo da numeri interi è detta *variabile casuale discreta*:
@@ -360,7 +342,7 @@ La parte a destra dell'uguale si può leggere come: "la probabilità che la vari
 
 Una rappresentazione grafica della stima della funzione di massa di probabilità per l'esperimento casuale del lancio di quattro monete equilibrate è fornita nella @fig-barplot-mdf-4coins.
 
-```{r fig-barplot-mdf-4coins, fig.cap="Grafico di $M = 100,000$ simulazioni della funzione di massa di probabilità di una variabile casuale definita come il numero di teste in quattro lanci di una moneta equilibrata."}
+```{r, fig-barplot-mdf-4coins, echo=FALSE, fig.cap="Grafico di $M = 100,000$ simulazioni della funzione di massa di probabilità di una variabile casuale definita come il numero di teste in quattro lanci di una moneta equilibrata."}
 set.seed(1234)
 M <- 1e5
 nflips <- 4
@@ -413,13 +395,13 @@ F(x_k) = P(X \leq x_k) = \sum_{x \leq x_k} P(x).
 $$
 
 ::: {#exr-prob-4-coins-2}
-Per l'esempio discusso nella @sec-fun-mass-prob, la funzione di ripartizione della variabile casuale $Z$ è
+Per l'esempio discusso nella @sec-fun-mass-prob, la funzione di ripartizione della variabile casuale $Z$ è fornita nella tabella seguente.
 
-```{r}
+```{r, echo=FALSE}
 z <- 0:4
 pz <- c(1/16, 4/16, 6/16, 4/16, 1/16)
 cum_prob <- cumsum(pz)
-tibble(z, pz, cum_prob) |> 
+data.frame(z, pz, cum_prob) |> 
   kbl() |> 
   kable_paper("hover", full_width = FALSE) |> 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))

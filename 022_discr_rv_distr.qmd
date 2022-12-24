@@ -73,7 +73,7 @@ $$ {#eq-demo-bino-kernel}
 
 Non siamo però interessati alla probabilità di una *specifica* sequenza di $S$ e $I$ ma, bensì, alla probabilità di osservare una *qualsiasi* sequenza di $y$ successi in $n$ prove. In altre parole, vogliamo la probabilità dell'unione di tutti gli eventi corrispondenti a $y$ successi in $n$ prove.
 
-È immediato notare che una qualsiasi altra sequenza contenente esattamente $y$ successi avrà sempre come probabilità $\theta^y \cdot (1-\theta)^{n-y}$: il prodotto infatti resta costante anche se cambia l'ordine dei fattori.[^discr_rv_distr-1] Per trovare il risultato cercato dobbiamo moltiplicare l'@eq-demo-bino-kernel per il numero di sequenze possibili di $y$ successi in $n$ prove.
+È immediato notare che una qualsiasi altra sequenza contenente esattamente $y$ successi avrà sempre come probabilità $\theta^y \cdot (1-\theta)^{n-y}$: il prodotto infatti resta costante anche se cambia l'ordine dei fattori.[^022_discr_rv_distr-1] Per trovare il risultato cercato dobbiamo moltiplicare l'@eq-demo-bino-kernel per il numero di sequenze possibili di $y$ successi in $n$ prove.
 
 Il numero di sequenze che contengono esattamente $y$ successi in $n$ prove. La risposta è fornita dal coefficiente binomiale:
 
@@ -88,7 +88,7 @@ dove il simbolo $n!$ si legge $n$ fattoriale ed è uguale al prodotto di $n$ num
 Essendo la probabilità dell'unione di $K$ elementi incompatibili uguale alla somma delle loro rispettive probabilità, e dato che le sequenze di $y$ successi in $n$ prove hanno tutte la stessa probabilità, per trovare la formula della distributione binomiale @eq-binomialdistribution è sufficiente moltiplicare l'@eq-demo-bino-kernel per l'@eq-binomial-coefficient.
 :::
 
-[^discr_rv_distr-1]: Viene detta *scambiabilità* la proprietà per cui l'ordine con cui compiamo le osservazioni è irrilevante per l'assegnazione delle probabilità.
+[^022_discr_rv_distr-1]: Viene detta *scambiabilità* la proprietà per cui l'ordine con cui compiamo le osservazioni è irrilevante per l'assegnazione delle probabilità.
 
 La distribuzione di probabilità di alcune distribuzioni binomiali, per due valori di $n$ e $\theta$, è fornita nella @fig-example-binomial-distr.
 
@@ -182,10 +182,24 @@ Ripetendo i calcoli per i valori $y = 0, \dots, 4$ troviamo la distribuzione bin
 |  4  |  0.0016  |
 | sum |   1.0    |
 
-Lo stesso risultato si ottiene usando la sequente istruzione R:
+Lo stesso risultato si può trovare in Python.
 
-```{r}
-dbinom(0:4, 4, 0.2)
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import binom
+```
+
+```{python}
+n = 4
+p = 0.2
+x = np.arange(0, n+1)
+x
+```
+
+```{python}
+binomial_pmf = binom.pmf(x, n, p)
+print(binomial_pmf)
 ```
 :::
 
@@ -194,16 +208,16 @@ Lanciando $5$ volte una moneta onesta, qual è la probabilità che esca testa al
 :::
 
 ::: solution
-In R, la soluzione si trova con
+In Python, la soluzione si trova con
 
-```{r}
-dbinom(3, 5, 0.5) + dbinom(4, 5, 0.5) + dbinom(5, 5, 0.5)
+```{python}
+binom.pmf(3, n=5, p=0.5) + binom.pmf(4, n=5, p=0.5) +  binom.pmf(5, n=5, p=0.5)
 ```
 
-Alternativamente, possiamo trovare la probabilità dell'evento complementare a quello definito dalla funzione di ripartizione calcolata mediante `pbinom()`, ovvero
+Alternativamente, possiamo trovare la probabilità dell'evento complementare a quello definito dalla funzione di ripartizione.
 
-```{r}
-1 - pbinom(2, 5, 0.5)
+```{python}
+1 - binom.cdf(2, n=5, p=0.5)
 ```
 :::
 
@@ -237,153 +251,6 @@ Si trovino il valore atteso e la varianza del lancio di quattro monete con proba
 Il valore atteso è $\mu = n \theta = 4 \cdot 0.2 = 0.8.$ Ciò significa che, se l'esperimento casuale venisse ripetuto infinite volte, l'esito testa verrebbe osservato un numero medio di volte pari a 0.8. La varianza è $n \theta (1-\theta) = 4 \cdot 0.2 \cdot (1 - 0.2) = 0.64$.
 :::
 
-## Distribuzione di Poisson
-
-La distribuzione di Poisson è una distribuzione di probabilità discreta che esprime le probabilità per il numero di eventi che si verificano successivamente ed indipendentemente in un dato intervallo di tempo, sapendo che mediamente se ne verifica un numero $\lambda$. La distribuzione di Poisson serve dunque per contare il numero di volte in cui un evento ha luogo in un determinato intervallo di tempo. La stessa distribuzione può essere estesa anche per contare gli eventi che hanno luogo in una determinata porzione di spazio.
-
-::: definition
-La distribuzione di Poisson può essere intesa come limite della distribuzione binomiale, dove la probabilità di successo $\theta$ è pari a $\frac{\lambda}{n}$ con $n$ che tende a $\infty$:
-
-```{=tex}
-\begin{equation}
-\lim_{y \rightarrow \infty} \binom{n}{y} \theta^y (1-\theta)^{n-y} = \frac{\lambda^y}{y!}e^{-\lambda}.
-\end{equation}
-```
-:::
-
-Alcune distribuzioni di Poisson sono riportate nella figura @fig-examples-poisson-distrib.
-
-```{r fig-examples-poisson-distrib, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE, fig.cap = "Alcune distribuzioni di Poisson."}
-library("scales")
-library("viridis")
-
-distribution_plot <- function(dset, dfun, darg, name) {
-  theme_update(legend.position = c(0.8, 0.8))
-  gg <- ggplot(dset, aes(x = x))
-  for (index in 1:length(darg)) {
-    iarg <- darg[[index]]
-    params <- names(iarg)
-    params <- sapply(params,
-      switch,
-      "size" = "n",
-      "prob" = "p",
-      "lambda" = "lambda",
-      "shape" = "alpha",
-      "rate" = "beta",
-      "mean" = "mu",
-      "sd" = "sigma",
-      "meanlog" = "mu",
-      "sdlog" = "sigma"
-    )
-    label <- paste(paste(params, unlist(iarg), sep = "=="), 
-                   collapse = "*','~~")
-    gg <- gg + stat_function(
-      data = dset %>% mutate(label = label),
-      aes(colour = label),
-      size = 0.75,
-      fun = dfun,
-      n = nrow(dset),
-      args = iarg,
-      geom = "path"
-    )
-    if (grepl("poisson|binomial", name)) {
-      gg <- gg + stat_function(
-        data = dset %>% mutate(label = label),
-        aes(colour = label),
-        fun = dfun,
-        n = nrow(dset),
-        args = iarg,
-        geom = "point"
-      )
-    }
-  }
-  gg <- gg + scale_fill_viridis(
-    option = "E",
-    name = "Parameters",
-    labels = parse_format()
-  )
-  gg <- gg + labs(x = "\ny", y = "f(y)\n")
-  print(gg)
-}
-
-poisson_plot <- function() {
-  dset <- tibble(x = seq(0, 20))
-  darg <- list(
-    list(lambda = 0.5),
-    list(lambda = 1),
-    list(lambda = 5),
-    list(lambda = 9)
-  )
-  distribution_plot(dset, dpois, darg, name = "poisson")
-}
-poisson_plot()
-```
-
-::: {#exr-poisson-1}
-Supponiamo che un evento accada 300 volte all'ora. Si vuole determinare la probabilità che in un minuto accadano esattamente 3 eventi.
-:::
-
-::: solution
-Il numero medio di eventi in un minuto è pari a
-
-```{r}
-lambda <- 300 / 60
-lambda
-```
-
-Quindi la probabilità che in un minuto si abbiano 3 eventi è pari a
-
-```{r}
-y <- 3
-(lambda^y / factorial(y)) * exp(-lambda)
-```
-:::
-
-::: {#exr-poisson-2}
-Per i dati dell'@exr-poisson-1, si trovi la probabilità che un evento accada almeno 8 volte in un minuto.
-:::
-
-::: solution
-La probabilità cercata è
-
-$$
-p(y \geq 8) = 1 - p (y \leq 7) = 1- \sum_{i = 0}^7 \frac{\lambda^7}{7!}e^{-\lambda},
-$$
-
-con $\lambda = 5$.
-
-Svolgendo i calcoli in R otteniamo:
-
-```{r}
-1 - ppois(q = 7, lambda = 5)
-ppois(q = 7, lambda = 5, lower.tail = FALSE)
-```
-:::
-
-::: {#exr-poisson-3}
-Sapendo che un evento avviene in media 6 volte al minuto, si calcoli (a) la probabilità di osservare un numero di eventi uguale o inferiore a 3 in un minuto, e (b) la probabilità di osservare esattamente 2 eventi in 30 secondi.
-:::
-
-::: solution
-Per la domanda (a), $\lambda = 6$ e la probabilità richiesta è
-
-```{r}
-ppois(q = 3, lambda = 6, lower.tail = TRUE)
-```
-
-Nel caso di (b), $\lambda = 6 / 2$ e la probabilità richiesta è
-
-```{r}
-dpois(x = 2, lambda = 3)
-```
-:::
-
-### Alcune proprietà della variabile di Poisson
-
--   Il valore atteso, la moda e la varianza della variabile di Poisson sono uguali a $\lambda$.
--   La somma $Y_1 + \dots + Y_n$ di $n$ variabili casuali indipendenti con distribuzioni di Poisson di parametri $\lambda_{1},\dots,\lambda_{n}$ segue una distribuzione di Poisson di parametro $\lambda = \lambda_{1}+\dots+\lambda_{n}$.
--   La differenze di due variabili di Poisson non è una variabile di Poisson. Basti infatti pensare che può assumere valori negativi.
-
 ## Distribuzione discreta uniforme
 
 Una distribuzione discreta uniforme è una distribuzione di probabilità discreta che è uniforme su un insieme, ovvero che attribuisce ad ogni elemento dell'insieme discreto e finito $S$ su cui è definita la stessa probabilità $p$ di verificarsi.
@@ -412,14 +279,6 @@ $$
 \mathbb{V}(X) = \mathbb{E}(X^2) - \left[\mathbb{E}(X)\right]^2.
 $$
 
-### Distribuzione discreta uniforme con $\textsf{R}$
-
-La sintassi per simulare una variabile casuale uniforme discreta è `sample(x, size, replace = TRUE)`. L'argomento `x` identifica i numeri da cui campionare casualmente. Se `x` è un numero, il campionamento viene eseguito da 1 a `x`. L'argomento `size` indica quanto dovrebbe essere grande la dimensione del campione e `replace` indica se i numeri devono essere reintrodotti o meno nell'urna dopo essere stati estratti. L'opzione di default è `replace = FALSE` ma per le uniformi discrete i valori estratti devono essere sostituiti. Seguono alcuni esempi.
-
--   Per lanciare un dado equilibrato 3000 volte: `sample(6, size = 3000, replace = TRUE)`;
--   per scegliere 27 numeri casuali da 30 a 70: `sample(30:70, size = 27, replace = TRUE)`;
--   per lanciare una moneta equa 1000 volte: `sample(c("H","T"), size = 1000, replace = TRUE)`.
-
 ## Distribuzione beta-binomiale
 
 La distribuzione beta-binomiale di parametri $N$, $\alpha$ e $\beta$ è una distribuzione discreta con una funzione di massa di probabilità uguale a
@@ -429,8 +288,6 @@ $$
 $$ {#eq-beta-binom-formula}
 
 dove la funzione beta è $B(u, v) = \frac{\Gamma(u)\Gamma(v)}{\Gamma(u+v)}$.
-
-Senza entrare nei dettagli, ci accontentiamo di sapere che tale distribuzione è implementata nella funzione `dbbinom()` del pacchetto `extraDistr`.
 
 ## Commenti e considerazioni finali {.unnumbered}
 

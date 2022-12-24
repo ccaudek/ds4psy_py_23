@@ -16,7 +16,7 @@ Non c'è un'unica distribuzione gaussiana (o normale): la distribuzione gaussian
 
 Iniziamo con un un breve excursus storico. Nel 1733, Abraham de Moivre notò che, aumentando il numero di prove di una distribuzione binomiale, la distribuzione risultante diventava quasi simmetrica e a forma campanulare. Con 10 prove e una probabilità di successo di 0.9 in ciascuna prova, la distribuzione è chiaramente asimmetrica.
 
-```{r fig-demoivre-1, fig.cap = 'Probabilità del numero di successi in $N = 10$ prove bernoulliane indipendenti, ciascuna con una probabilità di successo di 0.90. Il risultato è una distribuzione $\\mbox{Bin}(y \\mid 10, 0.9)$. Con solo dieci prove, la distribuzione è fortemente asimmetrica negativa.'}
+```{r fig-demoivre-1, echo=FALSE, fig.cap = 'Probabilità del numero di successi in $N = 10$ prove bernoulliane indipendenti, ciascuna con una probabilità di successo di 0.90. Il risultato è una distribuzione $\\mbox{Bin}(y \\mid 10, 0.9)$. Con solo dieci prove, la distribuzione è fortemente asimmetrica negativa.'}
 N <- 10
 x <- 0:10
 y <- dbinom(x, N, 0.9)
@@ -34,7 +34,7 @@ binomial_limit_plot
 
 Ma se aumentiamo il numero di prove di un fattore di 100 a *N* = 1000, senza modificare la probabilità di successo di 0.9, la distribuzione assume una forma campanulare quasi simmetrica. Dunque, de Moivre scoprì che, quando *N* è grande, la funzione gaussiana (che introdurremo qui sotto), nonostante sia la densità di v.a. continue, fornisce una buona approssimazione alla funzione di massa di probabilità binomiale.
 
-```{r fig-demoivre-2, fig.cap = 'Probabilità del numero di successi in $N = 1000$ prove bernoulliane indipendenti, ciascuna con una probabilità di successo di 0.90. Il risultato è una distribuzione $\\mbox{Bin}(y \\mid 1000, 0.9)$. Con mille prove, la distribuzione è quasi simmetrica a forma campanulare.'}
+```{r fig-demoivre-2, echo=FALSE, fig.cap = 'Probabilità del numero di successi in $N = 1000$ prove bernoulliane indipendenti, ciascuna con una probabilità di successo di 0.90. Il risultato è una distribuzione $\\mbox{Bin}(y \\mid 1000, 0.9)$. Con mille prove, la distribuzione è quasi simmetrica a forma campanulare.'}
 N <- 1000
 x <- 0:1000
 y <- dbinom(x, N, 0.9)
@@ -56,9 +56,9 @@ La distribuzione Normale fu scoperta da Gauss nel 1809. Il Paragrafo successivo 
 
 Alla conclusione di queste passeggiate casuali (*random walk*) non possiamo sapere con esattezza dove si troverà ciascuna persona, ma possiamo conoscere con certezza le caratteristiche della distribuzione delle mille distanze dall'origine. Per esempio, possiamo predire in maniera accurata la proporzione di persone che si sono spostate in avanti oppure all'indietro. Oppure, possiamo predire accuratamente la proporzione di persone che si troveranno ad una certa distanza dalla linea di partenza (es., a 1.5 m dall'origine).
 
-Queste predizioni sono possibili perché tali distanze si distribuiscono secondo la legge Normale. È facile simulare questo processo usando \mathsf{R}. I risultati della simulazione sono riportati nella @fig-rw-normal-4816.
+Queste predizioni sono possibili perché tali distanze si distribuiscono secondo la legge Normale. I risultati di una tale simulazione sono riportati nella @fig-rw-normal-4816.
 
-```{r fig-rw-normal-4816, fig.cap= "Passeggiata casuale di 4, 8 e 16 passi. La spezzata nera indica la media delle distanze dall'origine come funzione del numero di passi."}
+```{r fig-rw-normal-4816, echo=FALSE, fig.cap= "Passeggiata casuale di 4, 8 e 16 passi. La spezzata nera indica la media delle distanze dall'origine come funzione del numero di passi."}
 pos <-
   replicate(100, runif(16, -1, 1)) %>%
   as_tibble() %>%
@@ -88,7 +88,7 @@ ggplot(
 
 Un kernel density plot delle distanze ottenute dopo 4, 8 e 16 passi è riportato nella @fig-rw-normal-3panels. Nel pannello di destra, al kernel density plot è stata sovrapposta una densità Normale di opportuni parametri (linea tratteggiata).
 
-```{r, fig-rw-normal-3panels, fig.cap="Kernel density plot dei risultati della passeggiata casuale riportata nella figura precente, dopo 4, 8 e 16 passi. Nel pannello di destra, una densità Normale di opportuni parametri è sovrapposta all'istogramma lisciato."}
+```{r, fig-rw-normal-3panels, echo=FALSE, fig.cap="Kernel density plot dei risultati della passeggiata casuale riportata nella figura precente, dopo 4, 8 e 16 passi. Nel pannello di destra, una densità Normale di opportuni parametri è sovrapposta all'istogramma lisciato."}
 p1 <-
   pos %>%
   filter(step == 4) %>%
@@ -239,20 +239,21 @@ Usiamo $\mathsf{R}$ per calcolare la funzione di ripartizione della Normale. La 
 
 Per esempio, in precedenza abbiamo detto che il 68% circa dell'area sottesa ad una Normale è compresa nell'intervallo $\mu \pm \sigma$. Verifichiamo per la distribuzione del QI $\sim \mathcal{N}(\mu = 100, \sigma = 15)$:
 
-```{r}
-pnorm(100+15, 100, 15) - pnorm(100-15, 100, 15)
+```{python}
+from statistics import NormalDist
+NormalDist(mu=100, sigma=15).cdf(100+15) - NormalDist(mu=100, sigma=15).cdf(100-15)
 ```
 
 Il 95% dell'area è compresa nell'intervallo $\mu \pm 1.96 \cdot\sigma$:
 
-```{r}
-pnorm(100 + 1.96 * 15, 100, 15) - pnorm(100 - 1.96 * 15, 100, 15)
+```{python}
+NormalDist(mu=100, sigma=15).cdf(100+1.96*15) - NormalDist(mu=100, sigma=15).cdf(100-1.96*15)
 ```
 
 Quasi tutta la distribuzione è compresa nell'intervallo $\mu \pm 3 \cdot\sigma$:
 
-```{r}
-pnorm(100 + 3 * 15, 100, 15) - pnorm(100 - 3 * 15, 100, 15)
+```{python}
+NormalDist(mu=100, sigma=15).cdf(100+3*15) - NormalDist(mu=100, sigma=15).cdf(100-3*15)
 ```
 :::
 
@@ -275,7 +276,7 @@ Supponiamo che l'altezza degli individui adulti segua la distribuzione Normale d
 ::: solution
 Il problema ci chiede di trovare l'area sottesa alla distribuzione $\mathcal{N}(\mu = 1.7, \sigma = 0.1)$ nell'intervallo $[1.7, 1.8]$:
 
-```{r}
+```{r, echo=FALSE}
 df <- tibble(x = seq(1.4, 2.0, length.out = 100)) %>%
   mutate(y = dnorm(x, mean = 1.7, sd = 0.1))
 
@@ -290,11 +291,11 @@ ggplot(df, aes(x, y)) +
 
 La risposta si trova utilizzando la funzione di ripartizione $F(X)$ della legge $\mathcal{N}(1.7, 0.1)$ in corrispondenza dei due valori forniti dal problema: $F(X = 1.8) - F(X = 1.7)$. Utilizzando la seguente istruzione
 
-```{r}
-pnorm(1.8, 1.7, 0.1) - pnorm(1.7, 1.7, 0.1)
+```{python}
+NormalDist(mu=1.7, sigma=0.1).cdf(1.8) - NormalDist(mu=1.7, sigma=0.1).cdf(1.7)
 ```
 
-otteniamo il $31.43\%$.
+otteniamo il $34.13\%$.
 
 In maniera equivalente, possiamo standardizzare i valori che delimitano l'intervallo considerato e utilizzare la funzione di ripartizione della normale standardizzata. I limiti inferiore e superiore dell'intervallo sono
 
@@ -304,8 +305,8 @@ $$
 
 quindi otteniamo
 
-```{r}
-pnorm(1.0, 0, 1) - pnorm(0, 0, 1)
+```{python}
+NormalDist(mu=0.0, sigma=1.0).cdf(1.0) - NormalDist(mu=0.0, sigma=1.0).cdf(0.0)
 ```
 
 Il modo più semplice per risolvere questo problema resta comunque quello di rendersi conto che la probabilità richiesta non è altro che la metà dell'area sottesa dalle distribuzioni Normali nell'intervallo $[\mu - \sigma, \mu + \sigma]$, ovvero $0.683/2$.
@@ -315,7 +316,7 @@ Il modo più semplice per risolvere questo problema resta comunque quello di ren
 
 Si noti che la funzione logistica (in blu), pur essendo del tutto diversa dalla Normale dal punto di vista formale, assomiglia molto alla Normale standard quando le due cdf hanno la stessa varianza.
 
-```{r}
+```{r, echo=FALSE}
 tibble(x = c(-3, 3)) %>%
   ggplot(aes(x = x)) +
   stat_function(fun = pnorm) +
@@ -327,7 +328,7 @@ tibble(x = c(-3, 3)) %>%
 
 ## Teorema del limite centrale
 
-Laplace dimostrò il teorema del limite centrale (TLC) nel 1812. Il TLC ci dice che se prendiamo una sequenza di variabili casuali indipendenti e le sommiamo, tale somma tende a distribuirsi come una Normale. Il TLC specifica inoltre, sulla base dei valori attesi e delle varianze delle v.c. che vengono sommate, quali sono i parametri della distribuzione Normale così ottenuta.
+Laplace dimostrò il teorema del limite centrale (TLC) nel 1812. Il TLC dice che se prendiamo una sequenza di variabili casuali indipendenti e le sommiamo, tale somma tende a distribuirsi come una Normale. Inoltre, il TLC specifica, sulla base dei valori attesi e delle varianze delle v.c. che vengono sommate, quali sono i parametri della distribuzione Normale così ottenuta.
 
 ::: {#thm-tlc}
 Si supponga che $Y = Y_1, \dots, Y_i, \ldots, Y_n$ sia una sequenza di v.a. i.i.d. con $\mathbb{E}(Y_i) = \mu$ e $\mbox{SD}(Y_i) = \sigma$. Si definisca una nuova v.c. come:
@@ -428,23 +429,6 @@ chi_squared_plot()
 -   Per $k \rightarrow \infty$, la $\chi^2_{~\nu} \rightarrow \mathcal{N}$.
 -   Se $X$ e $Y$ sono due variabili casuali chi-quadrato indipendenti con $\nu_1$ e $\nu_2$ gradi di libertà, ne segue che $X + Y \sim \chi^2_m$, con $m = \nu_1 + \nu_2$. Tale principio si estende a qualunque numero finito di variabili casuali chi-quadrato indipendenti.
 
-::: {#exr-chisq-1}
-Usiamo $\mathsf{R}$ per disegnare la densità chi-quadrato con 3 gradi di libertà dividendo l'area sottesa alla curva di densità in due parti uguali.
-
-```{r}
-df <- tibble(x = seq(0, 15.0, length.out = 100)) %>%
-  mutate(y = dchisq(x, 3))
-
-ggplot(df, aes(x, y)) +
-  geom_area(fill = "sky blue") +
-  gghighlight(x < 3) +
-  labs(
-    x = "V.a. chi-quadrato con 3 gradi di libertà",
-    y = "Densità"
-  )
-```
-:::
-
 ## Distribuzione $t$ di Student
 
 Dalle distribuzioni Normale e Chi-quadrato deriva un'altra distribuzione molto nota, la $t$ di Student. Se $Z \sim \mathcal{N}$ e $W \sim \chi^2_{~\nu}$ sono due variabili casuali indipendenti, allora il rapporto
@@ -453,7 +437,7 @@ $$
 T = \frac{Z}{\Big( \frac{W}{\nu}\Big)^{\frac{1}{2}}}
 $$ {#eq-student-t-distr}
 
-definisce la distribuzione $t$ di Student con $\nu$ gradi di libertà. Si usa scrivere $T \sim t_{\nu}$. L'andamento della distribuzione $t$ di Student è simile a quello della distribuzione Normale, ma ha una maggiore dispersione (ha le code più pesanti di una Normale, ovvero ha una varianza maggiore di 1).
+definisce la distribuzione $t$ di Student con $\nu$ gradi di libertà. Si usa scrivere $T \sim t_{\nu}$. L'andamento della distribuzione $t$ di Student è simile a quello della distribuzione Normale, ma ha una dispersione maggiore (ha le code più pesanti di una Normale, ovvero ha una varianza maggiore di 1).
 
 La @fig-alcune-t-student mostra alcune distribuzioni $t$ di Student variando il parametro $\nu$.
 
@@ -522,9 +506,9 @@ La variabile casuale $t$ di Student soddisfa le seguenti proprietà:
 2.  La densità della $t_{\nu}$ è una funzione simmetrica con valore atteso nullo.
 3.  Per $\nu > 2$, la varianza della $t_{\nu}$ vale $\nu/(\nu - 2)$; pertanto è sempre maggiore di 1 e tende a 1 per $\nu \rightarrow \infty$.
 
-## Funzione beta
+## Funzione beta di Eulero
 
-La funzione beta di Eulero è una funzione matematica, *non* una densità di probabilità. La menzioniamo qui perché viene utilizzata nella distribuzione Beta. La funzione beta si può scrivere in molti modi diversi; per i nostri scopi la scriveremo così:
+La funzione beta di Eulero è una funzione matematica, *non* una densità di probabilità. La menzioniamo qui perché viene utilizzata nella distribuzione Beta. La funzione beta di Eulero si può scrivere in molti modi diversi; per i nostri scopi la presentiamo così:
 
 $$
 B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}\,,
@@ -537,33 +521,34 @@ $$
 $$
 
 ::: {#exr-beta-function-1}
-\
-
 Per esempio, posti $\alpha = 3$ e $\beta = 9$, la funzione beta assume il valore
 
-```{r}
-alpha <- 3
-beta <- 9
-beta(alpha, beta)
+```{python}
+import scipy.special as sc
+
+alpha = 3
+beta = 9
+sc.beta(alpha, beta)
 ```
 
-Per chiarire, lo stesso risultato si ottiene con
+Lo stesso risultato si ottiene con
 
-```{r}
-((2) * (8 * 7 * 6 * 5 * 4 * 3 * 2)) / 
-  (11 * 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2)
+```{python}
+((2) * (8 * 7 * 6 * 5 * 4 * 3 * 2)) / (11 * 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2)
 ```
 
 ovvero
 
-```{r}
-gamma(alpha) * gamma(beta) / gamma(alpha + beta)
+```{python}
+alpha = 3
+beta = 9
+sc.gamma(alpha) * sc.gamma(beta) / sc.gamma(alpha + beta)
 ```
 :::
 
 ## Distribuzione Beta
 
-La distribuzione Beta è una distribuzione usata per modellare percentuali e proporzioni in quanto è definita sull'intervallo $(0; 1)$ -- ma non include i valori 0 o 1.
+La distribuzione Beta è una distribuzione usata per modellare percentuali e proporzioni in quanto è definita sull'intervallo $(0; 1)$ -- ovvero, non include i valori 0 o 1.
 
 ::: {#def-beta-distribution}
 Sia $\pi$ una variabile casuale che può assumere qualsiasi valore compreso tra 0 e 1, cioè $\pi \in [0, 1]$. Diremo che $\pi$ segue la distribuzione Beta di parametri $\alpha$ e $\beta$, $\pi \sim \text{Beta}(\alpha, \beta)$, se la sua densità è
@@ -575,7 +560,7 @@ $$
 \end{align}
 $$ {#eq-beta-distr-formula}
 
-laddove $B(\alpha, \beta)$ è la funzione beta.
+laddove $B(\alpha, \beta)$ è la funzione beta di Eulero.
 :::
 
 I termini $\alpha$ e $\beta$ sono i parametri della distribuzione Beta e devono essere entrambi positivi. Tali parametri possono essere interpretati come l'espressione delle nostre credenze a priori relative ad una sequenza di prove Bernoulliane. Il parametro $\alpha$ rappresenta il numero di "successi" e il parametro $\beta$ il numero di "insuccessi":
@@ -592,23 +577,35 @@ $$
 
 Ad esempio, con $\alpha = 3$ e $\beta = 9$ abbiamo
 
-```{r}
-a <- 3
-b <- 9
-integrand <- function(p) {p^{a - 1}*(1 - p)^{b - 1}}
-integrate(integrand, lower = 0, upper = 1)
+```{python}
+import numpy as np
+from scipy.integrate import quad
+
+def integrand(p, a, b):
+    return p**(a-1) * (1-p)**(b-1)
+
+a = 3
+b = 9
+result, error = quad(integrand, 0, 1, args=(a, b))
+print(result)
 ```
 
 ovvero
 
-```{r}
-1 / (gamma(a + b) / (gamma(a) * gamma(b)))
+```{python}
+import math
+
+a = 3
+b = 9
+
+result = math.gamma(a) * math.gamma(b) / math.gamma(a + b)
+print(result)
 ```
 
 ovvero
 
-```{r}
-beta(alpha, beta)
+```{python}
+sc.beta(a, b)
 ```
 
 Il valore atteso, la moda e la varianza di una distribuzione Beta sono dati dalle seguenti equazioni:
@@ -627,16 +624,43 @@ $$ {#eq-beta-var}
 
 Al variare di $\alpha$ e $\beta$ si ottengono molte distribuzioni di forma diversa; un'illustrazione è fornita dalla seguente [GIF animata](https://en.wikipedia.org/wiki/File:PDF_of_the_Beta_distribution.gif).
 
-Si può ottenere una rappresentazione grafica della distribuzione $\mbox{Beta}(\pi \mid \alpha, \beta)$ con la funzione `plot_beta()` del pacchetto `bayesrules`. Per esempio:
+Si può ottenere una rappresentazione grafica della distribuzione $\mbox{Beta}(\pi \mid \alpha, \beta)$ nel modo seguente.
 
-```{r}
-bayesrules::plot_beta(alpha = 3, beta = 9)
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import beta
+import math
+
+a, b = 3, 9
+
+x = np.linspace(0.001, 0.999, num=100)
+
+plt.plot(x, beta.pdf(x, a, b), 'r-')
+plt.xlim(0.0, 1.0)
+plt.title('Distribuzione Beta')
+plt.xlabel('Valori di una variabile casuale X (0, 1)')
+plt.ylabel('Densità')
+plt.show()
 ```
 
-La funzione `bayesrules::summarize_beta()` ci restituisce la media, moda e varianza della distribuzione Beta. Per esempio:
+La funzione `beta_mean_mode_variance()` ci restituisce la media, moda e varianza della distribuzione Beta.
 
-```{r}
-bayesrules::summarize_beta(alpha = 3, beta = 9)
+```{python}
+def beta_mean_mode_variance(alpha, beta):
+    mean = alpha / (alpha + beta)
+    mode = (alpha - 1) / (alpha + beta - 2)
+    variance = alpha * beta / ((alpha + beta)**2 * (alpha + beta + 1))
+    return mean, mode, variance
+```
+
+Per esempio:
+
+```{python}
+alpha = 3
+beta = 9
+mean, mode, variance = beta_mean_mode_variance(alpha, beta)
+print(f'Mean: {mean}, Mode: {mode}, Variance: {variance}')
 ```
 
 ::: remark
@@ -645,99 +669,6 @@ Attenzione alle parole: in questo contesto, il termine "beta" viene utilizzato c
 -   la distribuzione di densità Beta,
 -   la funzione matematica beta,
 -   il parametro $\beta$.
-:::
-
-::: {#exr-beta-binom-1}
-Nel disturbo depressivo la recidiva è definita come la comparsa di un nuovo episodio depressivo che si manifesta dopo un prolungato periodo di recupero (6-12 mesi) con stato di eutimia (umore relativamente normale). Supponiamo che una serie di studi mostri una comparsa di recidiva in una proporzione che va dal 20% al 60% dei casi, con una media del 40% [per una recente discussione, si veda @nuggerud2020analysis]. Sulla base di queste informazioni, si usi la distribuzione Beta per rappresentare le credenze a priori relativamente alla probabilità di recidiva.
-:::
-
-::: solution
-Il problema richiede di trovare i parametri della distribuzione Beta tali per cui la massa della densità sia compresa tra 0.2 e 0.6, con la media in corrispondenza di 0.4. Procedendo per tentativi ed errori, ed usando la funzione `bayesrules::plot_beta()`, un risultato possibile è $\mbox{Beta}(16, 24)$.
-
-La funzione `find_pars()` prende in input la media e $\alpha + \beta$, ritorna i valori dei parametri:
-
-```{r}
-find_pars <- function(ev, n) {
-  a <- ev * n
-  b <- n - a
-  return(c(round(a), round(b)))
-}
-
-pars <- find_pars(.4, 40)
-pars
-bayesrules::plot_beta(pars[1], pars[2])
-```
-
-Verifichiamo il valore della media della distribuzione:
-
-```{r}
-16 / (16 + 24)
-```
-
-La moda è
-
-```{r}
-(16 - 1) / (16 + 24 - 2)
-```
-
-La deviazione standard della distribuzione è uguale a circa 8 punti percentuali:
-
-```{r}
-sqrt((16 * 24) / ((16 + 24)^2 * (16 + 24 + 1)))
-```
-
-Gli stessi risultati si ottengono usando la funzione `bayesrules::summarize_beta()`:
-
-```{r}
-bayesrules::summarize_beta(alpha = 16, beta = 24)
-```
-
-Possiamo concludere dicendo che, se utilizziamo la distribuzione $\mbox{Beta}(16, 24)$ per rappresentare le nostre credenze (a priori) rispetto la possibilità di recidiva, ciò significa che pensiamo che la nostra incertezza sia quantificabile nei termini di una deviazione standard di circa 8 punti percentuali rispetto a tutti i valori possibili di recidiva, per i quali il valore più verosimile (ovvero, la media della distribuzione) è 0.40.
-:::
-
-::: {#exr-beta-binom-2}
-Poniamoci ora il problema di verificare la nostra comprensione delle funzioni $\mathsf{R}$ che possono essere usate per la funzione Beta. Si risolva l'@exr-beta-binom-1 usando $\mathsf{R}$.
-:::
-
-::: solution
-Utilizziamo i seguenti parametri per la distribuzione Beta:
-
-```{r}
-alpha <- 16
-beta <- 24
-```
-
-La media di una $\mbox{Beta}(16, 24)$ è
-
-```{r}
-alpha / (alpha + beta)
-```
-
-In corrispondenza della media la densità della funzione è
-
-```{r}
-dbeta(pi, alpha, beta)
-```
-
-ovvero
-
-```{r}
-gamma(alpha + beta) / (gamma(alpha) * gamma(beta)) * 
-  pi^(alpha - 1) * (1 - pi)^(beta - 1)
-```
-
-Usando la funzione `dbeta()` possiamo costruire un grafico della funzione $\mbox{Beta}(16, 24)$ nel modo seguente:
-
-```{r}
-x <- seq(0, 1, length.out = 1e4)
-tibble(x) %>% 
-  ggplot(aes(x, dbeta(x, alpha, beta))) +
-  geom_line() +
-  labs(
-    x = "Probabilità di recidiva",
-    y = "Densità Beta(16, 24)"
-  )
-```
 :::
 
 ## Distribuzione di Cauchy

@@ -6,9 +6,9 @@ source("_common.R")
 
 Finora abbiamo considerato solo variabili casuali discrete, cioè variabili che assumono solo valori interi. Ma cosa succede se vogliamo usare variabili casuali per rappresentare lunghezze, o volumi, o distanze, o una qualsiasi delle altre proprietà continue nel mondo fisico o psicologico? È necessario generalizzare l'approccio usato finora.
 
-Le variabili casuali continue assumono valori reali. L'insieme dei numeri reali è *non numerabile* perché è più grande dell'insieme degli interi.[^density_func-1] Le leggi della probabilità sono le stesse per le variabili casuali discrete e quelle continue. La nozione di funzione di massa di probabilità, invece, deve essere sostituita dal suo equivalente continuo, ovvero dalla *funzione di densità di probabilità*. Lo scopo di questo Capitolo è quello di chiarire il significato di questa nozione, usando un approccio basato sulle simulazioni.
+Le variabili casuali continue assumono valori reali. L'insieme dei numeri reali è *non numerabile* perché è più grande dell'insieme degli interi.[^020_density_func-1] Le leggi della probabilità sono le stesse per le variabili casuali discrete e quelle continue. La nozione di funzione di massa di probabilità, invece, deve essere sostituita dal suo equivalente continuo, ovvero dalla *funzione di densità di probabilità*. Lo scopo di questo Capitolo è quello di chiarire il significato di questa nozione, usando un approccio basato sulle simulazioni.
 
-[^density_func-1]: Georg Cantor dimostrò che era impossibile mappare uno a uno i reali negli interi, dimostrando così che l'insieme dei reali è non numerabile.
+[^020_density_func-1]: Georg Cantor dimostrò che era impossibile mappare uno a uno i reali negli interi, dimostrando così che l'insieme dei reali è non numerabile.
 
 ## Spinner e variabili casuali continue uniformi
 
@@ -113,7 +113,7 @@ cdf_spinner_plot
 
 Possiamo verificare questo risultato mediante simulazione. Per stimare la funzione di ripartizione, simuliamo $M$ valori $\theta^{(m)}$ e poi li ordiniamo in ordine crescente.
 
-```{r, fig-unif_cdf_plot, fig.cap="Grafico della funzione di ripartizione di una variabile casuale $\\Theta$ che rappresenta il risultato di una rotazione di uno spinner simmetrico. Come previsto, tale funzione è una semplice funzione lineare perché la variabile sottostante $\\Theta$ ha una distribuzione uniforme."}
+```{r, echo=FALSE, fig-unif_cdf_plot, fig.cap="Grafico della funzione di ripartizione di una variabile casuale $\\Theta$ che rappresenta il risultato di una rotazione di uno spinner simmetrico. Come previsto, tale funzione è una semplice funzione lineare perché la variabile sottostante $\\Theta$ ha una distribuzione uniforme."}
 M <- 1000
 theta <- runif(M, 0, 360)
 theta_asc <- sort(theta)
@@ -155,18 +155,16 @@ $$
 
 Poiché le probabilità assumono valori nell'intervallo \[0, 1\], possiamo pensare a $\Theta$ come ad un valore di probabilità preso a caso in ciascuna realizzazione dell'esperimento casuale.
 
-La distribuzione uniforme è la più semplice delle distribuzioni di densità di probabilità. Per chiarire le proprietà di tale distribuzione, iniziamo con una simulazione e generiamo 10,000 valori casuali di $\Theta$. I primi 10 di tali valori sono stampati qui di seguito:
+La distribuzione uniforme è la più semplice delle distribuzioni di densità di probabilità. Per chiarire le proprietà di tale distribuzione, iniziamo con una simulazione e generiamo 10,000 valori casuali di $\Theta$. Creiamo poi un istogramma che descrive la distribuzione delle 10,000 realizzazioni $\Theta$ che abbiamo trovato. Alcuni valori $\Theta$ sono forniti di seguito.
 
-```{r}
+```{r, echo=FALSE}
 set.seed(1234)
 M <- 10000
 theta <- runif(M)
 theta[1:10]
 ```
 
-Creiamo ora un istogramma che descrive la distribuzione delle 10,000 realizzazioni $\Theta$ che abbiamo trovato:
-
-```{r fig-unif-distr, fig.cap='Istogramma di $10\\,000$ realizzazioni $\\Theta \\sim \\mbox{Uniform}(0, 1)$. '}
+```{r fig-unif-distr, echo=FALSE, fig.cap='Istogramma di $10\\,000$ realizzazioni $\\Theta \\sim \\mbox{Uniform}(0, 1)$. '}
 df_prob_unif <- data.frame(theta = theta)
 unif_prob_plot <-
   ggplot(df_prob_unif, aes(theta)) +
@@ -182,7 +180,7 @@ unif_prob_plot
 
 È chiaro che, all'aumentare del numero delle realizzazioni $\Theta$, il profilo dell'istogramma tenderà a diventare una linea retta. Ciò significa che la funzione di densità di una variabile casuale uniforme continua è una costante. Cioè, se $\Theta \sim \mathcal{U} (a, b)$, allora $p_{\Theta}(\theta) = c$, dove $c$ è una costante.
 
-```{r, fig-unif-distr-2, fig.cap="Distribuzione uniforme"}
+```{r, fig-unif-distr-2, echo=FALSE, fig.cap="Distribuzione uniforme"}
 uniform_pdf_df <- data.frame(y = c(0, 1), p_y = c(1, 1))
 uniform_pdf_plot <-
   ggplot(uniform_pdf_df, aes(x = y, y = p_y)) +
@@ -235,9 +233,9 @@ $$
 \mathcal{U}(\theta \mid a, b) = \frac{1}{b - a}.
 $$
 
-In conclusione, la densità di una variabile casuale uniforme continua non dipende da $\theta$ --- è costante e identica per ogni possibile valore $\theta$.[^density_func-2] Vedremo nel prossimo Paragrafo che, eseguendo una trasformazione su questa variabile casuale uniforme, possiamo creare altre variabili casuali di interesse.
+In conclusione, la densità di una variabile casuale uniforme continua non dipende da $\theta$ --- è costante e identica per ogni possibile valore $\theta$.[^020_density_func-2] Vedremo nel prossimo Paragrafo che, eseguendo una trasformazione su questa variabile casuale uniforme, possiamo creare altre variabili casuali di interesse.
 
-[^density_func-2]: Per comodità, possiamo assumere che i valori impossibili di $\theta$ abbiano una densità uguale a zero.
+[^020_density_func-2]: Per comodità, possiamo assumere che i valori impossibili di $\theta$ abbiano una densità uguale a zero.
 
 ::: exercise
 Si consideri una variabile casuale uniforme $X$ definita sull'intervallo \[0, 100\]. Si trovi la probabilità $P(20 < X < 60)$.
@@ -249,15 +247,15 @@ Per trovare la soluzione è sufficiente calcolare l'area di un rettangolo di bas
 
 Non esiste l'equivalente di una funzione di massa di probabilità per le variabili casuali continue. Esiste invece una *funzione di densità di probabilità* la quale, nei termini di una simulazione, può essere concepita nel modo seguente: avendo a disposizione un numero enorme di casi, quando l'intervallo $\Delta$ di ciascuna classe $\rightarrow$ 0, il profilo dell'istogramma delle frequenze delle classi di ampiezza $\Delta$ tende a diventare una curva continua. Tale curva continua $f(x)$ è detta funzione di densità di probabilità.
 
-Come si trasformano gli istogrammi all'aumentare del numero di osservazioni? Per fare un esempio, considereremo una funzione di una variabile casuale uniforme $[0, 1]$. Nello specifico, esamineremo la funzione logit:
+Come si trasformano gli istogrammi all'aumentare del numero di osservazioni? Per fare un esempio, considereremo una funzione di una variabile casuale uniforme $[0, 1]$. Nello specifico, esamineremo la funzione logit.
 
 $$
 \alpha = \log \left(\frac{\theta}{1-\theta}\right)
 $$
 
-Alcuni valori $\alpha$ presi a caso sono i seguenti:
+Alcuni valori logit presi a caso sono stampati di seguito.
 
-```{r}
+```{r, echo=FALSE}
 set.seed(1234)
 M <- 10000
 logit <- function(x) log(x / (1 - x))
@@ -269,7 +267,7 @@ for (m in 1:10)
 
 Nei grafici seguenti, la numerosità cresce da $10$ a $1\,000\,000$.
 
-```{r fig-logit-unif, out.width="100%", fig.cap="Istogramma di $M$ campioni casuali $\\Theta \\sim \\mbox{Uniform}(0, 1)$ trasformati in valori $\\Phi = \\mbox{logit}(\\Theta).$ Il profilo limite dell'istogramma è evidenziato nella figura in basso a destra che è stata costruita usando $1\\,000\\,000$ di osservazioni."}
+```{r fig-logit-unif, echo=FALSE, out.width="100%", fig.cap="Istogramma di $M$ campioni casuali $\\Theta \\sim \\mbox{Uniform}(0, 1)$ trasformati in valori $\\Phi = \\mbox{logit}(\\Theta).$ Il profilo limite dell'istogramma è evidenziato nella figura in basso a destra che è stata costruita usando $1\\,000\\,000$ di osservazioni."}
 df_log_odds_growth <- data.frame()
 for (log10M in 1:6) {
   M <- 10^log10M
@@ -305,7 +303,7 @@ In un istogramma, l'area di ciascuna barra è proporzionale alla frequenza relat
 
 Nella simulazione, possiamo pensare all'area di ciascuna barra dell'istogramma come alla stima della probabilità che la variabile casuale assuma un valore compreso nell'intervallo considerato. All'aumentare del numero $M$ di osservazioni, le probabilità stimate si avvicinano sempre di più ai veri valori della probabilità. All'aumentare del numero degli intervalli (quando l'ampiezza $\Delta$ dell'intervallo $\rightarrow$ 0), il profilo dell'istogramma tende a diventare una curva continua. Tale curva continua è la funzione di densità di probabilità della variabile casuale. Per l'esempio presente, con $M =1\,000\,000$, otteniamo il grafico riportato nella figura \@ref(fig:hist-dens-example).
 
-```{r fig-hist-dens-example, out.width="100%", fig.cap="Istogramma di $M = 1\\,000\\,000$ campioni casuali $\\Theta \\sim \\mbox{Uniform}(0,1)$ trasformati in valori $\\Phi = \\mbox{logit}(\\Theta)$. La spezzata nera congiunge i punti centrali superiori delle barre dell'istogramma. Nel limite, quando il numero di osservazioni e di barre tende all'infinito, tale spezzata approssima la funzione di densità di probabilità della variabile casuale."}
+```{r fig-hist-dens-example, echo=FALSE, out.width="100%", fig.cap="Istogramma di $M = 1\\,000\\,000$ campioni casuali $\\Theta \\sim \\mbox{Uniform}(0,1)$ trasformati in valori $\\Phi = \\mbox{logit}(\\Theta)$. La spezzata nera congiunge i punti centrali superiori delle barre dell'istogramma. Nel limite, quando il numero di osservazioni e di barre tende all'infinito, tale spezzata approssima la funzione di densità di probabilità della variabile casuale."}
 M <- 1e6
 alpha <- logit(runif(M))
 density_limit_df <- data.frame(alpha = alpha)
@@ -343,10 +341,10 @@ Nella statistica descrittiva abbiamo già incontrato una rappresentazione che ha
 Per descrivere le probabilità che possono essere associate ad una variabile casuale continua $X$ è necessario definire una funzione $p(X)$ che deve soddisfare le seguenti due proprietà:
 
 -   $p(x) \geq 0, \forall x$, ovvero, l'ordinata della funzione di densità è 0 o positiva;
--   $\int_{-\infty}^{\infty} p(x) \,\operatorname {d}\!x = 1$, ovvero, l'area sottesa dalla $p(x)$ è unitaria[^density_func-3];
+-   $\int_{-\infty}^{\infty} p(x) \,\operatorname {d}\!x = 1$, ovvero, l'area sottesa dalla $p(x)$ è unitaria[^020_density_func-3];
 -   $p(a < x < b) = \int_a^b p(x) \,\operatorname {d}\!x$, se $a \leq b$, ovvero, l'area sottesa dalla $p(y)$ tra due punti $a$ e $b$ corrisponde alla probabilità che la v.c. $x$ assuma un valore compresto tra questi due estremi.
 
-[^density_func-3]: Per quel che riguarda la notazione dell'integrale, ovvero $\int_x \,\operatorname {d}\!x$, rimando alla discussione di S.P. Thompson: https://calculusmadeeasy.org/1.html
+[^020_density_func-3]: Per quel che riguarda la notazione dell'integrale, ovvero $\int_x \,\operatorname {d}\!x$, rimando alla discussione di S.P. Thompson: https://calculusmadeeasy.org/1.html
 
 *Interpretazione.* È possibile che $p(x) > 1$, quindi una densità di probabilità non può essere interpretata come una probabilità. Piuttosto, la densità $p(x)$ può essere utilizzata per confrontare la fiducia relativa che può essere assegnata a diversi valori $x$. Considerata una variabile casuale $X$ di cui è disponibile un insieme di realizzazioni, possiamo dire che, se consideriamo due valori $x_k$ e $x_l$ con $p(x_k) > p(x_l)$, allora possiamo concludere che è più probabile, in termini relativi, osservare realizzazioni $X$ nell'intorno di $x_k$ piuttosto che nell'intorno di $x_l$.
 

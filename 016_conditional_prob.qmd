@@ -16,28 +16,37 @@ Per introdurre la probabilità condizionata, @albert2019probability utilizzando 
 
 @albert2019probability propongono di risolvere il problema con una simulazione $\textsf{R}$: prima di tutto si sceglie una carta a caso, e poi si sceglie un lato della carta. Ci sono tre carte possibili, che chiamiamo "c_rossa", "c_bianca", e "c_entrambi". Per la carta rossa, ci sono due lati rossi; per la carta bianca ci sono due lati bianchi e la carta "entrambi" ha un lato rosso e un lato bianco.
 
-```{r}
-df <- tibble(
-  Carta = c(
-    "c_rossa", "c_rossa", "c_bianca", "c_bianca", "c_entrambi", 
-    "c_entrambi"
-  ),
-  Lato = c(
-    "rosso", "rosso", "bianco", "bianco", "rosso", "bianco"
-  )
-)
+```{python}
+import pandas as pd
+from numpy import random
+import numpy as np
+import random
+random.seed(2023)
+```
+
+```{python}
+data={
+    'Carta':['c_rossa', 'c_rossa', 'c_bianca', 'c_bianca', 'c_entrambi', 'c_entrambi'],
+    'Lato':["rosso", "rosso", "bianco", "bianco", "rosso", "bianco"]
+    }
+df = pd.DataFrame(data, columns=['Carta', 'Lato'])
 df
 ```
 
 Estraiamo una carta a caso e classifichiamo il risultato ottenuto in base al tipo di carta e lato osservato. Ripetiamo l'esperimento 1,000 volte:
 
-```{r}
-set.seed(84735)
-carte <- sample_n(df, 1e3, replace = TRUE)
-table(carte$Carta, carte$Lato)
+```{python}
+nrep = 10000
+rs = df.sample(n=nrep, replace=True, random_state=1)
+rs
 ```
 
-Se si osserva il colore rosso (seconda colonna nella tabella precedente), questo risultato è dovuto ad una carta $A$ ("rossa") in 344 casi e ad una carta $B$ ("entrambi") in 160 casi. Quindi, nella simulazione il risultato per cui è stato osservato un colore rosso (344 + 160) è associato ad una carta $A$ ("rossa") in circa 2/3 dei casi -- se il lato visibile è di colore rosso, allora c'è una probabilità di 2/3 che anche il lato non visibile sia di colore rosso.
+```{python}
+table = pd.crosstab(rs['Carta'], rs['Lato']) 
+print(table)
+```
+
+Se si osserva il colore rosso (seconda colonna nella tabella precedente), questo risultato è dovuto ad una carta $A$ ("rossa") in 3257 casi e ad una carta $B$ ("entrambi") in 1635 casi. Quindi, nella simulazione il risultato per cui è stato osservato un colore rosso (3257 + 1635) è associato ad una carta $A$ ("rossa") in circa 2/3 dei casi -- se il lato visibile è di colore rosso, allora c'è una probabilità di 2/3 che anche il lato non visibile sia di colore rosso.
 
 Questo esempio dimostra come le nostre intuizioni a proposito della probabilità condizionata non sono sempre corrette. Consideriamo un altro problema più articolato.
 

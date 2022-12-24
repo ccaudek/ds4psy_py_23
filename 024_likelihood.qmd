@@ -66,6 +66,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import binom
 import math
+plt.style.use("seaborn-v0_8")
 
 theta = np.linspace(0.0, 1.0, num=100)
 print(theta)
@@ -104,9 +105,9 @@ La curva che interpola tali punti è la funzione di verosimiglianza. La @fig-lik
 n = 30
 r = 23
 plt.plot(theta, like(n=n, r=r, theta=theta), 'r-')
-plt.title('Funzione di verosimiglianza')
-plt.xlabel('Valore della variabile casuale theta [0, 1]')
-plt.ylabel('Verosimiglianza')
+plt.title('Funzione di verosimiglianza', fontsize=16)
+plt.xlabel('Valore della variabile casuale theta [0, 1]', fontsize=14)
+plt.ylabel('Verosimiglianza', fontsize=14)
 plt.show()
 ```
 
@@ -135,9 +136,9 @@ Si noti che, anziché usare la funzione `like()` che (per chiarezza) abbiamo def
 n = 30
 r = 23
 plt.plot(theta,  binom.pmf(r, n, theta), 'r-')
-plt.title('Funzione di verosimiglianza')
-plt.xlabel('Valore della variabile casuale theta [0, 1]')
-plt.ylabel('Verosimiglianza')
+plt.title('Funzione di verosimiglianza', fontsize=16)
+plt.xlabel('Valore della variabile casuale theta [0, 1]', fontsize=14)
+plt.ylabel('Verosimiglianza', fontsize=14)
 plt.show()
 ```
 
@@ -176,9 +177,9 @@ La funzione di log-verosimiglianza è rappresentata nella @fig-loglike-futureexp
 n = 30
 r = 23
 plt.plot(theta, binom.logpmf(r, n, theta), 'r-')
-plt.title('Funzione di log-verosimiglianza')
-plt.xlabel('Valore della variabile casuale theta [0, 1]')
-plt.ylabel('Log-verosimiglianza')
+plt.title('Funzione di log-verosimiglianza', fontsize=16)
+plt.xlabel('Valore della variabile casuale theta [0, 1]', fontsize=14)
+plt.ylabel('Log-verosimiglianza', fontsize=14)
 plt.show()
 ```
 
@@ -246,9 +247,9 @@ La funzione di verosimiglianza è la curva che interpola i punti $\big(\mu, f(\m
 
 ```{python}
 plt.plot(mu, f_mu, 'r-')
-plt.title('Funzione di verosimiglianza')
-plt.xlabel('Valore della variabile casuale mu [70, 160]')
-plt.ylabel('Verosimiglianza')
+plt.title('Funzione di verosimiglianza', fontsize=16)
+plt.xlabel('Valore della variabile casuale mu [70, 160]', fontsize=14)
+plt.ylabel('Verosimiglianza', fontsize=14)
 plt.xlim([70, 160])
 plt.show()
 ```
@@ -345,9 +346,9 @@ Nel caso di un solo parametro sconosciuto (nel caso presente, $\mu$) è possibil
 
 ```{python, fig-loglike-bdi2, fig.cap="Log-verosimiglianza del parametro $\\mu$ per i dati di @zetschefuture2019."}
 plt.plot(mu, ll, 'r-')
-plt.title('Funzione di log-verosimiglianza')
-plt.xlabel('Valore della variabile casuale mu')
-plt.ylabel('Log-verosimiglianza')
+plt.title('Funzione di log-verosimiglianza', fontsize=16)
+plt.xlabel('Valore della variabile casuale mu', fontsize=14)
+plt.ylabel('Log-verosimiglianza', fontsize=14)
 plt.axvline(x=np.mean(y), color='k', alpha=0.2, ls='--')
 plt.show()
 ```

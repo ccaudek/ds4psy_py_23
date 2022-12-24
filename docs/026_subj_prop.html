@@ -557,25 +557,43 @@ div.csl-indent {
 <p>Essendo una proporzione, <span class="math inline">\(\theta\)</span> può assumere valori compresi tra 0 e 1. È possibile pensare che <span class="math inline">\(\theta\)</span> sia uguale, ad esempio, a 0.5. Ciò significa assegnare all’evento <span class="math inline">\(\theta = 0.5\)</span> la probabilità 1; in altri termini, significa dire che siamo assolutamente certi che la quantità sconosciuta <span class="math inline">\(\theta\)</span> abbia il valore di 0.5. Questa posizione, però, è troppo estrema: non possiamo essere assolutamente certi che una quantità sconosciuta abbia uno specifico valore; altrimenti non sarebbe una quantità sconosciuta. Invece, sembra più sensato pensare che <span class="math inline">\(\theta\)</span> può, in linea di principio, assumere diversi valori e attribuire a tali valori livelli diversi di certezza soggettiva.</p>
 <p>Consideriamo, ad esempio, 10 possibili valori <span class="math inline">\(\theta\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">theta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">theta</span></span>
-<span><span class="co">#&gt;  [1] 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> uniform</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">"seaborn-v0_8"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="dv">11</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.linspace(a, b, size)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(theta)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [0.  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1. ]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se non abbiamo alcun motivo di pensare diversamente, possiamo assegnare a ciascun valore <span class="math inline">\(\theta\)</span> la stessa credibilità.</p>
+<p>Le distribuzioni hanno una forma generale e una forma “frozen”. La forma generale è tale per cui i parametri della distribuzione devono essere assegnati come argomenti ad ogni chiamata. La forma ‘frozen’ crea un oggetto nel quale i parametri della distribuzione sono stati fissati usando i valori che sono stati assengati. Nel caso presente, i parametri sono <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">p1</span></span>
-<span><span class="co">#&gt;  [1] 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unif_distr <span class="op">=</span> uniform(loc<span class="op">=</span>a, scale<span class="op">=</span>b)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(unif_distr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;scipy.stats._distn_infrastructure.rv_continuous_frozen object at 0x7fa57bc0efa0&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Con i parametri fissati, per i valori che abbiamo scelto per <code>theta</code>, la distribuzione uniforme discreta diventa la seguente.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>unif_distr_pdf <span class="op">=</span> unif_distr.pdf(theta) <span class="op">/</span> <span class="dv">11</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(unif_distr_pdf)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.09090909 0.09090909 0.09090909 0.09090909 0.09090909]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span><span class="va">theta</span>, <span class="va">p1</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">theta</span>, <span class="va">p1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xend <span class="op">=</span> <span class="va">theta</span>, yend <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">10</span>, lineend <span class="op">=</span> <span class="st">"butt"</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, unif_distr_pdf, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;StemContainer object of 3 artists&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a priori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-prior-bino-12-20-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-prior-bino-12-20-1-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-prior-bino-12-20-1-1.png" class="img-fluid figure-img" width="768"></p>
 <p></p><figcaption class="figure-caption">Figura&nbsp;17.1: Distribuzione a priori per il parametro <span class="math inline">\(\theta\)</span> (versione 1).</figcaption><p></p>
 </figure>
 </div>
@@ -583,21 +601,16 @@ div.csl-indent {
 </div>
 <p>Oppure, per qualche ragione, potremmo pensare che i valori centrali della distribuzione di <span class="math inline">\(\theta\)</span> siamo più credibili dei valori estremi. Tale opinione soggettiva può essere descritta dalla seguente distribuzione di massa di probabilità.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>  <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">p2</span></span>
-<span><span class="co">#&gt;  [1] 0.050 0.050 0.050 0.175 0.175 0.175 0.175 0.050 0.050 0.050</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span><span class="va">theta</span>, <span class="va">p2</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">theta</span>, <span class="va">p2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xend <span class="op">=</span> <span class="va">theta</span>, yend <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">10</span>, lineend <span class="op">=</span> <span class="st">"butt"</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>not_unif_distr_pdf <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, not_unif_distr_pdf, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;StemContainer object of 3 artists&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a priori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-prior-bino-12-20-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-prior-bino-12-20-2-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-prior-bino-12-20-2-3.png" class="img-fluid figure-img" width="768"></p>
 <p></p><figcaption class="figure-caption">Figura&nbsp;17.2: Distribuzione a priori per il parametro <span class="math inline">\(\theta\)</span> (versione 2).</figcaption><p></p>
 </figure>
 </div>
@@ -613,49 +626,60 @@ p(\theta \mid y) = \frac{p(y \mid \theta)p(\theta)}{p(y)}.
 \]</span></p>
 <p>Per trovare la funzione di verosimiglianza, <span class="math inline">\(p(y \mid \theta)\)</span>, è necessario pensare a come sono stati ottenuti i dati. I dati corrispondono ai risultati di 20 estrazioni con rimessa da un’urna. Se l’estrazione è casuale con reinserimento, allora i dati (12 successi in 20 prove) possono essere intesi come il risultato di un esperimento casuale binomiale. Usando <span class="math inline">\(\textsf{R}\)</span>, la funzione di verosimiglianza può essere generata mediante la funzione <code><a href="https://rdrr.io/r/stats/Binomial.html">dbinom()</a></code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">like</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">dbinom</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">20</span>, <span class="va">theta</span><span class="op">)</span></span>
-<span><span class="va">like</span></span>
-<span><span class="co">#&gt;  [1] 5.422595e-08 8.656592e-05 3.859282e-03 3.549744e-02 1.201344e-01</span></span>
-<span><span class="co">#&gt;  [6] 1.797058e-01 1.143967e-01 2.216088e-02 3.557765e-04 0.000000e+00</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> binom</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>lk <span class="op">=</span> binom.pmf(<span class="dv">12</span>, <span class="dv">20</span>, theta)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>lk</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; array([0.00000000e+00, 5.42259544e-08, 8.65659248e-05, 3.85928193e-03,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        3.54974396e-02, 1.20134354e-01, 1.79705788e-01, 1.14396740e-01,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        2.21608768e-02, 3.55776487e-04, 0.00000000e+00])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Per i 10 valori <span class="math inline">\(\theta\)</span> considerati, la funzione di verosimiglianza assume la forma indicata dalla <a href="#fig-like-12-20">Figura&nbsp;<span>17.3</span></a> .</p>
+<p>Per i 10 valori <span class="math inline">\(\theta\)</span> considerati, la funzione di verosimiglianza assume la forma indicata dalla <a href="#fig-like-12-20">Figura&nbsp;<span>17.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span><span class="va">theta</span>, <span class="va">like</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">theta</span>, <span class="va">like</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xend <span class="op">=</span> <span class="va">theta</span>, yend <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">10</span>, lineend <span class="op">=</span> <span class="st">"butt"</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, lk, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;StemContainer object of 3 artists&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Funzione di verosimiglianza'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-like-12-20" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-like-12-20-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-like-12-20-5.png" class="img-fluid figure-img" width="768"></p>
 <p></p><figcaption class="figure-caption">Figura&nbsp;17.3: Verosimiglianza del modello binomiale nel caso di 12 successi in 20 prove.</figcaption><p></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Per calcolare la distribuzione a posteriori dobbiamo fare il prodotto (elemento per elemento) del vettore che contiene i valori della distribuzione a priori e del vettore che contiene i valori della funzione di verosimiglianza. Tale prodotto andrà poi diviso per una costante di normalizzazione, <span class="math inline">\(p(y)\)</span>.</p>
-<p>Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati <span class="math inline">\(y\)</span> ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza. Nel caso discreto qui considerato, la probabilità marginale dei dati ci calcola come <code>sum(p2 * like)</code>.</p>
+<p>Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati <span class="math inline">\(y\)</span> ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">p2</span> <span class="op">*</span> <span class="va">like</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.08002663</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(not_unif_distr_pdf <span class="op">*</span> lk)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.08002663388085006</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>La distribuzione a posteriori di <span class="math inline">\(\theta\)</span> sarà dunque uguale a <code>(p2 * like) / sum(p2 * like)</code>.</p>
+<p>La distribuzione a posteriori di <span class="math inline">\(\theta\)</span> sarà dunque uguale al prodotto della distribuzione a priori per la verosimiglianza, diviso per la costante di normalizzazione (probabilità marginale dei dati).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p2</span> <span class="op">*</span> <span class="va">like</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">p2</span> <span class="op">*</span> <span class="va">like</span><span class="op">)</span></span>
-<span><span class="va">post</span></span>
-<span><span class="co">#&gt;  [1] 3.387994e-08 5.408570e-05 2.411248e-03 7.762481e-02 2.627064e-01</span></span>
-<span><span class="co">#&gt;  [6] 3.929756e-01 2.501596e-01 1.384594e-02 2.222863e-04 0.000000e+00</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>post <span class="op">=</span> (not_unif_distr_pdf <span class="op">*</span> lk) <span class="op">/</span> np.<span class="bu">sum</span>(not_unif_distr_pdf <span class="op">*</span> lk)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(post)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [0.00000000e+00 3.38799421e-08 5.40856966e-05 2.41124845e-03</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.76248059e-02 2.62706437e-01 3.92975580e-01 2.50159584e-01</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.38459383e-02 2.22286300e-04 0.00000000e+00]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Verifichiamo</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(post)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.0000000000000002</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Una rappresentazione grafica della distribuzione a posteriori di <span class="math inline">\(\theta\)</span> è fornita dalla <a href="#fig-post-bino-12-20-discr">Figura&nbsp;<span>17.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span><span class="va">theta</span>, <span class="va">post</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">theta</span>, <span class="va">post</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xend <span class="op">=</span> <span class="va">theta</span>, yend <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">10</span>, lineend <span class="op">=</span> <span class="st">"butt"</span></span>
-<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, post, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;StemContainer object of 3 artists&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a posteriori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-post-bino-12-20-discr" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-post-bino-12-20-discr-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/fig-post-bino-12-20-discr-7.png" class="img-fluid figure-img" width="768"></p>
 <p></p><figcaption class="figure-caption">Figura&nbsp;17.4: Distribuzione a posteriori per il modello binomiale con 12 successi in 20 prove e la distribuzione a priori indicata in <a href="#fig-prior-bino-12-20-2">Figura&nbsp;<span>17.2</span></a>.</figcaption><p></p>
 </figure>
 </div>
@@ -663,26 +687,31 @@ p(\theta \mid y) = \frac{p(y \mid \theta)p(\theta)}{p(y)}.
 </div>
 <p>Conoscendo la distribuzione a posteriori di <span class="math inline">\(\theta\)</span> diventa possibile calcolare altre quantità di interesse. Per esempio, la moda a posteriori di <span class="math inline">\(\theta\)</span> si ricava direttamente dal grafico precedente, e corrisponde a 0.6. La media a posteriori si trova con la formula del valore atteso delle v.c..</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">*</span> <span class="va">post</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.5853112</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(theta <span class="op">*</span> post)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.5853112012901504</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lo stesso si può dire della varianza della distribuzione a posteriori.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">theta</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="va">post</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">*</span> <span class="va">post</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
-<span><span class="co">#&gt; [1] 0.008817409</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(theta<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> post) <span class="op">-</span> (np.<span class="bu">sum</span>(theta <span class="op">*</span> post))<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.0088174094860623</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione <code><a href="https://rdrr.io/pkg/ProbBayes/man/bayesian_crank.html">bayesian_crank()</a></code> del pacchetto <code>ProbBayes</code>. Dato che <code>ProbBayes</code> non è su CRAN, può essere installato nel modo seguente.</p>
+<p>Usando questo metodo possiamo trovare la distribuzione a posteriori di <span class="math inline">\(\theta\)</span> nel caso di qualunque distribuzione a priori discreta.</p>
+<p>Verifichiamo i calcoli svolti usando R. Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione <code><a href="https://rdrr.io/pkg/ProbBayes/man/bayesian_crank.html">bayesian_crank()</a></code> del pacchetto <code>ProbBayes</code>. Dato che <code>ProbBayes</code> non è su CRAN, può essere installato nel modo seguente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">"devtools"</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">"devtools"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"bayesball/ProbBayes"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Una volta installato, il pacchetto può essere caricato come facciamo normalmente.</p>
+<p>Una volta installato, il pacchetto può essere caricato normalmente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/bayesball/ProbBayes">"ProbBayes"</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/bayesball/ProbBayes">"ProbBayes"</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Per usare <code><a href="https://rdrr.io/pkg/ProbBayes/man/bayesian_crank.html">bayesian_crank()</a></code> procediamo come indicato di seguito:</p>
+<p>Per usare <code><a href="https://rdrr.io/pkg/ProbBayes/man/bayesian_crank.html">bayesian_crank()</a></code> procediamo come indicato di seguito.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>p <span class="op">=</span> <span class="va">theta</span>, Prior <span class="op">=</span> <span class="va">p2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">theta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>  <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>p <span class="op">=</span> <span class="va">theta</span>, Prior <span class="op">=</span> <span class="va">p2</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">12</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">d</span><span class="op">$</span><span class="va">Likelihood</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">dbinom</a></span><span class="op">(</span><span class="va">y</span>, prob <span class="op">=</span> <span class="va">d</span><span class="op">$</span><span class="va">p</span>, size <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
@@ -700,80 +729,97 @@ p(\theta \mid y) = \frac{p(y \mid \theta)p(\theta)}{p(y)}.
 <span><span class="co">#&gt; 9  0.9 0.050 3.557765e-04 1.778882e-05 2.222863e-04</span></span>
 <span><span class="co">#&gt; 10 1.0 0.050 0.000000e+00 0.000000e+00 0.000000e+00</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Verifichiamo il risultato trovato calcolando, ad esempio, la media a posteriori (come abbiamo fatto sopra):</p>
+<p>Calcoliamo la media della distribuzione a posteriori</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">theta</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">Posterior</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">p</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">Posterior</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.5853112</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Usando questo metodo possiamo trovare la distribuzione a posteriori di <span class="math inline">\(\theta\)</span> nel caso di qualunque distribuzione a priori discreta.</p>
+<p>e la varianza della distribuzione a posteriori</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">p</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">Posterior</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">p</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">Posterior</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
+<span><span class="co">#&gt; [1] 0.008817409</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I risultati replicano quelli trovati sopra.</p>
 </section><section id="ch-prior-cont-binom" class="level2" data-number="17.2"><h2 data-number="17.2" class="anchored" data-anchor-id="ch-prior-cont-binom">
 <span class="header-section-number">17.2</span> Inferenza bayesiana con una distribuzione a priori continua</h2>
 <p>Il caso di una distribuzione a priori discreta è stato discusso solo per scopi didattici. In generale, l’uso di una distribuzione a priori discreta non è una buona scelta per rappresentare le nostre credenze a priori sul parametro sconosciuto. Infatti, per definizione, una distribuzione a priori discreta può rappresentare solo alcuni dei possibili valori del parametro – nel caso discusso sopra, ad esempio, non abbiamo considerato il valore 0.55. Sembra dunque più sensato descrivere le nostre credenze a priori sul parametro utilizzando una distribuzione continua.</p>
 <p>Cerchiamo una funzione di densità con supporto in <span class="math inline">\([0, 1]\)</span>. Il candidato naturale è fornito dalla funzione Beta (si veda il <a href="023_cont_rv_distr.html"><span>Capitolo&nbsp;14</span></a>). Come per le altre funzioni di densità, abbiamo a disposizione quattro funzioni <span class="math inline">\(\textsf{R}\)</span> che ci consentono di manipolare facilmente questa densità.</p>
 <p>Ad esempio, possiamo valutare la funzione di densità <span class="math inline">\(\mbox{Beta}(1, 1)\)</span> in corrispondenza dei valori <span class="math inline">\(p = 0.5\)</span> e <span class="math inline">\(p = 0.8\)</span>, che dovrebbe essere entrambi uguali a 1, e in corrispondenza di <span class="math inline">\(p = 1.2\)</span>, che dovrebbe essere ugualea 0 poiché questo valore è al di fuori dell’intervallo <span class="math inline">\([ 0, 1]\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">dbeta</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">1.2</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1 1 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> beta</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.pdf([<span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">1.2</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1. 1. 0.]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Oppure possiamo valutare la funzione distribuzione <span class="math inline">\(\mbox{Beta}(1, 1)\)</span> in corrispondenza dei punti 0.5 e 0.8:</p>
+<p>Oppure possiamo valutare la funzione distribuzione <span class="math inline">\(\mbox{Beta}(1, 1)\)</span> in corrispondenza dei punti 0.5 e 0.8.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">pbeta</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.8</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.5 0.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.cdf([<span class="fl">0.5</span>, <span class="fl">0.8</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [0.5 0.8]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Oppure possiamo calcolare la probabilità <span class="math inline">\(P(0.5 &lt; p &lt; 0.8)\)</span></p>
+<p>Oppure possiamo calcolare la probabilità <span class="math inline">\(P(0.5 &lt; p &lt; 0.8)\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">pbeta</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">pbeta</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; [1] 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.cdf(<span class="fl">0.8</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">-</span> beta.cdf(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.30000000000000004</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Possiamo trovare i quantili della distribuzione <span class="math inline">\(\mbox{Beta}(1, 1)\)</span> di ordine 0.5 e 0.8:</p>
+<p>Possiamo trovare i quantili della distribuzione <span class="math inline">\(\mbox{Beta}(1, 1)\)</span> di ordine 0.5 e 0.8.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">qbeta</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.8</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.5 0.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.ppf([<span class="fl">0.5</span>, <span class="fl">0.8</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [0.5 0.8]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Infine, è possibile simulare dei valori casuali dalla distribuzione <span class="math inline">\(\mbox{Beta}(1, 1)\)</span>. Se vogliamo 5 valori, scriviamo:</p>
+<p>Infine, è possibile simulare dei valori casuali dalla distribuzione <span class="math inline">\(\mbox{Beta}(a, b)\)</span>. Se vogliamo 5 valori da una <span class="math inline">\(\mbox{Beta}(2, 10)\)</span>, scriviamo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">rbeta</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.2523117 0.5492791 0.2174402 0.4063601 0.2128675</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Se vogliamo 5 valori da una <span class="math inline">\(\mbox{Beta}(2, 10)\)</span>, scriviamo:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">rbeta</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.17364773 0.21332530 0.24430864 0.15817644 0.04897118</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Il pacchetto <code>ProbBayes</code> offre la funzione <code><a href="https://rdrr.io/pkg/ProbBayes/man/beta_area.html">beta_area()</a></code> per visualizzare la probabilità di una distribuzione Beta in un certo intrvallo di valori. Per esempio, se vogliamo la probabilità dell’evento per cui la variabile casuale <span class="math inline">\(p\)</span> è contenuta nell’intervallo <span class="math inline">\([0.1, 0.3]\)</span> nel caso di una <span class="math inline">\(\mbox{Beta}(2, 10)\)</span>, scriviamo:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ProbBayes/man/beta_area.html">beta_area</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="576"></p>
-</figure>
-</div>
-</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.random <span class="im">import</span> default_rng</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> default_rng()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>rng.beta(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; array([0.11506325, 0.1731984 , 0.17169031, 0.2328708 , 0.15457095])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="quali-parametri-per-la-distribuzione-beta" class="level3" data-number="17.2.1"><h3 data-number="17.2.1" class="anchored" data-anchor-id="quali-parametri-per-la-distribuzione-beta">
 <span class="header-section-number">17.2.1</span> Quali parametri per la distribuzione Beta?</h3>
 <p>Se usiamo una distribuzione Beta per rappresentare le nostre credenze a priori sul parametro <span class="math inline">\(\theta\)</span> (probabilità di successo), allora dobbiamo porci il problema di scegliere i parametri che definiscono la distribuzione Beta che meglio rappresenta le nostre opinioni a priori. Il modo più ovvio per ottenere questo risultato è per prove ed errori. Oppure, possiamo individuare i parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> della distribuzione interpretando <span class="math inline">\(\alpha\)</span> come la nostra stima a priori del numero di “successi”, <span class="math inline">\(\beta\)</span> come a nostra stima a priori del numero di “insuccessi” e <span class="math inline">\(\alpha + \beta\)</span> come il numero di prove del campione. Ad esempio, se pensiamo che, su 30 prove, verranno osservati 10 successi, otteniamo una <span class="math inline">\(\mbox{Beta}(10, 20)\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">bayesrules</span><span class="fu">::</span><span class="fu"><a href="https://bayes-rules.github.io/bayesrules/docs/reference/plot_beta.html">plot_beta</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, mean <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(beta.ppf(<span class="fl">0.01</span>, a, b),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                beta.ppf(<span class="fl">0.99</span>, a, b), <span class="dv">100</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plt.plot(x, beta.pdf(x, a, b),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>       <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'beta pdf'</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valore della variabile casuale X [0, 1]'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. Usando la Shiny App <code><a href="https://rdrr.io/pkg/ProbBayes/man/ChooseBeta.html">ProbBayes::ChooseBeta()</a></code> troviamo i parametri <span class="math inline">\(\alpha = 1.84\)</span> e <span class="math inline">\(\beta = 4.89\)</span>.</p>
+<p>In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. In questo caso potremmo usare i parametri <span class="math inline">\(\alpha = 2\)</span> e <span class="math inline">\(\beta = 5\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">bayesrules</span><span class="fu">::</span><span class="fu"><a href="https://bayes-rules.github.io/bayesrules/docs/reference/plot_beta.html">plot_beta</a></span><span class="op">(</span><span class="fl">1.84</span>, <span class="fl">4.89</span>, mean <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(beta.ppf(<span class="fl">0.01</span>, a, b),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                beta.ppf(<span class="fl">0.99</span>, a, b), <span class="dv">100</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.plot(x, beta.pdf(x, a, b),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>       <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'beta pdf'</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valore della variabile casuale X [0, 1]'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="026_subj_prop_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure"><p><img src="026_subj_prop_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.median(<span class="dv">2</span>, <span class="dv">5</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.26444998329566005</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.ppf(<span class="fl">0.9</span>, <span class="dv">2</span>, <span class="dv">5</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.5103163065514917</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="commenti-e-considerazioni-finali" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="commenti-e-considerazioni-finali">Commenti e considerazioni finali</h2>
-<p>Abbiamo qui introdotto la procedura dell’aggiornamento bayesiano nel caso in cui la distribuzione a priori sia discreta. Abbiamo anche fornito alcune informazioni che sono utili per affrontare il problema nel caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non si può risolvere per via analitica. Il caso dell’inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta però un’eccezione, ovvero consente di derivare le proprietà della distribuzione a posteriori per via analitica. Il prossimo capitolo ha lo scopo di illustrare questo argomento.</p>
+<p>In questo capitolo abbiamo introdotto la procedura dell’aggiornamento bayesiano nel caso di una distribuzione a priori discreta. Abbiamo anche anticipato alcune informazioni che si dimostreranno utili quando dovremo affrontare il caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non può essere risolto per via analitica. Il caso dell’inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta un’eccezione, è un caso nel quale le proprietà della distribuzione a posteriori si posso derivare per via analitica. Questo argomento verrà affrontato nel prossimo capitolo.</p>
 
 
 <!-- -->
@@ -977,238 +1023,287 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb26" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pensare ad una proporzione in termini soggettivi {#sec-subj-think-prop}</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include = FALSE}</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>Obiettivo di questo Capitolo è introdurre l'inferenza bayesiana considerando il modello binomiale. Esamineremo prima il caso di una distribuzione a priori discreta; esamineremo poi il caso di una distribuzione a priori continua. Il materiale qui presentato segue molto da vicino il capitolo 7 del testo di @albert2019probability.</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inferenza bayesiana con una distribuzione a priori discreta {#ch-prior-discr-binom}</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>Nei problemi tradizionali di teoria delle probabilità ci sono molti esempi che riguardano l'estrazione di palline colorate da un'urna. In questi esempi ci viene fornito il numero di palline di vari colori presenti nell'urna e ci viene chiesto di calcolare le probabilità di vari eventi. Ad esempio, in un'urna ci sono 40 palline bianche e 20 rosse. Se estrai due palline a caso, qual è la probabilità che entrambe siano bianche?</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>L'approccio bayesiano considera uno scenario diverso, ovvero quello in cui non conosciamo le proporzioni delle palline colorate presenti nell'urna. Cioè, nell'esempio precedente, sappiamo solo che nell'urna ci sono due tipi di palline colorate, ma non sappiamo che 40 sono bianche (proporzione di bianco = $2/3$) e 20 sono rosse (proporzione di rosso = $1/3$). Ci poniamo la seguente domanda: è possibile inferire le proporzioni di palline nell'urna estraendo un campione di palline dall'urna e osservando i colori delle palline estratte? Espresso in questo modo, questo diventa un problema di inferenza statistica, perché stiamo cercando di inferire la proporzione $\theta$ della popolazione sulla base di un campione casuale. Per continuare con l'esempio precedente, quello che vogliamo fare è inferire $\theta$, ad esempio, la proporzione di palline rosse nell'urna, alla luce del numero di palline rosse e bianche nel campione.</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>Le proporzioni assomigliano alle probabilità. Ricordiamo che sono state proposte tre diverse interpretazioni del concetto di probabilità.</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Il punto di vista classico: è necessario enumerare tutti gli eventi elementari dello spazio campione nel quale ciascun risultato è ugualmente probabile.</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Il punto di vista frequentista: è necessario ripetere l'esperimento esperimento casuale (cioè l'estrazione del campione) molte volte in condizioni identiche.</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>La visione soggettiva: è necessario esprimere la propria opinione sulla probabilità di un evento unico e irripetibile.</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>La visione classica non sembra potere funzionare qui, perché sappiamo solo che ci sono due tipi di palline colorate e che il numero totale di palline è 60. Anche se estraiamo un campione di 10 palline, possiamo solo osservare la proporzione di palline rosse nel campione. Non c'è modo per potere stabilire che, nello spazio campione, ogni risultato è ugualmente probabile.</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>La visione frequentista potrebbe funzionare nel caso presente. Possiamo considerare il processo del campionamento (cioè l'estrazione di un campione casuale di 10 palline dall'urna) come un esperimento casuale che produce una proporzione campionaria $p$. Potremmo quindi pensare di ripetere l'esperimento casuale molte volte nelle stesse condizioni, ottenere una serie di proporzioni campionarie $p$ e infine riassumere in qualche modo questa distribuzione di statistiche campionarie. Ripetendo l'esperimento casuale tante volte è possibile ottenere una stima abbastanza accurata della proporzione $\theta$ di palline rosse nell'urna. Questo processo è fattibile, ma però è noioso, dispendioso in termini di tempo e soggetto ad errori.</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>La visione soggettivista concepisce invece la probabilità sconosciuta $\theta$ come un'opinione soggettiva di cui possiamo essere più o meno certi. Questa opinione soggettiva dipende da due tipi di evidenze: le nostre credenze iniziali e le nuove informazioni fornite dai dati che abbiamo osservato. Vedremo in questo capitolo come sia possibile combinare le credenze iniziali rispetto al possibile valore $\theta$ con le evidenze fornite dai dati per giungere ad una nuova credenza a posteriori su $\theta$. In particolare, vedremo come si possa pensare in termini soggetti a delle quantità sconosciute (in questo caso, $\theta$) usando le distribuzioni di probabilità.</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>Essendo una proporzione, $\theta$ può assumere valori compresi tra 0 e 1. È possibile pensare che $\theta$ sia uguale, ad esempio, a 0.5. Ciò significa assegnare all'evento $\theta = 0.5$ la probabilità 1; in altri termini, significa dire che siamo assolutamente certi che la quantità sconosciuta $\theta$ abbia il valore di 0.5. Questa posizione, però, è troppo estrema: non possiamo essere assolutamente certi che una quantità sconosciuta abbia uno specifico valore; altrimenti non sarebbe una quantità sconosciuta. Invece, sembra più sensato pensare che $\theta$ può, in linea di principio, assumere diversi valori e attribuire a tali valori livelli diversi di certezza soggettiva.</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>Consideriamo, ad esempio, 10 possibili valori $\theta$.</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>theta</span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>Se non abbiamo alcun motivo di pensare diversamente, possiamo assegnare a ciascun valore $\theta$ la stessa credibilità.</span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, <span class="dv">10</span>)</span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>p1</span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-prior-bino-12-20-1, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 1)."}</span></span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(theta, p1) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(theta, p1)) <span class="sc">+</span></span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> theta, <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">lineend =</span> <span class="st">"butt"</span></span>
-<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>Oppure, per qualche ragione, potremmo pensare che i valori centrali della distribuzione di $\theta$ siamo più credibili dei valori estremi. Tale opinione soggettiva può essere descritta dalla seguente distribuzione di massa di probabilità.</span>
-<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span></span>
-<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>p2</span>
-<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-prior-bino-12-20-2, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 2)."}</span></span>
-<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(theta, p2) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(theta, p2)) <span class="sc">+</span></span>
-<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> theta, <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">lineend =</span> <span class="st">"butt"</span></span>
-<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>La prima distribuzione di probabilità è chiamata distribuzione discreta uniforme perché attribuisce la stessa probabilità (ovvero, 1/10) ad ogni elemento dell'insieme discreto su cui è definita (ovvero, $0.1, 0.2, \dots, 1.0$). Anche la seconda distribuzione è discreta, ma non è uniforme: riteniamo più credibile che $\theta$ assuma un valore nell'insieme $<span class="sc">\{</span>0.4, 0.5, 0.6, 0.7<span class="sc">\}</span>$ piuttosto che nell'insieme $<span class="sc">\{</span>0.1, 0.2, 0.3, 0.8, 0.9, 1.0<span class="sc">\}</span>$.</span>
-<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>Le credenze relative alla credibilità dei possibili valori che $\theta$ possono assumere forme diverse e corrispondono a quella che viene chiamata la *distribuzione a priori*, ovvero descrivono le credenze iniziali relative alla quantità sconosciuta di interesse.</span>
-<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>La procedura di inferenza bayesiana "aggiorna" tali credenze a priori utilizzando le informazioni fornite da un campione di dati. Usando il teorema di Bayes, le informazioni fornite dai dati vengono combinate con le nostre credenze precedenti relative alla quantità sconosciuta $\theta$ per giungere ad una credenza detta "a posteriori".</span>
-<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>Supponendo che i dati corrispondano all'osservazione di 12 palline rosse in 20 estrazioni con rimessa dall'urna, usiamo ora la seconda delle distribuzioni a priori descritte sopra per ottenere la distribuzione a posteriori.</span>
-<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>Il teorema di Bayes specifica la distribuzione a posteriori come il prodotto della verosimiglianza e della distribuzione a priori, diviso per una costante di normalizzazione:</span>
-<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>p(\theta \mid y) = \frac{p(y \mid \theta)p(\theta)}{p(y)}.</span>
-<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>Per trovare la funzione di verosimiglianza, $p(y \mid \theta)$, è necessario pensare a come sono stati ottenuti i dati. I dati corrispondono ai risultati di 20 estrazioni con rimessa da un'urna. Se l'estrazione è casuale con reinserimento, allora i dati (12 successi in 20 prove) possono essere intesi come il risultato di un esperimento casuale binomiale. Usando $\textsf{R}$, la funzione di verosimiglianza può essere generata mediante la funzione <span class="in">`dbinom()`</span>.</span>
-<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a>like <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">12</span>, <span class="dv">20</span>, theta)</span>
-<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a>like</span>
-<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>Per i 10 valori $\theta$ considerati, la funzione di verosimiglianza assume la forma indicata dalla @fig-like-12-20 .</span>
-<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-like-12-20, fig.cap="Verosimiglianza del modello binomiale nel caso di 12 successi in 20 prove."}</span></span>
-<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(theta, like) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(theta, like)) <span class="sc">+</span></span>
-<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> theta, <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">lineend =</span> <span class="st">"butt"</span></span>
-<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>Per calcolare la distribuzione a posteriori dobbiamo fare il prodotto (elemento per elemento) del vettore che contiene i valori della distribuzione a priori e del vettore che contiene i valori della funzione di verosimiglianza. Tale prodotto andrà poi diviso per una costante di normalizzazione, $p(y)$.</span>
-<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati $y$ ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza. Nel caso discreto qui considerato, la probabilità marginale dei dati ci calcola come <span class="in">`sum(p2 * like)`</span>.</span>
-<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(p2 <span class="sc">*</span> like)</span>
-<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>La distribuzione a posteriori di $\theta$ sarà dunque uguale a <span class="in">`(p2 * like) / sum(p2 * like)`</span>.</span>
-<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> (p2 <span class="sc">*</span> like) <span class="sc">/</span> <span class="fu">sum</span>(p2 <span class="sc">*</span> like)</span>
-<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>post</span>
-<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a>Una rappresentazione grafica della distribuzione a posteriori di $\theta$ è fornita dalla @fig-post-bino-12-20-discr.</span>
-<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig-post-bino-12-20-discr, fig.cap="Distribuzione a posteriori per il modello binomiale con 12 successi in 20 prove e la distribuzione a priori indicata in  @fig-prior-bino-12-20-2."}</span></span>
-<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(theta, post) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(theta, post)) <span class="sc">+</span></span>
-<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> theta, <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">lineend =</span> <span class="st">"butt"</span></span>
-<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a>Conoscendo la distribuzione a posteriori di $\theta$ diventa possibile calcolare altre quantità di interesse. Per esempio, la moda a posteriori di $\theta$ si ricava direttamente dal grafico precedente, e corrisponde a 0.6. La media a posteriori si trova con la formula del valore atteso delle v.c..</span>
-<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(theta <span class="sc">*</span> post)</span>
-<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a>Lo stesso si può dire della varianza della distribuzione a posteriori.</span>
-<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(theta<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> post) <span class="sc">-</span> (<span class="fu">sum</span>(theta <span class="sc">*</span> post))<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a>Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione <span class="in">`bayesian_crank()`</span> del pacchetto <span class="in">`ProbBayes`</span>. Dato che <span class="in">`ProbBayes`</span> non è su CRAN, può essere installato nel modo seguente.</span>
-<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
-<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"devtools"</span>)</span>
-<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"bayesball/ProbBayes"</span>)</span>
-<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-158"><a href="#cb26-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a>Una volta installato, il pacchetto può essere caricato come facciamo normalmente.</span>
-<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ProbBayes"</span>)</span>
-<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a>Per usare <span class="in">`bayesian_crank()`</span> procediamo come indicato di seguito:</span>
-<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">p =</span> theta, <span class="at">Prior =</span> p2)</span>
-<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>Likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">prob =</span> d<span class="sc">$</span>p, <span class="at">size =</span> n)</span>
-<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">bayesian_crank</span>(d)</span>
-<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a>Verifichiamo il risultato trovato calcolando, ad esempio, la media a posteriori (come abbiamo fatto sopra):</span>
-<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(theta <span class="sc">*</span> df<span class="sc">$</span>Posterior)</span>
-<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a>Usando questo metodo possiamo trovare la distribuzione a posteriori di $\theta$ nel caso di qualunque distribuzione a priori discreta.</span>
-<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inferenza bayesiana con una distribuzione a priori continua {#ch-prior-cont-binom}</span></span>
-<span id="cb26-191"><a href="#cb26-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-192"><a href="#cb26-192" aria-hidden="true" tabindex="-1"></a>Il caso di una distribuzione a priori discreta è stato discusso solo per scopi didattici. In generale, l'uso di una distribuzione a priori discreta non è una buona scelta per rappresentare le nostre credenze a priori sul parametro sconosciuto. Infatti, per definizione, una distribuzione a priori discreta può rappresentare solo alcuni dei possibili valori del parametro -- nel caso discusso sopra, ad esempio, non abbiamo considerato il valore 0.55. Sembra dunque più sensato descrivere le nostre credenze a priori sul parametro utilizzando una distribuzione continua.</span>
-<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>Cerchiamo una funzione di densità con supporto in $<span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span>$. Il candidato naturale è fornito dalla funzione Beta (si veda il @sec-distr-rv-cont). Come per le altre funzioni di densità, abbiamo a disposizione quattro funzioni $\textsf{R}$ che ci consentono di manipolare facilmente questa densità.</span>
-<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>Ad esempio, possiamo valutare la funzione di densità $\mbox{Beta}(1, 1)$ in corrispondenza dei valori $p = 0.5$ e $p = 0.8$, che dovrebbe essere entrambi uguali a 1, e in corrispondenza di $p = 1.2$, che dovrebbe essere ugualea 0 poiché questo valore è al di fuori dell'intervallo $<span class="co">[</span><span class="ot"> 0, 1</span><span class="co">]</span>$.</span>
-<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a><span class="fu">dbeta</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">1.2</span>), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>Oppure possiamo valutare la funzione distribuzione $\mbox{Beta}(1, 1)$ in corrispondenza dei punti 0.5 e 0.8:</span>
-<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-208"><a href="#cb26-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-209"><a href="#cb26-209" aria-hidden="true" tabindex="-1"></a><span class="fu">pbeta</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb26-210"><a href="#cb26-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-211"><a href="#cb26-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-212"><a href="#cb26-212" aria-hidden="true" tabindex="-1"></a>Oppure possiamo calcolare la probabilità $P(0.5 &lt; p &lt; 0.8)$</span>
-<span id="cb26-213"><a href="#cb26-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-216"><a href="#cb26-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-217"><a href="#cb26-217" aria-hidden="true" tabindex="-1"></a><span class="fu">pbeta</span>(<span class="fl">0.8</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">-</span> <span class="fu">pbeta</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>) </span>
-<span id="cb26-218"><a href="#cb26-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-219"><a href="#cb26-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-220"><a href="#cb26-220" aria-hidden="true" tabindex="-1"></a>Possiamo trovare i quantili della distribuzione $\mbox{Beta}(1, 1)$ di ordine 0.5 e 0.8:</span>
-<span id="cb26-221"><a href="#cb26-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-224"><a href="#cb26-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-225"><a href="#cb26-225" aria-hidden="true" tabindex="-1"></a><span class="fu">qbeta</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb26-226"><a href="#cb26-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-227"><a href="#cb26-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-228"><a href="#cb26-228" aria-hidden="true" tabindex="-1"></a>Infine, è possibile simulare dei valori casuali dalla distribuzione $\mbox{Beta}(1, 1)$. Se vogliamo 5 valori, scriviamo:</span>
-<span id="cb26-229"><a href="#cb26-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-232"><a href="#cb26-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-233"><a href="#cb26-233" aria-hidden="true" tabindex="-1"></a><span class="fu">rbeta</span>(<span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb26-234"><a href="#cb26-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-235"><a href="#cb26-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-236"><a href="#cb26-236" aria-hidden="true" tabindex="-1"></a>Se vogliamo 5 valori da una $\mbox{Beta}(2, 10)$, scriviamo:</span>
-<span id="cb26-237"><a href="#cb26-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-240"><a href="#cb26-240" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-241"><a href="#cb26-241" aria-hidden="true" tabindex="-1"></a><span class="fu">rbeta</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
-<span id="cb26-242"><a href="#cb26-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-243"><a href="#cb26-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-244"><a href="#cb26-244" aria-hidden="true" tabindex="-1"></a>Il pacchetto <span class="in">`ProbBayes`</span> offre la funzione <span class="in">`beta_area()`</span> per visualizzare la probabilità di una distribuzione Beta in un certo intrvallo di valori. Per esempio, se vogliamo la probabilità dell'evento per cui la variabile casuale $p$ è contenuta nell'intervallo $<span class="co">[</span><span class="ot">0.1, 0.3</span><span class="co">]</span>$ nel caso di una $\mbox{Beta}(2, 10)$, scriviamo:</span>
-<span id="cb26-245"><a href="#cb26-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-248"><a href="#cb26-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-249"><a href="#cb26-249" aria-hidden="true" tabindex="-1"></a><span class="fu">beta_area</span>(<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">10</span>))</span>
-<span id="cb26-250"><a href="#cb26-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-251"><a href="#cb26-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-252"><a href="#cb26-252" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quali parametri per la distribuzione Beta?</span></span>
-<span id="cb26-253"><a href="#cb26-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-254"><a href="#cb26-254" aria-hidden="true" tabindex="-1"></a>Se usiamo una distribuzione Beta per rappresentare le nostre credenze a priori sul parametro $\theta$ (probabilità di successo), allora dobbiamo porci il problema di scegliere i parametri che definiscono la distribuzione Beta che meglio rappresenta le nostre opinioni a priori. Il modo più ovvio per ottenere questo risultato è per prove ed errori. Oppure, possiamo individuare i parametri $\alpha$ e $\beta$ della distribuzione interpretando $\alpha$ come la nostra stima a priori del numero di "successi", $\beta$ come a nostra stima a priori del numero di "insuccessi" e $\alpha + \beta$ come il numero di prove del campione. Ad esempio, se pensiamo che, su 30 prove, verranno osservati 10 successi, otteniamo una $\mbox{Beta}(10, 20)$.</span>
-<span id="cb26-255"><a href="#cb26-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-258"><a href="#cb26-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-259"><a href="#cb26-259" aria-hidden="true" tabindex="-1"></a>bayesrules<span class="sc">::</span><span class="fu">plot_beta</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="at">mean =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-260"><a href="#cb26-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-261"><a href="#cb26-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-262"><a href="#cb26-262" aria-hidden="true" tabindex="-1"></a>In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. Usando la Shiny App <span class="in">`ProbBayes::ChooseBeta()`</span> troviamo i parametri $\alpha = 1.84$ e $\beta = 4.89$.</span>
-<span id="cb26-263"><a href="#cb26-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-266"><a href="#cb26-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-267"><a href="#cb26-267" aria-hidden="true" tabindex="-1"></a>bayesrules<span class="sc">::</span><span class="fu">plot_beta</span>(<span class="fl">1.84</span>, <span class="fl">4.89</span>, <span class="at">mean =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-268"><a href="#cb26-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-269"><a href="#cb26-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-270"><a href="#cb26-270" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali {.unnumbered}</span></span>
-<span id="cb26-271"><a href="#cb26-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-272"><a href="#cb26-272" aria-hidden="true" tabindex="-1"></a>Abbiamo qui introdotto la procedura dell'aggiornamento bayesiano nel caso in cui la distribuzione a priori sia discreta. Abbiamo anche fornito alcune informazioni che sono utili per affrontare il problema nel caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non si può risolvere per via analitica. Il caso dell'inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta però un'eccezione, ovvero consente di derivare le proprietà della distribuzione a posteriori per via analitica. Il prossimo capitolo ha lo scopo di illustrare questo argomento.</span>
+<div class="sourceCode" id="cb28" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pensare ad una proporzione in termini soggettivi {#sec-subj-think-prop}</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include = FALSE}</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>Obiettivo di questo Capitolo è introdurre l'inferenza bayesiana considerando il modello binomiale. Esamineremo prima il caso di una distribuzione a priori discreta; esamineremo poi il caso di una distribuzione a priori continua. Il materiale qui presentato segue molto da vicino il capitolo 7 del testo di @albert2019probability.</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inferenza bayesiana con una distribuzione a priori discreta {#ch-prior-discr-binom}</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>Nei problemi tradizionali di teoria delle probabilità ci sono molti esempi che riguardano l'estrazione di palline colorate da un'urna. In questi esempi ci viene fornito il numero di palline di vari colori presenti nell'urna e ci viene chiesto di calcolare le probabilità di vari eventi. Ad esempio, in un'urna ci sono 40 palline bianche e 20 rosse. Se estrai due palline a caso, qual è la probabilità che entrambe siano bianche?</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>L'approccio bayesiano considera uno scenario diverso, ovvero quello in cui non conosciamo le proporzioni delle palline colorate presenti nell'urna. Cioè, nell'esempio precedente, sappiamo solo che nell'urna ci sono due tipi di palline colorate, ma non sappiamo che 40 sono bianche (proporzione di bianco = $2/3$) e 20 sono rosse (proporzione di rosso = $1/3$). Ci poniamo la seguente domanda: è possibile inferire le proporzioni di palline nell'urna estraendo un campione di palline dall'urna e osservando i colori delle palline estratte? Espresso in questo modo, questo diventa un problema di inferenza statistica, perché stiamo cercando di inferire la proporzione $\theta$ della popolazione sulla base di un campione casuale. Per continuare con l'esempio precedente, quello che vogliamo fare è inferire $\theta$, ad esempio, la proporzione di palline rosse nell'urna, alla luce del numero di palline rosse e bianche nel campione.</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>Le proporzioni assomigliano alle probabilità. Ricordiamo che sono state proposte tre diverse interpretazioni del concetto di probabilità.</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Il punto di vista classico: è necessario enumerare tutti gli eventi elementari dello spazio campione nel quale ciascun risultato è ugualmente probabile.</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Il punto di vista frequentista: è necessario ripetere l'esperimento esperimento casuale (cioè l'estrazione del campione) molte volte in condizioni identiche.</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>La visione soggettiva: è necessario esprimere la propria opinione sulla probabilità di un evento unico e irripetibile.</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>La visione classica non sembra potere funzionare qui, perché sappiamo solo che ci sono due tipi di palline colorate e che il numero totale di palline è 60. Anche se estraiamo un campione di 10 palline, possiamo solo osservare la proporzione di palline rosse nel campione. Non c'è modo per potere stabilire che, nello spazio campione, ogni risultato è ugualmente probabile.</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>La visione frequentista potrebbe funzionare nel caso presente. Possiamo considerare il processo del campionamento (cioè l'estrazione di un campione casuale di 10 palline dall'urna) come un esperimento casuale che produce una proporzione campionaria $p$. Potremmo quindi pensare di ripetere l'esperimento casuale molte volte nelle stesse condizioni, ottenere una serie di proporzioni campionarie $p$ e infine riassumere in qualche modo questa distribuzione di statistiche campionarie. Ripetendo l'esperimento casuale tante volte è possibile ottenere una stima abbastanza accurata della proporzione $\theta$ di palline rosse nell'urna. Questo processo è fattibile, ma però è noioso, dispendioso in termini di tempo e soggetto ad errori.</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>La visione soggettivista concepisce invece la probabilità sconosciuta $\theta$ come un'opinione soggettiva di cui possiamo essere più o meno certi. Questa opinione soggettiva dipende da due tipi di evidenze: le nostre credenze iniziali e le nuove informazioni fornite dai dati che abbiamo osservato. Vedremo in questo capitolo come sia possibile combinare le credenze iniziali rispetto al possibile valore $\theta$ con le evidenze fornite dai dati per giungere ad una nuova credenza a posteriori su $\theta$. In particolare, vedremo come si possa pensare in termini soggetti a delle quantità sconosciute (in questo caso, $\theta$) usando le distribuzioni di probabilità.</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>Essendo una proporzione, $\theta$ può assumere valori compresi tra 0 e 1. È possibile pensare che $\theta$ sia uguale, ad esempio, a 0.5. Ciò significa assegnare all'evento $\theta = 0.5$ la probabilità 1; in altri termini, significa dire che siamo assolutamente certi che la quantità sconosciuta $\theta$ abbia il valore di 0.5. Questa posizione, però, è troppo estrema: non possiamo essere assolutamente certi che una quantità sconosciuta abbia uno specifico valore; altrimenti non sarebbe una quantità sconosciuta. Invece, sembra più sensato pensare che $\theta$ può, in linea di principio, assumere diversi valori e attribuire a tali valori livelli diversi di certezza soggettiva.</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>Consideriamo, ad esempio, 10 possibili valori $\theta$.</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> uniform</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">"seaborn-v0_8"</span>)</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="dv">11</span></span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.linspace(a, b, size)</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(theta)</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>Se non abbiamo alcun motivo di pensare diversamente, possiamo assegnare a ciascun valore $\theta$ la stessa credibilità.</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>Le distribuzioni hanno una forma generale e una forma "frozen". La forma generale è tale per cui i parametri della distribuzione devono essere assegnati come argomenti ad ogni chiamata. La forma 'frozen' crea un oggetto nel quale i parametri della distribuzione sono stati fissati usando i valori che sono stati assengati. Nel caso presente, i parametri sono $a$ e $b$.</span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a>unif_distr <span class="op">=</span> uniform(loc<span class="op">=</span>a, scale<span class="op">=</span>b)</span>
+<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(unif_distr)</span>
+<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>Con i parametri fissati, per i valori che abbiamo scelto per <span class="in">`theta`</span>, la distribuzione uniforme discreta diventa la seguente.</span>
+<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a>unif_distr_pdf <span class="op">=</span> unif_distr.pdf(theta) <span class="op">/</span> <span class="dv">11</span></span>
+<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(unif_distr_pdf)</span>
+<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{python, fig-prior-bino-12-20-1, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 1)."}</span></span>
+<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, unif_distr_pdf, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a priori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-73"><a href="#cb28-73" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-74"><a href="#cb28-74" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb28-75"><a href="#cb28-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-76"><a href="#cb28-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-77"><a href="#cb28-77" aria-hidden="true" tabindex="-1"></a>Oppure, per qualche ragione, potremmo pensare che i valori centrali della distribuzione di $\theta$ siamo più credibili dei valori estremi. Tale opinione soggettiva può essere descritta dalla seguente distribuzione di massa di probabilità.</span>
+<span id="cb28-78"><a href="#cb28-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-79"><a href="#cb28-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{python, fig-prior-bino-12-20-2, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 2)."}</span></span>
+<span id="cb28-80"><a href="#cb28-80" aria-hidden="true" tabindex="-1"></a>not_unif_distr_pdf <span class="op">=</span> [<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>]</span>
+<span id="cb28-81"><a href="#cb28-81" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, not_unif_distr_pdf, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb28-82"><a href="#cb28-82" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a priori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb28-83"><a href="#cb28-83" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-84"><a href="#cb28-84" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-85"><a href="#cb28-85" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb28-86"><a href="#cb28-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-87"><a href="#cb28-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-88"><a href="#cb28-88" aria-hidden="true" tabindex="-1"></a>La prima distribuzione di probabilità è chiamata distribuzione discreta uniforme perché attribuisce la stessa probabilità (ovvero, 1/10) ad ogni elemento dell'insieme discreto su cui è definita (ovvero, $0.1, 0.2, \dots, 1.0$). Anche la seconda distribuzione è discreta, ma non è uniforme: riteniamo più credibile che $\theta$ assuma un valore nell'insieme $<span class="sc">\{</span>0.4, 0.5, 0.6, 0.7<span class="sc">\}</span>$ piuttosto che nell'insieme $<span class="sc">\{</span>0.1, 0.2, 0.3, 0.8, 0.9, 1.0<span class="sc">\}</span>$.</span>
+<span id="cb28-89"><a href="#cb28-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-90"><a href="#cb28-90" aria-hidden="true" tabindex="-1"></a>Le credenze relative alla credibilità dei possibili valori che $\theta$ possono assumere forme diverse e corrispondono a quella che viene chiamata la *distribuzione a priori*, ovvero descrivono le credenze iniziali relative alla quantità sconosciuta di interesse.</span>
+<span id="cb28-91"><a href="#cb28-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-92"><a href="#cb28-92" aria-hidden="true" tabindex="-1"></a>La procedura di inferenza bayesiana "aggiorna" tali credenze a priori utilizzando le informazioni fornite da un campione di dati. Usando il teorema di Bayes, le informazioni fornite dai dati vengono combinate con le nostre credenze precedenti relative alla quantità sconosciuta $\theta$ per giungere ad una credenza detta "a posteriori".</span>
+<span id="cb28-93"><a href="#cb28-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-94"><a href="#cb28-94" aria-hidden="true" tabindex="-1"></a>Supponendo che i dati corrispondano all'osservazione di 12 palline rosse in 20 estrazioni con rimessa dall'urna, usiamo ora la seconda delle distribuzioni a priori descritte sopra per ottenere la distribuzione a posteriori.</span>
+<span id="cb28-95"><a href="#cb28-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-96"><a href="#cb28-96" aria-hidden="true" tabindex="-1"></a>Il teorema di Bayes specifica la distribuzione a posteriori come il prodotto della verosimiglianza e della distribuzione a priori, diviso per una costante di normalizzazione:</span>
+<span id="cb28-97"><a href="#cb28-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-98"><a href="#cb28-98" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb28-99"><a href="#cb28-99" aria-hidden="true" tabindex="-1"></a>p(\theta \mid y) = \frac{p(y \mid \theta)p(\theta)}{p(y)}.</span>
+<span id="cb28-100"><a href="#cb28-100" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb28-101"><a href="#cb28-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-102"><a href="#cb28-102" aria-hidden="true" tabindex="-1"></a>Per trovare la funzione di verosimiglianza, $p(y \mid \theta)$, è necessario pensare a come sono stati ottenuti i dati. I dati corrispondono ai risultati di 20 estrazioni con rimessa da un'urna. Se l'estrazione è casuale con reinserimento, allora i dati (12 successi in 20 prove) possono essere intesi come il risultato di un esperimento casuale binomiale. Usando $\textsf{R}$, la funzione di verosimiglianza può essere generata mediante la funzione <span class="in">`dbinom()`</span>.</span>
+<span id="cb28-103"><a href="#cb28-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-106"><a href="#cb28-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-107"><a href="#cb28-107" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> binom</span>
+<span id="cb28-108"><a href="#cb28-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-109"><a href="#cb28-109" aria-hidden="true" tabindex="-1"></a>lk <span class="op">=</span> binom.pmf(<span class="dv">12</span>, <span class="dv">20</span>, theta)</span>
+<span id="cb28-110"><a href="#cb28-110" aria-hidden="true" tabindex="-1"></a>lk</span>
+<span id="cb28-111"><a href="#cb28-111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-112"><a href="#cb28-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-113"><a href="#cb28-113" aria-hidden="true" tabindex="-1"></a>Per i 10 valori $\theta$ considerati, la funzione di verosimiglianza assume la forma indicata dalla @fig-like-12-20.</span>
+<span id="cb28-114"><a href="#cb28-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-115"><a href="#cb28-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{python, fig-like-12-20, fig.cap="Verosimiglianza del modello binomiale nel caso di 12 successi in 20 prove."}</span></span>
+<span id="cb28-116"><a href="#cb28-116" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, lk, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb28-117"><a href="#cb28-117" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Funzione di verosimiglianza'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb28-118"><a href="#cb28-118" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-119"><a href="#cb28-119" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-120"><a href="#cb28-120" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb28-121"><a href="#cb28-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-122"><a href="#cb28-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-123"><a href="#cb28-123" aria-hidden="true" tabindex="-1"></a>Per calcolare la distribuzione a posteriori dobbiamo fare il prodotto (elemento per elemento) del vettore che contiene i valori della distribuzione a priori e del vettore che contiene i valori della funzione di verosimiglianza. Tale prodotto andrà poi diviso per una costante di normalizzazione, $p(y)$.</span>
+<span id="cb28-124"><a href="#cb28-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-125"><a href="#cb28-125" aria-hidden="true" tabindex="-1"></a>Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati $y$ ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza.</span>
+<span id="cb28-126"><a href="#cb28-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-129"><a href="#cb28-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-130"><a href="#cb28-130" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(not_unif_distr_pdf <span class="op">*</span> lk)</span>
+<span id="cb28-131"><a href="#cb28-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-132"><a href="#cb28-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-133"><a href="#cb28-133" aria-hidden="true" tabindex="-1"></a>La distribuzione a posteriori di $\theta$ sarà dunque uguale al prodotto della distribuzione a priori per la verosimiglianza, diviso per la costante di normalizzazione (probabilità marginale dei dati).</span>
+<span id="cb28-134"><a href="#cb28-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-137"><a href="#cb28-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-138"><a href="#cb28-138" aria-hidden="true" tabindex="-1"></a>post <span class="op">=</span> (not_unif_distr_pdf <span class="op">*</span> lk) <span class="op">/</span> np.<span class="bu">sum</span>(not_unif_distr_pdf <span class="op">*</span> lk)</span>
+<span id="cb28-139"><a href="#cb28-139" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(post)</span>
+<span id="cb28-140"><a href="#cb28-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-141"><a href="#cb28-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-142"><a href="#cb28-142" aria-hidden="true" tabindex="-1"></a>Verifichiamo</span>
+<span id="cb28-143"><a href="#cb28-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-146"><a href="#cb28-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-147"><a href="#cb28-147" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(post)</span>
+<span id="cb28-148"><a href="#cb28-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-149"><a href="#cb28-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-150"><a href="#cb28-150" aria-hidden="true" tabindex="-1"></a>Una rappresentazione grafica della distribuzione a posteriori di $\theta$ è fornita dalla @fig-post-bino-12-20-discr.</span>
+<span id="cb28-151"><a href="#cb28-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-152"><a href="#cb28-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{python, fig-post-bino-12-20-discr, fig.cap="Distribuzione a posteriori per il modello binomiale con 12 successi in 20 prove e la distribuzione a priori indicata in  @fig-prior-bino-12-20-2."}</span></span>
+<span id="cb28-153"><a href="#cb28-153" aria-hidden="true" tabindex="-1"></a>plt.stem(theta, post, markerfmt<span class="op">=</span><span class="st">' '</span>)</span>
+<span id="cb28-154"><a href="#cb28-154" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a posteriori'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb28-155"><a href="#cb28-155" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-156"><a href="#cb28-156" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-157"><a href="#cb28-157" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb28-158"><a href="#cb28-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-159"><a href="#cb28-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-160"><a href="#cb28-160" aria-hidden="true" tabindex="-1"></a>Conoscendo la distribuzione a posteriori di $\theta$ diventa possibile calcolare altre quantità di interesse. Per esempio, la moda a posteriori di $\theta$ si ricava direttamente dal grafico precedente, e corrisponde a 0.6. La media a posteriori si trova con la formula del valore atteso delle v.c..</span>
+<span id="cb28-161"><a href="#cb28-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-164"><a href="#cb28-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-165"><a href="#cb28-165" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(theta <span class="op">*</span> post)</span>
+<span id="cb28-166"><a href="#cb28-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-167"><a href="#cb28-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-168"><a href="#cb28-168" aria-hidden="true" tabindex="-1"></a>Lo stesso si può dire della varianza della distribuzione a posteriori.</span>
+<span id="cb28-169"><a href="#cb28-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-172"><a href="#cb28-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-173"><a href="#cb28-173" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(theta<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> post) <span class="op">-</span> (np.<span class="bu">sum</span>(theta <span class="op">*</span> post))<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb28-174"><a href="#cb28-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-175"><a href="#cb28-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-176"><a href="#cb28-176" aria-hidden="true" tabindex="-1"></a>Usando questo metodo possiamo trovare la distribuzione a posteriori di $\theta$ nel caso di qualunque distribuzione a priori discreta.</span>
+<span id="cb28-177"><a href="#cb28-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-178"><a href="#cb28-178" aria-hidden="true" tabindex="-1"></a>Verifichiamo i calcoli svolti usando R. Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione <span class="in">`bayesian_crank()`</span> del pacchetto <span class="in">`ProbBayes`</span>. Dato che <span class="in">`ProbBayes`</span> non è su CRAN, può essere installato nel modo seguente.</span>
+<span id="cb28-179"><a href="#cb28-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-180"><a href="#cb28-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb28-181"><a href="#cb28-181" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"devtools"</span>)</span>
+<span id="cb28-182"><a href="#cb28-182" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"bayesball/ProbBayes"</span>)</span>
+<span id="cb28-183"><a href="#cb28-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-184"><a href="#cb28-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-185"><a href="#cb28-185" aria-hidden="true" tabindex="-1"></a>Una volta installato, il pacchetto può essere caricato normalmente.</span>
+<span id="cb28-186"><a href="#cb28-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-189"><a href="#cb28-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-190"><a href="#cb28-190" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ProbBayes"</span>)</span>
+<span id="cb28-191"><a href="#cb28-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-192"><a href="#cb28-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-193"><a href="#cb28-193" aria-hidden="true" tabindex="-1"></a>Per usare <span class="in">`bayesian_crank()`</span> procediamo come indicato di seguito.</span>
+<span id="cb28-194"><a href="#cb28-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-197"><a href="#cb28-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-198"><a href="#cb28-198" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)</span>
+<span id="cb28-199"><a href="#cb28-199" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb28-200"><a href="#cb28-200" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.175</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span></span>
+<span id="cb28-201"><a href="#cb28-201" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-202"><a href="#cb28-202" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">p =</span> theta, <span class="at">Prior =</span> p2)</span>
+<span id="cb28-203"><a href="#cb28-203" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb28-204"><a href="#cb28-204" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb28-205"><a href="#cb28-205" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>Likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">prob =</span> d<span class="sc">$</span>p, <span class="at">size =</span> n)</span>
+<span id="cb28-206"><a href="#cb28-206" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">bayesian_crank</span>(d)</span>
+<span id="cb28-207"><a href="#cb28-207" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb28-208"><a href="#cb28-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-209"><a href="#cb28-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-210"><a href="#cb28-210" aria-hidden="true" tabindex="-1"></a>Calcoliamo la media della distribuzione a posteriori</span>
+<span id="cb28-211"><a href="#cb28-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-214"><a href="#cb28-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-215"><a href="#cb28-215" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(df<span class="sc">$</span>p <span class="sc">*</span> df<span class="sc">$</span>Posterior)</span>
+<span id="cb28-216"><a href="#cb28-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-217"><a href="#cb28-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-218"><a href="#cb28-218" aria-hidden="true" tabindex="-1"></a>e la varianza della distribuzione a posteriori</span>
+<span id="cb28-219"><a href="#cb28-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-222"><a href="#cb28-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-223"><a href="#cb28-223" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(df<span class="sc">$</span>p<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> df<span class="sc">$</span>Posterior) <span class="sc">-</span> (<span class="fu">sum</span>(df<span class="sc">$</span>p <span class="sc">*</span> df<span class="sc">$</span>Posterior))<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb28-224"><a href="#cb28-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-225"><a href="#cb28-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-226"><a href="#cb28-226" aria-hidden="true" tabindex="-1"></a>I risultati replicano quelli trovati sopra.</span>
+<span id="cb28-227"><a href="#cb28-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-228"><a href="#cb28-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inferenza bayesiana con una distribuzione a priori continua {#ch-prior-cont-binom}</span></span>
+<span id="cb28-229"><a href="#cb28-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-230"><a href="#cb28-230" aria-hidden="true" tabindex="-1"></a>Il caso di una distribuzione a priori discreta è stato discusso solo per scopi didattici. In generale, l'uso di una distribuzione a priori discreta non è una buona scelta per rappresentare le nostre credenze a priori sul parametro sconosciuto. Infatti, per definizione, una distribuzione a priori discreta può rappresentare solo alcuni dei possibili valori del parametro -- nel caso discusso sopra, ad esempio, non abbiamo considerato il valore 0.55. Sembra dunque più sensato descrivere le nostre credenze a priori sul parametro utilizzando una distribuzione continua.</span>
+<span id="cb28-231"><a href="#cb28-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-232"><a href="#cb28-232" aria-hidden="true" tabindex="-1"></a>Cerchiamo una funzione di densità con supporto in $<span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span>$. Il candidato naturale è fornito dalla funzione Beta (si veda il @sec-distr-rv-cont). Come per le altre funzioni di densità, abbiamo a disposizione quattro funzioni $\textsf{R}$ che ci consentono di manipolare facilmente questa densità.</span>
+<span id="cb28-233"><a href="#cb28-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-234"><a href="#cb28-234" aria-hidden="true" tabindex="-1"></a>Ad esempio, possiamo valutare la funzione di densità $\mbox{Beta}(1, 1)$ in corrispondenza dei valori $p = 0.5$ e $p = 0.8$, che dovrebbe essere entrambi uguali a 1, e in corrispondenza di $p = 1.2$, che dovrebbe essere ugualea 0 poiché questo valore è al di fuori dell'intervallo $<span class="co">[</span><span class="ot"> 0, 1</span><span class="co">]</span>$.</span>
+<span id="cb28-235"><a href="#cb28-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-238"><a href="#cb28-238" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-239"><a href="#cb28-239" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> beta</span>
+<span id="cb28-240"><a href="#cb28-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-241"><a href="#cb28-241" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.pdf([<span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">1.2</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb28-242"><a href="#cb28-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-243"><a href="#cb28-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a>Oppure possiamo valutare la funzione distribuzione $\mbox{Beta}(1, 1)$ in corrispondenza dei punti 0.5 e 0.8.</span>
+<span id="cb28-245"><a href="#cb28-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.cdf([<span class="fl">0.5</span>, <span class="fl">0.8</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-252"><a href="#cb28-252" aria-hidden="true" tabindex="-1"></a>Oppure possiamo calcolare la probabilità $P(0.5 &lt; p &lt; 0.8)$.</span>
+<span id="cb28-253"><a href="#cb28-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-256"><a href="#cb28-256" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.cdf(<span class="fl">0.8</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">-</span> beta.cdf(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a>Possiamo trovare i quantili della distribuzione $\mbox{Beta}(1, 1)$ di ordine 0.5 e 0.8.</span>
+<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-265"><a href="#cb28-265" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.ppf([<span class="fl">0.5</span>, <span class="fl">0.8</span>], <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb28-266"><a href="#cb28-266" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a>Infine, è possibile simulare dei valori casuali dalla distribuzione $\mbox{Beta}(a, b)$. Se vogliamo 5 valori da una $\mbox{Beta}(2, 10)$, scriviamo:</span>
+<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.random <span class="im">import</span> default_rng</span>
+<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> default_rng()</span>
+<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a>rng.beta(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quali parametri per la distribuzione Beta?</span></span>
+<span id="cb28-280"><a href="#cb28-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-281"><a href="#cb28-281" aria-hidden="true" tabindex="-1"></a>Se usiamo una distribuzione Beta per rappresentare le nostre credenze a priori sul parametro $\theta$ (probabilità di successo), allora dobbiamo porci il problema di scegliere i parametri che definiscono la distribuzione Beta che meglio rappresenta le nostre opinioni a priori. Il modo più ovvio per ottenere questo risultato è per prove ed errori. Oppure, possiamo individuare i parametri $\alpha$ e $\beta$ della distribuzione interpretando $\alpha$ come la nostra stima a priori del numero di "successi", $\beta$ come a nostra stima a priori del numero di "insuccessi" e $\alpha + \beta$ come il numero di prove del campione. Ad esempio, se pensiamo che, su 30 prove, verranno osservati 10 successi, otteniamo una $\mbox{Beta}(10, 20)$.</span>
+<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb28-288"><a href="#cb28-288" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(beta.ppf(<span class="fl">0.01</span>, a, b),</span>
+<span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a>                beta.ppf(<span class="fl">0.99</span>, a, b), <span class="dv">100</span>)</span>
+<span id="cb28-290"><a href="#cb28-290" aria-hidden="true" tabindex="-1"></a>plt.plot(x, beta.pdf(x, a, b),</span>
+<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a>       <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'beta pdf'</span>)</span>
+<span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valore della variabile casuale X [0, 1]'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-293"><a href="#cb28-293" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-294"><a href="#cb28-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a>In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. In questo caso potremmo usare i parametri $\alpha = 2$ e $\beta = 5$.</span>
+<span id="cb28-297"><a href="#cb28-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb28-302"><a href="#cb28-302" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(beta.ppf(<span class="fl">0.01</span>, a, b),</span>
+<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a>                beta.ppf(<span class="fl">0.99</span>, a, b), <span class="dv">100</span>)</span>
+<span id="cb28-305"><a href="#cb28-305" aria-hidden="true" tabindex="-1"></a>plt.plot(x, beta.pdf(x, a, b),</span>
+<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a>       <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'beta pdf'</span>)</span>
+<span id="cb28-307"><a href="#cb28-307" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valore della variabile casuale X [0, 1]'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-308"><a href="#cb28-308" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb28-309"><a href="#cb28-309" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.median(<span class="dv">2</span>, <span class="dv">5</span>))</span>
+<span id="cb28-315"><a href="#cb28-315" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-316"><a href="#cb28-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-319"><a href="#cb28-319" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb28-320"><a href="#cb28-320" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(beta.ppf(<span class="fl">0.9</span>, <span class="dv">2</span>, <span class="dv">5</span>))</span>
+<span id="cb28-321"><a href="#cb28-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-322"><a href="#cb28-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-323"><a href="#cb28-323" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali {.unnumbered}</span></span>
+<span id="cb28-324"><a href="#cb28-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-325"><a href="#cb28-325" aria-hidden="true" tabindex="-1"></a>In questo capitolo abbiamo introdotto la procedura dell'aggiornamento bayesiano nel caso di una distribuzione a priori discreta. Abbiamo anche anticipato alcune informazioni che si dimostreranno utili quando dovremo affrontare il caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non può essere risolto per via analitica. Il caso dell'inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta un'eccezione, è un caso nel quale le proprietà della distribuzione a posteriori si posso derivare per via analitica. Questo argomento verrà affrontato nel prossimo capitolo.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

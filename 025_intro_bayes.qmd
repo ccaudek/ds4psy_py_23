@@ -78,9 +78,9 @@ Nella ricerca scientifica, le misurazioni sono fortemente contaminate da moltepl
 
 #### Esempio: fake news nei post Twitter
 
-Per chiarire, consideriamo ora un esempio discusso da @Johnson2022bayesrules. Esaminiamo un insieme di post Twitter.
+Per chiarire, consideriamo ora un esempio discusso da @Johnson2022bayesrules. Esaminiamo un insieme di 150 post Twitter.
 
-```{r}
+```{r, echo=FALSE}
 library(bayesrules)
 library(tidyverse)
 library(janitor)
@@ -91,7 +91,7 @@ data(fake_news)
 
 In questo data set la proporzione di notizie false è 60 / 150 = 0.4.
 
-```{r}
+```{r, echo=FALSE}
 fake_news %>% 
   count(type) %>% 
   adorn_totals("row")
@@ -99,7 +99,7 @@ fake_news %>%
 
 Nei post Twitter esaminati, alcuni post contengono dei punti esclamativi, altri no. Consideriamo la distribuzione dei punti esclamativi rispetto al tipo di notizie (false, vere).
 
-```{r}
+```{r, echo=FALSE}
 fake_news %>% 
   tabyl(title_has_excl, type) %>% 
   adorn_totals("row")
@@ -133,7 +133,7 @@ La verosimiglianza con consente di confrontare la plausibilità relativa dei dat
 
 Nel caso presente, @Johnson2022bayesrules fanno notare come la distribuzione di probabilità (condizionata) della presenza di un punto esclamativo sia data da $P(E\mid F)$ e $P(E\mid F^c)$. Quindi, la funzione di verosimiglianza diventa $P(F \mid E)$ e $P(F^c \mid E)$. Ovvero
 
-```{r}
+```{r, echo=FALSE}
 # Prior probability
 row_prior <- fake_news %>% 
   count(type) %>% 
@@ -165,7 +165,7 @@ $$
 P(F)P(E \mid F) + P(F^c) P(E \mid F^c) = 0.12.
 $$
 
-```{r}
+```{r, echo=FALSE, eval=FALSE}
 fake_news %>% 
   count(type, title_has_excl) %>% 
   mutate(prop = n / sum(n)) %>% 
@@ -191,13 +191,11 @@ Si noti che la probabilità a priori che una notizia sia falsa era 0.40. Alla lu
 
 ### Seconda idea: le possibilità sono valori di parametri in un modello statistico
 
-BDI-II prima e dopo un intervento psicologico.
-
 Nel precedente ragionamento "bayesiano" di Sherlock Holmes, le possibilità corrispondevano alle quattro modalità di una variabile discreta: la variabile era "i sospettati del crimine" e le modalità erano A, B, C e D. In statistica, lavorare con variabili discrete è complicato. È più semplice svolgere l'aggiornamento bayesiano mediante gli strumenti della teoria delle probabilità se vengono invece utilizzate variabili continue. In tali circostanze, le "possibilità" corrispondono ai valori dei parametri in un modello statistico. Possiamo chiarire questa affermazione nel modo seguente.
 
-Consideriamo una distribuzione di differenze di punteggi BDI-II misurati prima e dopo un intervento psicologico: se l'intervento funziona i punteggi BDI-II saranno minori dopo l'intervento e dunque la differenza prima - dopo sarà positiva. L'intervento però non ha gli stessi effetti sui diversi partecipanti per cui, in uno studio, osserviaamo una distribuzione di punteggi (prima - dopo). Supponiamo che tale distrinuzione di punteggi sia rappresentata dall'istogramma illustrato nella figura seguente.
+Consideriamo una distribuzione di differenze di punteggi BDI-II misurati prima e dopo un intervento psicologico: se l'intervento funziona i punteggi BDI-II saranno minori dopo l'intervento e dunque la differenza prima - dopo sarà positiva. L'intervento però non ha gli stessi effetti sui diversi partecipanti per cui, in uno studio, osserviamo una distribuzione di punteggi (prima - dopo). Supponiamo che tale distrinuzione di punteggi sia rappresentata dall'istogramma illustrato nella figura seguente.
 
-```{r}
+```{r, echo=FALSE}
 set.seed(2)
 d <- tibble(x = rnorm(2000, mean = 5, sd = 4))
 
@@ -217,7 +215,7 @@ d %>% ggplot(aes(x = x)) +
 
 All'istogramma è sovrapposta una distribuzione Gaussiana di parametri $\mu$ = 5 e $\sigma$ = 4. Questa scelta per i valori dei parametri sembra appropriata per descrivere i dati a disposizione. Qui in basso mostriamo gli stessi dati ipotetici con sovrapposta una diversa distribuzione Gaussiana, di parametri $\mu$ = 3.5 e $\sigma$ = 5. Anche se questa seconda distribuzione Gaussiana è plausibile, sicuramente descrive i dati in una maniera peggiore del caso precedente.
 
-```{r}
+```{r, echo=FALSE}
 ggplot(data = d, aes(x = x)) +
   geom_histogram(aes(y = ..density..),
                  binwidth = 1, fill = "grey67",
@@ -230,13 +228,13 @@ ggplot(data = d, aes(x = x)) +
   theme(panel.grid = element_blank())
 ```
 
-Il ruolo dell'inferenza bayesiana è quello di calcolare l'esatta credibilità relativa dei valori dei parametri candidati, tenendo anche conto delle loro probabilità a priori. In applicazioni realistiche, i valori dei parametri candidati possono formare un continuum infinito. Il parametro di localizzazione della distribuzione normale può assumere qualsiasi valore da negativo a positivo infinito. L'inferenza bayesiana opera senza problemi su continui infiniti.
+Il ruolo dell'inferenza bayesiana è quello di calcolare l'esatta credibilità relativa dei valori dei parametri candidati, tenendo anche conto delle loro probabilità a priori. In applicazioni realistiche, i valori dei parametri candidati possono formare un continuum infinito. Il parametro $\mu$ della distribuzione normale può assumere qualsiasi valore da $-\infty$ a $+\infty$. L'inferenza bayesiana opera senza problemi su continui infiniti.
 
-Ci sono due principali desiderata per una descrizione matematica dei dati. In primo luogo, la descrizione matematica dovrebbe essere comprensibile. Così come sarebbe inutile descrivere i dati in una lingua che non conosciamo, sarebbe inutile descrivere i dati con una forma matematica che non comprendiamo, con parametri che non possiamo interpretare. Nel caso di una distribuzione normale, ad esempio, il parametro $\mu$ medio e il parametro $\sigma$ sono direttamente interpretabili come indici di posizione e scala della distribuzione. In questo insegnamento useremo descrizioni matematiche dei dati dotate di parametri a cui è possibile attribuire un'interpretazione intuitiva. Pertanto, possiamo dire che l'analisi bayesiana rialloca la credibilità tra i valori dei parametri all'interno di uno spazio di possibilità definito dal modello scelto.
+Ci sono due principali desiderata per una descrizione matematica dei dati. In primo luogo, la descrizione matematica dovrebbe essere comprensibile. Così come sarebbe inutile descrivere i dati in una lingua che non conosciamo, sarebbe inutile descrivere i dati con una forma matematica che non comprendiamo, con parametri che non possiamo interpretare. Nel caso di una distribuzione normale, ad esempio, il parametro $\mu$ medio e il parametro $\sigma$ sono facilmente interpretabili in quanto corrispondono agli indici di posizione e di scala della distribuzione. In questo insegnamento useremo descrizioni matematiche dei dati dotate di parametri a cui è possibile assegnare un'interpretazione intuitiva. In questo contest, possiamo dire che l'analisi bayesiana procede alla riallocazone della credibilità dei valori dei parametri all'interno di uno spazio di possibilità definito dal modello statistico che è stato scelto.
 
-Il secondo desideratum di una modellizzazione matematica è che dovrebbe essere descrittivamente adeguata, il che significa, all'incirca, che il modello matematico (in questo caso, la curva Normale) dovrebbe "assomigliare" ai dati. Non dovrebbero esserci discrepanze sistematiche importanti tra le tendenze dei dati e la forma del modello. Decidere se un'apparente discrepanza sia importante o sistematica non è un processo definito. Nelle prime fasi della ricerca, potremmo essere soddisfatti di una descrizione approssimativa e "abbastanza buona" dei dati, perché cattura tendenze significative che sono interessanti e nuove rispetto alle conoscenze precedenti. Man mano che il campo della ricerca matura, potremmo richiedere descrizioni sempre più accurate dei dati. L'analisi bayesiana è molto utile per valutare la credibilità relativa di diverse possibili modellizzazioni matematiche dei dati.
+Il secondo desideratum di una modellizzazione matematica è che dovrebbe essere descrittivamente adeguata, il che significa, all'incirca, che il modello matematico (in questo caso, la curva Normale) dovrebbe "assomigliare" ai dati. Non dovrebbero esserci discrepanze sistematiche importanti tra le tendenze dei dati e la forma del modello. Il problema di decidere se un'apparente discrepanza sia importante o meno non è un problema facile da risolvere. Nelle prime fasi della ricerca, dunque, le nostre aspettative si limitano ad una descrizione approssimativa e "abbastanza buona" dei dati, perché è in grado di catturare tendenze significative nei dati che sono interessanti e nuove rispetto alle nostre conoscenze precedenti. Man mano che il campo della ricerca matura, i ricercatori si pongono il problema di ottenere descrizioni sempre più quantitativamente accurate del fenomeno oggetto di studio. L'analisi bayesiana è molto utile per valutare la credibilità relativa di diverse possibili modellizzazioni matematiche dei dati.
 
-È anche importante capire che le descrizioni matematiche dei dati non sono necessariamente spiegazioni causali dei dati. Dire che i dati sono ben descritti da una distribuzione normale con media di 5 e deviazione standard di 4 non spiega quale processo abbia causato i dati aventi quella forma. I parametri hanno un significato solo nel contesto del modello matematico della distribuzione normale; i valori dei parametri non hanno necessariamente un significato se consideriamo le cause dell'efficacia (o non efficacia) dell'intervento psicologico nell'esempio. Meglio sarebbe esprimere le possibili cause dell'efficiacia dell'intervento psicologico nei termini di un modello matematico per poi usare i dati, e l'analisi bayesiana, per stimare i parametri del modello (ovvero, per attribuire un "peso" alle possibili cause), ma procedere in questo modo è possibile solo in pochi casi. Solitamente la psicologia si accontenta di descrivere le differenze medie tra gruppi, senza un'indagine puntuale delle cause di tali differenze.
+È importante capire che le descrizioni matematiche dei dati non sono necessariamente spiegazioni causali del fenomeno di interesse. Dire che i dati sono ben descritti da una distribuzione normale con media di 5 e deviazione standard di 4 non spiega quale sia il processo che rappresenta la causa sottostante del fatto che i datti assumono la forma osservata. I parametri di un modello come la distribuzione normale, ad esempio, non hanno necessariamente un significato in relazione alle cause dell'efficacia (o non efficacia) di un intervento psicologico, ad esempio. Meglio sarebbe esprimere le possibili cause dell'efficiacia dell'intervento psicologico nei termini di un modello matematico per poi usare i dati, e l'analisi bayesiana, per stimare i parametri del modello (ovvero, per attribuire un "peso" alle possibili cause). Tuttavia, ma procedere in questo modo è possibile solo in pochi casi. Solitamente la psicologia si accontenta di descrivere le differenze medie tra gruppi, senza un'indagine puntuale delle cause di tali differenze.
 
 ## Modellizzazione bayesiana
 

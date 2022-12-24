@@ -2,6 +2,8 @@
 
 ```{r, include = FALSE}
 source("_common.R")
+library(tidyverse)
+library(tibble)
 ```
 
 Obiettivo di questo Capitolo è introdurre l'inferenza bayesiana considerando il modello binomiale. Esamineremo prima il caso di una distribuzione a priori discreta; esamineremo poi il caso di una distribuzione a priori continua. Il materiale qui presentato segue molto da vicino il capitolo 7 del testo di @albert2019probability.
@@ -28,41 +30,53 @@ Essendo una proporzione, $\theta$ può assumere valori compresi tra 0 e 1. È po
 
 Consideriamo, ad esempio, 10 possibili valori $\theta$.
 
-```{r}
-theta = seq(0.1, 1, length.out = 10)
-theta
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from scipy.stats import uniform
+plt.style.use("seaborn-v0_8")
+
+a = 0
+b = 1
+size = 11
+theta = np.linspace(a, b, size)
+print(theta)
 ```
 
 Se non abbiamo alcun motivo di pensare diversamente, possiamo assegnare a ciascun valore $\theta$ la stessa credibilità.
 
-```{r}
-p1 <- rep(0.1, 10)
-p1
+Le distribuzioni hanno una forma generale e una forma "frozen". La forma generale è tale per cui i parametri della distribuzione devono essere assegnati come argomenti ad ogni chiamata. La forma 'frozen' crea un oggetto nel quale i parametri della distribuzione sono stati fissati usando i valori che sono stati assengati. Nel caso presente, i parametri sono $a$ e $b$.
+
+```{python}
+unif_distr = uniform(loc=a, scale=b)
+print(unif_distr)
 ```
 
-```{r fig-prior-bino-12-20-1, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 1)."}
-tibble(theta, p1) %>% 
-  ggplot(aes(theta, p1)) +
-  geom_segment(
-    aes(xend = theta, yend = 0), size = 10, lineend = "butt"
-  )
+Con i parametri fissati, per i valori che abbiamo scelto per `theta`, la distribuzione uniforme discreta diventa la seguente.
+
+```{python}
+unif_distr_pdf = unif_distr.pdf(theta) / 11
+print(unif_distr_pdf)
+```
+
+```{python, fig-prior-bino-12-20-1, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 1)."}
+plt.stem(theta, unif_distr_pdf, markerfmt=' ')
+plt.title('Distribuzione a priori', fontsize=16)
+plt.xlabel('theta', fontsize=14)
+plt.ylabel('Probabilità', fontsize=14)
+plt.show()
 ```
 
 Oppure, per qualche ragione, potremmo pensare che i valori centrali della distribuzione di $\theta$ siamo più credibili dei valori estremi. Tale opinione soggettiva può essere descritta dalla seguente distribuzione di massa di probabilità.
 
-```{r}
-p2 <- c(
-  0.05, 0.05, 0.05, 0.175, 0.175, 0.175, 0.175, 0.05, 0.05, 0.05
-)
-p2
-```
-
-```{r fig-prior-bino-12-20-2, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 2)."}
-tibble(theta, p2) %>% 
-  ggplot(aes(theta, p2)) +
-  geom_segment(
-    aes(xend = theta, yend = 0), size = 10, lineend = "butt"
-  )
+```{python, fig-prior-bino-12-20-2, fig.cap="Distribuzione a priori per il parametro $\\theta$ (versione 2)."}
+not_unif_distr_pdf = [0, 0.05, 0.05, 0.05, 0.175, 0.175, 0.175, 0.175, 0.05, 0.05, 0.05]
+plt.stem(theta, not_unif_distr_pdf, markerfmt=' ')
+plt.title('Distribuzione a priori', fontsize=16)
+plt.xlabel('theta', fontsize=14)
+plt.ylabel('Probabilità', fontsize=14)
+plt.show()
 ```
 
 La prima distribuzione di probabilità è chiamata distribuzione discreta uniforme perché attribuisce la stessa probabilità (ovvero, 1/10) ad ogni elemento dell'insieme discreto su cui è definita (ovvero, $0.1, 0.2, \dots, 1.0$). Anche la seconda distribuzione è discreta, ma non è uniforme: riteniamo più credibile che $\theta$ assuma un valore nell'insieme $\{0.4, 0.5, 0.6, 0.7\}$ piuttosto che nell'insieme $\{0.1, 0.2, 0.3, 0.8, 0.9, 1.0\}$.
@@ -81,74 +95,88 @@ $$
 
 Per trovare la funzione di verosimiglianza, $p(y \mid \theta)$, è necessario pensare a come sono stati ottenuti i dati. I dati corrispondono ai risultati di 20 estrazioni con rimessa da un'urna. Se l'estrazione è casuale con reinserimento, allora i dati (12 successi in 20 prove) possono essere intesi come il risultato di un esperimento casuale binomiale. Usando $\textsf{R}$, la funzione di verosimiglianza può essere generata mediante la funzione `dbinom()`.
 
-```{r}
-like <- dbinom(12, 20, theta)
-like
+```{python}
+from scipy.stats import binom
+
+lk = binom.pmf(12, 20, theta)
+lk
 ```
 
-Per i 10 valori $\theta$ considerati, la funzione di verosimiglianza assume la forma indicata dalla @fig-like-12-20 .
+Per i 10 valori $\theta$ considerati, la funzione di verosimiglianza assume la forma indicata dalla @fig-like-12-20.
 
-```{r fig-like-12-20, fig.cap="Verosimiglianza del modello binomiale nel caso di 12 successi in 20 prove."}
-tibble(theta, like) %>% 
-  ggplot(aes(theta, like)) +
-  geom_segment(
-    aes(xend = theta, yend = 0), size = 10, lineend = "butt"
-  )
+```{python, fig-like-12-20, fig.cap="Verosimiglianza del modello binomiale nel caso di 12 successi in 20 prove."}
+plt.stem(theta, lk, markerfmt=' ')
+plt.title('Funzione di verosimiglianza', fontsize=16)
+plt.xlabel('theta', fontsize=14)
+plt.ylabel('Probabilità', fontsize=14)
+plt.show()
 ```
 
 Per calcolare la distribuzione a posteriori dobbiamo fare il prodotto (elemento per elemento) del vettore che contiene i valori della distribuzione a priori e del vettore che contiene i valori della funzione di verosimiglianza. Tale prodotto andrà poi diviso per una costante di normalizzazione, $p(y)$.
 
-Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati $y$ ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza. Nel caso discreto qui considerato, la probabilità marginale dei dati ci calcola come `sum(p2 * like)`.
+Per la legge della probabilità totale, il denominatore corrisponde alla probabilità marginale dei dati $y$ ed è uguale alla somma dei prodotti tra la distribuzione a priori e la funzione di verosimiglianza.
 
-```{r}
-sum(p2 * like)
+```{python}
+np.sum(not_unif_distr_pdf * lk)
 ```
 
-La distribuzione a posteriori di $\theta$ sarà dunque uguale a `(p2 * like) / sum(p2 * like)`.
+La distribuzione a posteriori di $\theta$ sarà dunque uguale al prodotto della distribuzione a priori per la verosimiglianza, diviso per la costante di normalizzazione (probabilità marginale dei dati).
 
-```{r}
-post <- (p2 * like) / sum(p2 * like)
-post
+```{python}
+post = (not_unif_distr_pdf * lk) / np.sum(not_unif_distr_pdf * lk)
+print(post)
+```
+
+Verifichiamo
+
+```{python}
+np.sum(post)
 ```
 
 Una rappresentazione grafica della distribuzione a posteriori di $\theta$ è fornita dalla @fig-post-bino-12-20-discr.
 
-```{r fig-post-bino-12-20-discr, fig.cap="Distribuzione a posteriori per il modello binomiale con 12 successi in 20 prove e la distribuzione a priori indicata in  @fig-prior-bino-12-20-2."}
-tibble(theta, post) %>% 
-  ggplot(aes(theta, post)) +
-  geom_segment(
-    aes(xend = theta, yend = 0), size = 10, lineend = "butt"
-  )
+```{python, fig-post-bino-12-20-discr, fig.cap="Distribuzione a posteriori per il modello binomiale con 12 successi in 20 prove e la distribuzione a priori indicata in  @fig-prior-bino-12-20-2."}
+plt.stem(theta, post, markerfmt=' ')
+plt.title('Distribuzione a posteriori', fontsize=16)
+plt.xlabel('theta', fontsize=14)
+plt.ylabel('Probabilità', fontsize=14)
+plt.show()
 ```
 
 Conoscendo la distribuzione a posteriori di $\theta$ diventa possibile calcolare altre quantità di interesse. Per esempio, la moda a posteriori di $\theta$ si ricava direttamente dal grafico precedente, e corrisponde a 0.6. La media a posteriori si trova con la formula del valore atteso delle v.c..
 
-```{r}
-sum(theta * post)
+```{python}
+np.sum(theta * post)
 ```
 
 Lo stesso si può dire della varianza della distribuzione a posteriori.
 
-```{r}
-sum(theta^2 * post) - (sum(theta * post))^2
+```{python}
+np.sum(theta**2 * post) - (np.sum(theta * post))**2
 ```
 
-Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione `bayesian_crank()` del pacchetto `ProbBayes`. Dato che `ProbBayes` non è su CRAN, può essere installato nel modo seguente.
+Usando questo metodo possiamo trovare la distribuzione a posteriori di $\theta$ nel caso di qualunque distribuzione a priori discreta.
+
+Verifichiamo i calcoli svolti usando R. Nel caso di una distribuzione a priori discreta, il calcolo della distribuzione a posteriori è implementata nella funzione `bayesian_crank()` del pacchetto `ProbBayes`. Dato che `ProbBayes` non è su CRAN, può essere installato nel modo seguente.
 
 ```{r, eval=FALSE}
 library("devtools")
 install_github("bayesball/ProbBayes")
 ```
 
-Una volta installato, il pacchetto può essere caricato come facciamo normalmente.
+Una volta installato, il pacchetto può essere caricato normalmente.
 
 ```{r}
 library("ProbBayes")
 ```
 
-Per usare `bayesian_crank()` procediamo come indicato di seguito:
+Per usare `bayesian_crank()` procediamo come indicato di seguito.
 
 ```{r}
+theta = seq(0.1, 1, length.out = 10)
+p2 <- c(
+  0.05, 0.05, 0.05, 0.175, 0.175, 0.175, 0.175, 0.05, 0.05, 0.05
+)
 d <- tibble(p = theta, Prior = p2)
 y <- 12
 n <- 20
@@ -157,13 +185,19 @@ df <- bayesian_crank(d)
 df %>% as.data.frame()
 ```
 
-Verifichiamo il risultato trovato calcolando, ad esempio, la media a posteriori (come abbiamo fatto sopra):
+Calcoliamo la media della distribuzione a posteriori
 
 ```{r}
-sum(theta * df$Posterior)
+sum(df$p * df$Posterior)
 ```
 
-Usando questo metodo possiamo trovare la distribuzione a posteriori di $\theta$ nel caso di qualunque distribuzione a priori discreta.
+e la varianza della distribuzione a posteriori
+
+```{r}
+sum(df$p^2 * df$Posterior) - (sum(df$p * df$Posterior))^2
+```
+
+I risultati replicano quelli trovati sopra.
 
 ## Inferenza bayesiana con una distribuzione a priori continua {#ch-prior-cont-binom}
 
@@ -173,60 +207,75 @@ Cerchiamo una funzione di densità con supporto in $[0, 1]$. Il candidato natura
 
 Ad esempio, possiamo valutare la funzione di densità $\mbox{Beta}(1, 1)$ in corrispondenza dei valori $p = 0.5$ e $p = 0.8$, che dovrebbe essere entrambi uguali a 1, e in corrispondenza di $p = 1.2$, che dovrebbe essere ugualea 0 poiché questo valore è al di fuori dell'intervallo $[ 0, 1]$.
 
-```{r}
-dbeta(c(0.5, 0.8, 1.2), 1, 1)
+```{python}
+from scipy.stats import beta
+
+print(beta.pdf([0.5, 0.8, 1.2], 1, 1))
 ```
 
-Oppure possiamo valutare la funzione distribuzione $\mbox{Beta}(1, 1)$ in corrispondenza dei punti 0.5 e 0.8:
+Oppure possiamo valutare la funzione distribuzione $\mbox{Beta}(1, 1)$ in corrispondenza dei punti 0.5 e 0.8.
 
-```{r}
-pbeta(c(0.5, 0.8), 1, 1)
+```{python}
+print(beta.cdf([0.5, 0.8], 1, 1))
 ```
 
-Oppure possiamo calcolare la probabilità $P(0.5 < p < 0.8)$
+Oppure possiamo calcolare la probabilità $P(0.5 < p < 0.8)$.
 
-```{r}
-pbeta(0.8, 1, 1) - pbeta(0.5, 1, 1) 
+```{python}
+print(beta.cdf(0.8, 1, 1) - beta.cdf(0.5, 1, 1))
 ```
 
-Possiamo trovare i quantili della distribuzione $\mbox{Beta}(1, 1)$ di ordine 0.5 e 0.8:
+Possiamo trovare i quantili della distribuzione $\mbox{Beta}(1, 1)$ di ordine 0.5 e 0.8.
 
-```{r}
-qbeta(c(0.5, 0.8), 1, 1)
+```{python}
+print(beta.ppf([0.5, 0.8], 1, 1))
 ```
 
-Infine, è possibile simulare dei valori casuali dalla distribuzione $\mbox{Beta}(1, 1)$. Se vogliamo 5 valori, scriviamo:
+Infine, è possibile simulare dei valori casuali dalla distribuzione $\mbox{Beta}(a, b)$. Se vogliamo 5 valori da una $\mbox{Beta}(2, 10)$, scriviamo:
 
-```{r}
-rbeta(5, 1, 1)
-```
+```{python}
+from numpy.random import default_rng
+rng = default_rng()
 
-Se vogliamo 5 valori da una $\mbox{Beta}(2, 10)$, scriviamo:
-
-```{r}
-rbeta(5, 2, 10)
-```
-
-Il pacchetto `ProbBayes` offre la funzione `beta_area()` per visualizzare la probabilità di una distribuzione Beta in un certo intrvallo di valori. Per esempio, se vogliamo la probabilità dell'evento per cui la variabile casuale $p$ è contenuta nell'intervallo $[0.1, 0.3]$ nel caso di una $\mbox{Beta}(2, 10)$, scriviamo:
-
-```{r}
-beta_area(0.1, 0.3, c(2, 10))
+rng.beta(2, 10, 5)
 ```
 
 ### Quali parametri per la distribuzione Beta?
 
 Se usiamo una distribuzione Beta per rappresentare le nostre credenze a priori sul parametro $\theta$ (probabilità di successo), allora dobbiamo porci il problema di scegliere i parametri che definiscono la distribuzione Beta che meglio rappresenta le nostre opinioni a priori. Il modo più ovvio per ottenere questo risultato è per prove ed errori. Oppure, possiamo individuare i parametri $\alpha$ e $\beta$ della distribuzione interpretando $\alpha$ come la nostra stima a priori del numero di "successi", $\beta$ come a nostra stima a priori del numero di "insuccessi" e $\alpha + \beta$ come il numero di prove del campione. Ad esempio, se pensiamo che, su 30 prove, verranno osservati 10 successi, otteniamo una $\mbox{Beta}(10, 20)$.
 
-```{r}
-bayesrules::plot_beta(10, 20, mean = TRUE, mode = TRUE)
+```{python}
+a = 10
+b = 20
+x = np.linspace(beta.ppf(0.01, a, b),
+                beta.ppf(0.99, a, b), 100)
+plt.plot(x, beta.pdf(x, a, b),
+       'r-', lw=2, alpha=0.6, label='beta pdf')
+plt.xlabel('Valore della variabile casuale X [0, 1]', fontsize=14)
+plt.ylabel('Densità', fontsize=14)
 ```
 
-In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. Usando la Shiny App `ProbBayes::ChooseBeta()` troviamo i parametri $\alpha = 1.84$ e $\beta = 4.89$.
+In alternativa, potremmo specificare la distribuzione a priori definendo la mediana e un quantile della distribuzione. Per esempio, le nostre opinioni a priori sul parametro potrebbero essere tali per cui pensiamo che la mediana della distribuzione sia 0.25 e il quantile della distribuzione di ordine 0.9 sia 0.5. In questo caso potremmo usare i parametri $\alpha = 2$ e $\beta = 5$.
 
-```{r}
-bayesrules::plot_beta(1.84, 4.89, mean = TRUE, mode = TRUE)
+```{python}
+a = 2
+b = 5
+x = np.linspace(beta.ppf(0.01, a, b),
+                beta.ppf(0.99, a, b), 100)
+plt.plot(x, beta.pdf(x, a, b),
+       'r-', lw=2, alpha=0.6, label='beta pdf')
+plt.xlabel('Valore della variabile casuale X [0, 1]', fontsize=14)
+plt.ylabel('Densità', fontsize=14)
+```
+
+```{python}
+print(beta.median(2, 5))
+```
+
+```{python}
+print(beta.ppf(0.9, 2, 5))
 ```
 
 ## Commenti e considerazioni finali {.unnumbered}
 
-Abbiamo qui introdotto la procedura dell'aggiornamento bayesiano nel caso in cui la distribuzione a priori sia discreta. Abbiamo anche fornito alcune informazioni che sono utili per affrontare il problema nel caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non si può risolvere per via analitica. Il caso dell'inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta però un'eccezione, ovvero consente di derivare le proprietà della distribuzione a posteriori per via analitica. Il prossimo capitolo ha lo scopo di illustrare questo argomento.
+In questo capitolo abbiamo introdotto la procedura dell'aggiornamento bayesiano nel caso di una distribuzione a priori discreta. Abbiamo anche anticipato alcune informazioni che si dimostreranno utili quando dovremo affrontare il caso in cui viene utilizzata una distribuzione a priori continua. Se viene utilizzata una distribuzione a priori continua, al denominatore del rapporto di Bayes troviamo un integrale che, in generale, non può essere risolto per via analitica. Il caso dell'inferenza su una proporzione, in cui la distribuzione a priori è una distribuzione Beta e la verosimiglianza è binoniale, rappresenta un'eccezione, è un caso nel quale le proprietà della distribuzione a posteriori si posso derivare per via analitica. Questo argomento verrà affrontato nel prossimo capitolo.

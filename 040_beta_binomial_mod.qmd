@@ -1,12 +1,11 @@
-# Il modello beta-binomiale in linguaggio Stan {#sec-stan-beta-binom}
+# Markov Chain Monte Carlo per l'inferenza bayesiana {#sec-stan-beta-binom}
 
-```{r c040, include = FALSE}
+```{r, include = FALSE}
 source("_common.R")
 source("_stan_options.R")
-# suppressPackageStartupMessages(library("rethinking")) 
 ```
 
-In questo Capitolo introdurremo un linguaggio di programmazione probabilistica chiamato [Stan](http://mc-stan.org/) [@carpenter2017stan]. Stan consente di generare campioni da distribuzioni di probabilità basati sulla costruzione di una catena di Markov avente come distribuzione di equilibrio (o stazionaria) la distribuzione desiderata. Prende il nome da uno dei creatori del metodo Monte Carlo, Stanislaw Ulam [@Eckhardt1987stan]. Un'introduzione al linguaggio Stan è fornita in Appendice. In questo Capitolo useremo Stan per fare inferenza su una proporzione.
+In questo Capitolo introdurremo PyMC, un pacchetto Python per la modellazione statistica bayesiana. Nel @sec-grid-metropolis abbiamo esaminato l'algoritmo Metropolis che consente di generare campioni da distribuzioni di probabilità basati sulla costruzione di una catena di Markov avente come distribuzione di equilibrio (o stazionaria) la distribuzione desiderata. Benché l'algoritmo Metropolis possa essere utilizzato per risolvere problemi più complessi di quello utilizzato nell'esempio che abbiamo discusso, un suo limite risiede nel fatto che è poco efficiente -- nel caso di modelli complessi, dunque, richiede molto tempo per raggiungere una distribuzione stazionaria (ovvero, una distribuzione di probabilità che si mantiene costante all'evolversi nel tempo della catena di Markov). Sono stati messi a punto algoritmi Monte Carlo (MCMC) a catena di Markov che massimizzano l'efficienza nella velocità di esecuzione, come ad esempio, il campionatore No-U-Turn (NUTS), gli algoritmi Metropolis-Hastings, Gibbs Sampler e Hamiltonian Monte Carlo, e questi motori di inferenza (incluso l'algoritmo Metropolis di cui abbiamo discusso nel capitolo precedente) sono implementati in vari framework per la programmazione probabilistica (PP). PyMC e [Stan](http://mc-stan.org/) [@carpenter2017stan] sono i due strumenti di PP più popolari. Con l'aiuto del framework PyMC è possibile definire modelli complessi, anche con molte migliaia di parametri, mediante una sintassi leggibile e intuitiva. In questo Capitolo useremo PyMC per eseguire l'inferenza su una o due proporzioni binomiali con Markov Chain Monte Carlo.
 
 ## Il presidente Trump e l'idrossiclorochina
 
@@ -14,29 +13,11 @@ Per fare un esempio concreto, consideriamo un set di dati reali. Cito dal *Washi
 
 > One of the most bizarre and disturbing aspects of President Trump's nightly press briefings on the coronavirus pandemic is when he turns into a drug salesman. Like a cable TV pitchman hawking 'male enhancement' pills, Trump regularly extols the virtues of taking hydroxychloroquine, a drug used to treat malaria and lupus, as a potential 'game changer' that just might cure Covid-19.
 
-Tralasciamo qui il fatto che il Donald Trump non sia un esperto in questo campo. Esaminiamo invece le evidenze iniziali a supporto dell'ipotesi che l'idrossiclorochina possa essere utile per la cura del Covid-19, ovvero le evidenze che erano disponibili nel momento in cui il Donald Trump ha fatto le affermazioni riportate sopra (in seguito, quest'idea è stata screditata). Tali evidenze sono state fornite da uno studio di @Gautret_2020. Il disegno sperimentale di @Gautret_2020 comprende, tra le altre cose, il confronto tra una condizione sperimentale e una condizione di controllo. Il confronto importante è tra la proporzione di paziente positivi al virus SARS-CoV-2 nel gruppo sperimentale (a cui è stata somministrata l'idrossiclorochina; 6 su 14) e la proporzione di paziente positivi nel gruppo di controllo (a cui non è stata somministrata l'idrossiclorochina; ovvero 14 su 16). Obiettivo di questo Capitolo è mostrare come si possa fare inferenza sui dati di @Gautret_2020 usando il linguaggio Stan. Per semplicità, iniziamo considerando solo il gruppo di controllo.
+Tralasciamo qui il fatto che il Donald Trump non sia un esperto in questo campo. Esaminiamo invece le evidenze iniziali a supporto dell'ipotesi che l'idrossiclorochina possa essere utile per la cura del Covid-19, ovvero le evidenze che erano disponibili nel momento in cui il Donald Trump ha fatto le affermazioni riportate sopra (in seguito, quest'idea è stata screditata). Tali evidenze sono state fornite da uno studio di @Gautret_2020. Il disegno sperimentale di @Gautret_2020 comprende, tra le altre cose, il confronto tra una condizione sperimentale e una condizione di controllo. Il confronto importante è tra la proporzione di paziente positivi al virus SARS-CoV-2 nel gruppo sperimentale (a cui è stata somministrata l'idrossiclorochina; 6 su 14) e la proporzione di paziente positivi nel gruppo di controllo (a cui non è stata somministrata l'idrossiclorochina; ovvero 14 su 16). Obiettivo di questo capitolo è mostrare come si possa fare inferenza sui dati di @Gautret_2020 usando PyMC. Per semplicità, iniziamo considerando solo il gruppo di controllo.
 
 ## Una proporzione
 
 Sulla base di ciò che è stato detto nel @sec-distr-coniugate, sappiamo che, quando i dati sono rappresentati da una proporzione $\theta$, e quando utilizziamo una distribuzione a priori Beta per $\theta$, la distribuzione a posteriori di $\theta$ è specificata dallo schema beta-binomiale. Se scegliamo, ad esempio, una $\mbox{Beta}(2, 2)$ quale distribuzione a priori per $\theta$, il modello diventa:
-
-<!-- Si considerino $n$ variabili casuali Bernoulliane i.i.d.:  -->
-
-<!-- $$ -->
-
-<!-- y = (y_1, \dots, y_n) \stackrel{iid}{\sim} \mbox{Bernoulli}(\theta). -->
-
-<!-- $$  -->
-
-<!-- Vogliamo stimare $\theta$ avendo osservato $y$. Essendo i.i.d., i dati possono essere riassunti dal numero totale di successi nelle $n$ prove, denotato da $y$. Il modello binomiale è -->
-
-<!-- \begin{equation} -->
-
-<!-- p(y \mid \theta) = \mbox{Bin}(y \mid n, \theta) = \binom{n}{y}\theta^y (1 -\theta)^{n-y}, -->
-
-<!-- \end{equation} -->
-
-<!-- dove nel termine di sinistra dell'equazione abbiamo ignorato $n$ in quanto viene considerato fisso per disegno. L'inferenza sul modello binomiale richiede di assegnare una distribuzione a priori su $\theta$ che dipende dall'informazione disponibile a priori.  -->
 
 $$
 \begin{align}
@@ -45,182 +26,235 @@ y &\sim \mbox{Bin}(n, \theta) \notag\\
 \end{align}
 $$ {#eq-beta-binom-trump}
 
-dove la prima riga definisce la funzione di verosimiglianza e la seconda riga definisce la distribuzione a priori. Vediamo ora come specificare il modello beta-binomiale in linguaggio Stan.
+dove la prima riga definisce la funzione di verosimiglianza e la seconda riga definisce la distribuzione a priori.
 
-## Interfaccia `cmdstanr` {#cmdstanr-gautret}
+Per essere chiari, in questo caso particolare non è necessario utilizzare MCMC per stimare il posteriore poiché esiste già una soluzione analitica in forma chiusa. Tuttavia, la maggior parte dei modelli di inferenza bayesiana non ammette una soluzione in forma chiusa per il posteriore e quindi è necessario utilizzare MCMC. In questo esempio, applichiamo MCMC a un caso di cui "conosciamo già la risposta", in modo da poter confrontare i risultati di una soluzione in forma chiusa e quella calcolata per approssimazione numerica.
 
-I modelli presentati in questo capitolo sono discussi da @gelman1995bayesian mentre il codice è stato ricavato dalla seguente [pagina web](http://avehtari.github.io/BDA_R_demos/demos_rstan/rstan_demo.html). In questo e nei successivi capitoli useremo Stan mediante l'interfaccia `cmdstanr` di CmdStan.
+## Dedurre una proporzione binomiale con PyMC
 
-Iniziamo con il caricare i pacchetti necessari.
+Ora eseguiremo la stessa analisi che abbiamo svolto in precedenza utilizzando invece il metodo numerico Markov Chain Monte Carlo. Suppoaniamo di avere già installato PyMC. Una volta installato, dobbiamo successivamente importare le librerie necessarie, che includono Matplotlib, Numpy, Scipy, Arviz e lo stesso PyMC.
 
-```{r, message=FALSE, warning=FALSE, error=FALSE, eval=FALSE}
-library("cmdstanr")
-library("posterior")
-availableCores()
-SEED <- 84735 
+```{python}
+import arviz as az
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pymc as pm
+from scipy.stats import beta
+
+# Initialize random number generator
+RANDOM_SEED = 8927
+rng = np.random.default_rng(RANDOM_SEED)
+az.style.use("arviz-darkgrid")
+print(f"Running on PyMC v{pm.__version__}")
 ```
 
-Per svolgere l'analisi mediante `cmdstanr` è necessario prima specificare la struttura del modello bayesiano nella notazione Stan e, poi, eseguire il campionamento dalla distribuzione a posteriori. Esaminiamo questi due passaggi per l'esempio presente.
+Vediamo ora come specificare il modello beta-binomiale mediante PyMC. Per svolgere l'analisi mediante PyMC è necessario prima specificare la struttura del modello bayesiano e poi eseguire il campionamento dalla distribuzione a posteriori. Esaminiamo questi due passaggi per l'esempio presente.
 
-### Fase 1
+## Dati
 
-Nella prima fase dell'analisi dobbiamo definire i dati, i parametri e il modello. I *dati* devono essere contenuti in un oggetto di classe `list`.
+I dati sono i seguenti.
 
-```{r}
-data1_list <- list(
-  N = 16,
-  y = c(rep(1, 14), rep(0, 2))
-)
+```{python}
+ntrials = 16
+y = 14
 ```
 
-Il *modello* è $\mbox{Bin}(n, \theta)$. Oppure, dato che abbiamo specificato in input ciascuna singola osservazione, $\mbox{Bernoulli}(\theta)$.
+### Specificare il modello
 
-```{r, eval=FALSE}
-y ~ bernoulli(theta);
+Ora definiamo una distribuzione Beta a priori e il modello di probabilità Binomiale. Questi sono i parametri della distribuzione Beta.
+
+```{python}
+alpha_prior = 2
+beta_prior = 2
 ```
 
-La verosimiglianza dipende dal *parametro* `theta`. In Stan, è necessario specificare che `theta` è un numero reale compreso tra 0 e 1. Inoltre, è necessario imporre su $\theta$ una distribuzione a priori. Nel caso presente abbiamo scelto una $\mbox{Beta}(2, 2)$.
+PyMC ha un'API molto pulita per eseguire questa operazione. Si usa un `context with` di Python per assegnare tutti i parametri, le dimensioni dei passaggi e i valori iniziali a un'istanza `pymc.Model` (che denominiamo `bb_model`).
 
-```{r, eval=FALSE}
-theta ~ beta(2, 2);
+```{python}
+bb_model = pm.Model()
+
+with bb_model:
+    # Prior
+    theta = pm.Beta("theta", alpha=alpha_prior, beta=beta_prior)
+    # Likelihood
+    obs = pm.Binomial("obs", p=theta, n=ntrials, observed=y)
 ```
 
-Memorizziamo il modello beta-binomiale che abbiamo specificato in linguaggio Stan come stringa di caratteri.
+La prima linea di codice
 
-```{r}
-modelString = "
-data {
-  int<lower=0> N;
-  array[N] int<lower=0, upper=1> y;
-}
-parameters {
-  real<lower=0, upper=1> theta;
-}
-model {
-  theta ~ beta(2, 2);
-  y ~ bernoulli(theta);
-}
-"
+`bb_model = pm.Model()`
+
+crea un nuovo oggetto di classe `Model` che è un contenitore per le variabili casuali del modello. Dopo l'istanziazione del modello, la successiva specificazione delle componenti del modello viene eseguita all'interno di un'istruzione `with:`.
+
+Questo crea un *context manager*, con il nostro `bb_model` come contesto, che include tutte le istruzioni fino alla fine del blocco indentato. Ciò significa che tutti gli oggetti PyMC introdotti nel blocco di codice indentato sotto l'istruzione `with:` vengono aggiunti al modello. In assenza di questo idioma del *context manager*, saremmo costretti ad associare manualmente ciascuna delle variabili a `bb_model`.
+
+Con la chiamata del costruttore `pm.Beta` si crea una variabile casuale da usare come distribuzione a priori. Il primo argomento è sempre il nome della variabile casuale, che dovrebbe corrispondere al nome della variabile Python assegnata, poiché a volte viene utilizzato per recuperare la variabile dal modello per riassumere l'output. I restanti argomenti richiesti per un oggetto stocastico sono i parametri, in questo caso `alpha` e `beta`, a cui assegniamo i valori degli iperparametri del modello. Nel caso presente, usiamo i valori `alpha_prior` e `beta_prior` come parametri della distribuzione Beta a priori.
+
+La riga finale del modello definisce `obs`, la distribuzione campionaria della variabile di esito nel set di dati. Questo è un caso speciale di variabile stocastica chiamata `observed stochastic`, la quale rappresenta la verosimiglianza dei dati del modello. Tale variabile stocastica è identica alle altre variabili stocastiche, tranne per l'argomento `obs`, il quale indica che i valori per questa variabile sono stati osservati e non devono essere modificati dal modello. I dati possono essere passati sotto forma di oggetto `ndarray` o `DataFrame`. Nel caso presente, per la funzione di verosimiglianza Binomiale specificando il parametro `p=theta`, il numero di prove `n=ntrials` e il numero di successi `observed=y`.
+
+Si noti che, a differenza delle distribuzioni a priori del modello, i parametri per la distribuzione Beta di `obs` non sono valori fissi, ma piuttosto corrispondono all'oggetto stocastico `theta`. Questo crea una relazione genitore-figlio tra la verosimiglianza e questa variabile.
+
+### Campionamento
+
+Eseguiamo il campionamento MCMC usando l'algoritmo di default (NUTS) e salviamo i risultati nell'oggetto `idata`.
+
+```{python, message=FALSE, comment=FALSE, error=FALSE, results='hide'}
+with bb_model:
+    step = pm.NUTS()
+    idata = pm.sample(2000, tune=1000, init=None, step=step, chains=4)
 ```
 
-Utilizzando il seguente [link](https://rok-cesnovar.github.io/stanc3js-demo/autoformat.html) si può ottenere una formattazione automatica del codice e anche, in qualche misura, una correzione della sintassi.
-
-Salviamo `modelString` in un file a cui assegniamo il nome `oneprop.stan` (si noti l'estensione `.stan`). Sul mio computer ho creato una cartella chiamata `code` dove salvo i file `.stan`. Se non vogliamo definire una sotto-cartella chiamata `code`, è sufficiente scrivere `writeLines(modelString, con = "oneprop.stan")`.
-
-```{r}
-writeLines(modelString, con = "code/oneprop.stan")
-```
-
-### Fase 2
-
-Per utilizzare il modello che abbiamo specificato, prima leggiamo l'indirizzo del file che contiene il codice Stan.
-
-```{r}
-file <- file.path("code", "oneprop.stan")
-```
-
-Poi compiliamo il codice Stan. Questo crea un file eseguibile che, nel caso presente, abbiamo chiamato `mod`.
-
-```{r, message=FALSE, comment=FALSE, error=FALSE}
-mod <- cmdstan_model(file)
-```
-
-Possiamo ora eseguire il campionamento MCMC con la seguente chiamata.
-
-```{r, message=FALSE, comment=FALSE, error=FALSE, results='hide'}
-fit1 <- mod$sample(
-  data = data1_list,
-  iter_sampling = 4000L,
-  iter_warmup = 2000L,
-  seed = 84735,
-  chains = 4L,
-  refresh = 0
-)
-```
-
-Si noti che `$sample()` è un "metodo" che viene applicato al file eseguibile che abbiamo compilato, al quale è stato assegnato il nome `mod`.
-
-Il metodo `$sample()` richiede una serie di argomenti.
-
--   `data`, ovvero i dati in input in formato lista (nel caso presente, `data1_list`).
--   `chains` specifica quante catene di Markov parallele eseguire. Eseguiamo qui quattro catene, quindi otterremo quattro campioni distinti di valori $\pi$.
--   `iter` specifica il numero desiderato di iterazioni o la lunghezza di ciascuna catena di Markov. Per impostazione predefinita, la prima metà di queste iterazioni è costituita da campioni "burn-in" o "warm-up" che verranno ignorati. La seconda metà è conservata e costituisce un campione della distribuzione a posteriori.
--   `iter_warmup` specifica il numero di campioni "warm-up" che vogliamo vengano ignorati.
--   `seed` imposta il numero casuale che viene usato per generare il punto di partenza di ciascuna catena di Markov.
+La funzione `sample` esegue il metod0 `step` assegnati (o passati) ad essa per il numero specificato di iterazioni e restituisce un oggetto `InferenceData` contenente i campioni raccolti, insieme ad altri attributi utili come le statistiche dell'esecuzione del campionamento e una copia dei dati osservati. Si noti che `sample` genera una serie di catene parallele, a seconda del numero di *core* di calcolo presenti sulla macchina.
 
 Avendo assunto una distribuzione a priori per il parametro $\theta$, l'algoritmo procede in maniera ciclica, correggendo la distribuzione a priori di $\theta$ condizionandola ai valori già generati. Dopo un certo numero di cicli, necessari per portare l'algoritmo a convergenza, i valori estratti possono essere assunti come campionati dalla distribuzione a posteriori di $\theta$.
 
 Al crescere del numero di passi della catena, la distribuzione di target viene sempre meglio approssimata. All'inizio del campionamento, però, la distribuzione può essere significativamente lontana da quella stazionaria, e ci vuole un certo tempo prima di raggiungere la distribuzione stazionaria di equilibrio, detto, appunto, periodo di *burn-in*. I campioni provenienti da tale parte iniziale della catena vanno tipicamente scartati perché possono non rappresentare accuratamente la distribuzione a posteriori.
 
-### Fase 3
+Il tempo di campionamento dipende dalla velocità del computer a disposizione.
 
-Possiamo ora fare inferenza usando i risultati ottenuti. Un sommario della distribuzione a posteriori si ottiene con il metodo `summary()`.
-
-```{r}
-fit1$summary(c("theta"))
+```{python}
+idata
 ```
 
-Creo un oggetto di classe `stanfit`.
+I vari attributi dell'oggetto `InferenceData` possono essere estratti come nel caso di un `dict` contenente coppie composte da una chiave e un valore separati tra loro dal simbolo dei due punti. In questo caso le chiavi sono i nomi delle variabili e i valori sono dei `numpy.arrays`. Ad esempio, possiamo recuperare la traccia di campionamento dalla variabile latente `theta` nel modo seguente.
 
-```{r}
-stanfit1 <- rstan::read_stan_csv(fit1$output_files())
+```{python}
+idata.posterior["theta"]
 ```
 
-Calcolo le dimensioni dell'oggetto `stanfit1`.
+Si noti che l'oggetto ritornato è un array
 
-```{r}
-dim(as.matrix(stanfit1, pars = "theta"))
+```{python}
+idata.posterior["theta"].shape
 ```
 
-Stampo i primi 10 valori di `stanfit1`.
+di dimensioni 4 $\times$ 2000 (sul mio computer). Per visualizzare il primi 10 valori della prima catena, ad esempio, usiamo:
 
-```{r}
-as.matrix(stanfit1, pars = "theta") %>% 
-  head(10)
+```{python}
+idata.posterior["theta"][0, 1:10]
 ```
 
-La matrice precedente include i valori assunti dalla catena di Markov, ovvero un insieme di valori $\theta$ estratti dalla distribuzione a posteriori. Un tracciato della catena di Markov illustra questa esplorazione rappresentando il valore $\theta$ sulle ordinate e l'indice progressivo di in ogni iterazione sull'ascissa. Uso la funzione `mcmc_trace()` del pacchetto `bayesplot` per costruire il grafico che include tutte e quattro le catene di Markov.
+Se volessimo utilizzare l'algoritmo di campionamento Metropolis invece di NUTS (che è stato assegnato di default), possiamo specificare questo come argomento `step` per `sample`.
 
-```{r fig-trace-plot-gautret, fig.cap= "Trace-plot per il parametro $\\theta$ nel modello Beta-Binomiale."}
-stanfit1 %>% 
-  mcmc_trace(pars = c("theta"), size = 0.1)
+```{python, message=FALSE, comment=FALSE, error=FALSE, results='hide', eval=FALSE}
+with bb_model:
+    # Instantiate sampler
+    step = pm.Metropolis()
+    # Draw 5000 posterior samples
+    metropolis_idata = pm.sample(5000, step=step)
 ```
 
-La @fig-trace-plot-gautret mostra che le catene esplorano uno spazio compreso approssimativamenre tra 0.5 e 0.95; questa figura descrive il comportamento *longitudinale* delle catene di Markov.
+### Analisi a posteriori
 
-Possiamo anche esaminare la distribuzione degli stati della catena di Markov, ovvero, dei valori che queste catene visitano lungo il loro percorso, ignorando l'ordine di queste visite. L'istogramma della @fig-hist-post-gautret fornisce una rappresentazione grafica di questa distribuzione per i 16000 valori complessivi delle quattro catene, ovvero per 4000 valori provienienti da ciascuna catena.
+Esaminiamo l'accettanza.
 
-```{r fig-hist-post-gautret, fig.cap="Istogramma che illustra l'approssimazione della distribuzione a posteriori per il parametro $\\theta$ nel modello Beta-Binomiale."}
-mcmc_hist(stanfit1, pars = "theta") + 
-  yaxis_text(TRUE) + 
-  ylab("count")
+```{python}
+az.plot_posterior(
+    idata, group="sample_stats", var_names="acceptance_rate", 
+    hdi_prob="hide", kind="hist"
+)
 ```
 
-Nello schema beta-binomiale in cui la verosimiglianza è binomiale con 14 successi su 16 prove e in cui assumiamo una distribuzione a priori $\mbox{Beta}(2, 2)$ sul parametro $\theta$, la distribuzione a posteriori è una distribuzione Beta di parametri $\alpha$ = 2 + 14 e $\beta$ = 2 + 16 - 14. La @fig-hist-post-gautret-plus-correct riporta un kernel density plot per i valori delle quattro catene di Markov con sovrapposta in nero la densità $\mbox{Beta}(16, 4)$. Si noti come la distribuzione dei valori delle catene di Markov produca un'eccellente approssimazione alla distribuzione bersaglio.[^beta_binomial_mod-1]
+Estraiamo le stime a posteriori di $\theta$ da `idata`.
 
-[^beta_binomial_mod-1]: Nel caso presente, il risultato è poco utile dato che è disponibile una soluzione analitica. Tuttavia, questo esercizio mette in evidenza il fatto cruciale che, nei casi in cui possiamo verificarne la soluzione, il campionamento MCMC è in grado di trovare la risposta corretta. Di conseguenza, possiamo essere sicuri che fornirà un'ottima approssimazione alla distribuzione a posteriori anche in quei casi in cui una soluzione analitica non è disponibile.
-
-```{r fig-hist-post-gautret-plus-correct, fig.cap= "Istogramma che illustra l'approssimazione della distribuzione a posteriori per il parametro $\\theta$ nel modello Beta-Binomiale. La curva nera rappresenta la corretta distribuzione a posteriori Beta(16, 4)."}
-mcmc_dens(stanfit1, pars = "theta") + 
-  yaxis_text(TRUE) + 
-  ylab("density") +
-  stat_function(fun = dbeta, args = list(shape1 = 16, shape2=4))
+```{python}
+posterior = az.extract(idata)
 ```
 
-Un intervallo di credibilità al 95% per $\theta$ si ottiene con la funzione `posterior_interval()`.
+Le stime a posteriori di $\theta$ sono accessibili nel modo seguente.
 
-```{r}
-posterior1 <- extract(stanfit1)
-rstantools::posterior_interval(as.matrix(stanfit1), prob = 0.95)
+```{python}
+posterior['theta']
 ```
+
+Dato che `posterior['theta']` è una lista, possiamo facilmente calcolare la media a posteriori
+
+```{python}
+posterior['theta'].mean()
+```
+
+oppure la mediana a posteriori di $\theta$
+
+```{python}
+posterior['theta'].median()
+```
+
+La deviazione standard della stima a posteriori è
+
+```{python}
+np.std(posterior['theta'])
+```
+
+Per semplicità, salvo le stime a posteriori di $\theta$ in un array.
+
+```{python}
+p_post = posterior['theta']
+```
+
+Possiamo ora fare inferenza usando i risultati ottenuti. Un sommario della distribuzione a posteriori si ottiene con il metodo `az.summary()`.
+
+```{python}
+az.summary(idata, hdi_prob=.95, round_to=3)
+```
+
+Si ottiene così l'intervallo di credibilità a densità posteriori più alta al 95%. Questo intervallo ci informa sul fatto che, a posteriori, possiamo essere certi al 95% che il vero valore del parametro $\theta$ sia contenuto nell'intervallo \[0.625, 0.95\].
+
+L'output grafico dell'analisi è riportato nel grafico seguente.
+
+```{python}
+# Posterior: Beta(alpha + y, beta + n - y)
+alpha_post = alpha_prior + y
+beta_post = beta_prior + ntrials - y
+
+plt.hist(
+    p_post,bins=50,
+    histtype="step",  density=True,
+    label="A posteriori (MCMC)", color="red"
+)
+
+# Plot the analytic prior and posterior beta distributions
+x = np.linspace(0, 1, 100)
+plt.plot(
+    x, beta.pdf(x, alpha_prior, beta_prior),
+    "--", label="A priori", color="blue"
+)
+plt.plot(
+    x, beta.pdf(x, alpha_post, beta_post),
+    label='A posteriori (analitico)', color="green"
+)
+
+# Update the graph labels
+plt.legend(title=" ", loc="best")
+plt.xlabel("$\\theta$, Proporzione di successi")
+plt.ylabel("Densità")
+plt.show()
+```
+
+In questo esempio, con 8,000 campioni, la convergenza dell'algoritmo NUTS è estremamente buona. L'istogramma segue da vicino la distribuzione a posteriori calcolata analiticamente, come da previsione.
+
+Stampo ora i valori degli ultimi 100 campioni prodotti dalla procedura di campionamento MCMC.
+
+```{python}
+p_post[7900:8000]
+```
+
+Un tracciato della catena di Markov illustra questa esplorazione rappresentando il valore $\theta$ sulle ordinate e l'indice progressivo di in ogni iterazione sull'ascissa. Il trace plot è estremamente utile per valutare la convergenza di un algoritmo MCMC e se è necessario escludere un periodo di campioni iniziali (noto come burn-in). Per produrre la traccia chiamiamo semplicemente `az.plot_trace()` con la variabile `idata`:
+
+```{python}
+az.plot_trace(idata)
+plt.show()
+```
+
+La traccia descrive il comportamento *longitudinale* delle catene di Markov. Possiamo usare il metodo `az.plot_trace()` per visualizzare sia la traccia sia una stima della densità del kernel (KDE) dell'istogramma delle stime a posteriori, ovvero, dei valori che le catene MCMC visitano lungo il loro percorso, ignorando l'ordine di queste visite. Da notare come la stima di KDE della convinzione a posteriori nella probabilità di efficacia dell'idrossiclorochina riflette sia la convinzione a priori di 𝜎=0.22 che i nostri dati con una correttezza campionaria di 𝜎=0.09. Inoltre possiamo vedere che la procedura di campionamento MCMC è "convergente alla distribuzione" poiché la serie di campionamento sembra stazionaria.
 
 Svolgendo un'analisi bayesiana simile a questa, @Gautret_2020 hanno trovato che gli intervalli di credibilità del gruppo di controllo e del gruppo sperimentale non si sovrappongono. Questo fatto viene interpretato dicendo che il parametro $\theta$ è diverso nei due gruppi. Sulla base di queste evidenza, @Gautret_2020 hanno concluso, con un grado di certezza soggettiva del 95%, che nel gruppo sperimentale vi è una probabilità più bassa di risultare positivi al SARS-CoV-2 rispetto al gruppo di controllo. In altri termini, l'analisi statistica condotta da @Gautret_2020 suggerisce che l'idrossiclorochina è una terapia efficace per il Covid-19.
 
 ## La critica di @Hulme_2020
 
-Un articolo pubblicato da @Hulme_2020 si è posto il problema di rianalizzare i dati di @Gautret_2020.[^beta_binomial_mod-2] Tra gli autori di questo articolo figura anche Eric-Jan Wagenmakers, uno psicologo molto conosciuto per i suoi contributi metodologici. @Hulme_2020 osservano che, nelle loro analisi statistiche, @Gautret_2020 hanno escluso alcuni dati. Nel gruppo sperimentale, infatti, vi erano alcuni pazienti i quali, anziché migliorare, sono in realtà peggiorati. L'analisi statistica di @Gautret_2020 ha escluso i dati di questi pazienti. Se consideriamo tutti i pazienti --- non solo quelli selezionati da @Gautret_2020 --- la situazione diventa la seguente:
+Un articolo pubblicato da @Hulme_2020 si è posto il problema di rianalizzare i dati di @Gautret_2020.[^040_beta_binomial_mod-1] Tra gli autori di questo articolo figura anche Eric-Jan Wagenmakers, uno psicologo molto conosciuto per i suoi contributi metodologici. @Hulme_2020 osservano che, nelle loro analisi statistiche, @Gautret_2020 hanno escluso alcuni dati. Nel gruppo sperimentale, infatti, vi erano alcuni pazienti i quali, anziché migliorare, sono in realtà peggiorati. L'analisi statistica di @Gautret_2020 ha escluso i dati di questi pazienti. Se consideriamo tutti i pazienti --- non solo quelli selezionati da @Gautret_2020 --- la situazione diventa la seguente:
 
-[^beta_binomial_mod-2]: Si veda <https://osf.io/5dgmx/>.
+[^040_beta_binomial_mod-1]: Si veda <https://osf.io/5dgmx/>.
 
 -   gruppo sperimentale: 10 positivi su 18;
 -   gruppo di controllo: 14 positivi su 16.
@@ -239,82 +273,45 @@ ovvero il rapporto tra gli Odds di positività tra i pazienti del gruppo di cont
 
 Nell'implementazione di questo modello, la quantità di interesse è l'odds ratio; tale quantità viene calcolata nel blocco `generated quantities`. Per i parametri $\theta_1$ e $\theta_2$ useremo delle distribuzioni a priori debolmente informative il cui scopo è la regolarizzazione dei dati.
 
-Inseriscoo i dati dei due gruppi in un oggetto di classe `list`.
+Elenco i dati dei due gruppi.
 
-```{r}
-data_list <- list(
-  N1 = 18, 
-  y1 = 10, 
-  N2 = 16, 
-  y2 = 14
-)
+```{python}
+# Define the data for proportion 1
+y1 = 14
+n1 = 16
+
+# Define the data for proportion 2
+y2 = 10
+n2 = 18
 ```
 
-Definisco il modello in linguaggio Stan.
+Definisco il modello.
 
-```{r}
-modelString <- "
-//  Comparison of two groups with Binomial
-data {
-  int<lower=0> N1; // number of experiments in group 1
-  int<lower=0> y1; // number of deaths in group 1
-  int<lower=0> N2; // number of experiments in group 2
-  int<lower=0> y2; // number of deaths in group 2
-}
-parameters {
-  real<lower=0, upper=1> theta1; // probability of death in group 1
-  real<lower=0, upper=1> theta2; // probability of death in group 2
-}
-model {
-  theta1 ~ beta(2, 2); // prior
-  theta2 ~ beta(2, 2); // prior
-  y1 ~ binomial(N1, theta1); // likelihood
-  y2 ~ binomial(N2, theta2); // likelihood
-}
-generated quantities {
-  real oddsratio = (theta2 / (1 - theta2)) / (theta1 / (1 - theta1));
-}
-"
-writeLines(modelString, con = "code/twoprop1.stan")
-```
-
-Salvo il modello in un file.
-
-```{r}
-file <- file.path("code", "twoprop1.stan")
-```
-
-Compilo il modello.
-
-```{r, message=FALSE, comment=FALSE, error=FALSE}
-mod <- cmdstan_model(file)
+```{python}
+with pm.Model() as model:
+    # Define the priors for the two proportions
+    p1 = pm.Beta('p1', alpha=2, beta=2)
+    p2 = pm.Beta('p2', alpha=2, beta=2)
+    
+    # Define the likelihood functions for the two proportions
+    likelihood1 = pm.Binomial('likelihood1', n=n1, p=p1, observed=y1)
+    likelihood2 = pm.Binomial('likelihood2', n=n2, p=p2, observed=y2)
+    
+    # Define the difference of odds model
+    odds_ratio = pm.Deterministic('odds_ratio', (p1/(1-p1))/(p2/(1-p2)))
 ```
 
 Eseguo il campionamento MCMC.
 
-```{r, message=FALSE, comment=FALSE, error=FALSE, results='hide'}
-fit <- mod$sample(
-  data = data_list,
-  iter_sampling = 4000L,
-  iter_warmup = 2000L,
-  seed = SEED,
-  chains = 4L,
-  refresh = 0
-)
+```{python, message=FALSE, comment=FALSE, error=FALSE, results='hide'}
+with model:
+    trace = pm.sample(draws=10000, tune=5000)
 ```
 
 Esamino i risulati.
 
-```{r}
-stanfit <- rstan::read_stan_csv(fit$output_files())
-```
-
-```{r}
-print(
-  stanfit,
-  pars = c("theta1", "theta2", "oddsratio"),
-  digits_summary = 3L
-)
+```{python}
+az.hdi(trace, hdi_prob=.95)
 ```
 
 L'intervallo di credibilità del 95% per l'OR include il valore di 1.0 (ovvero, il valore che indica che gli Odds di positività sono uguali nei due gruppi). In base agli standard correnti, un risultato di questo tipo non viene considerato come evidenza sufficiente per potere concludere che il parametro $\theta$ assume un valore diverso nei due gruppi. In conclusione, se consideriamo tutti i dati, e non solo quelli selezionati da @Gautret_2020, non vi sono evidenze sull'efficacia dell'idrossiclorochina come terapia per il Covid-19.

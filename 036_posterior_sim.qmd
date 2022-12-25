@@ -10,17 +10,13 @@ $$
 p(\theta \mid y) = \frac{p(y \mid \theta) p(\theta)}{\int p(y \mid \theta) p(\theta) \,\operatorname {d}\! \theta}. 
 $$
 
-Se vogliamo trovare la distribuzione a posteriori con metodi analitici è necessario ricorrere all'impiego di distribuzioni a priori coniugate, come abbiamo fatto nello schema beta-binomiale. Per quanto "semplice" in termini formali, la scelta di distribuzioni a priori coniugate limita di molto le possibili scelte del ricercatore. Inoltre, non è sempre sensato, dal punto di vista teorico, utilizzare tali distribuzioni per la stima dei parametri di interesse. Il mancato ricorso all'impiego delle distribuzioni a priori coniugate richiede necessariamente il computo dell'espressione a denominatore della formula di Bayes che solo in rare occasioni può essere ottenuta per via analitica. In altre parole, è possibile ottenere analiticamenre la distribuzione a posteriori solo per alcune specifiche combinazioni di distribuzioni a priori e verosimiglianza, il che limita considerevolmente la flessibilità della modellizzazione. Inoltre, i sommari della distribuzione a posteriori sono espressi come rapporto di integrali. Ad esempio, la media a posteriori di $\theta$ è data da
+Il problema fondamentale consiste nella difficoltà di valutare analiticamente l'integrale a denominatore. Se vogliamo trovare la distribuzione a posteriori con metodi analitici, dobbiamo ricorrere all'impiego di distribuzioni a priori coniugate, come abbiamo fatto nello schema beta-binomiale. Per quanto "semplice" in termini formali, la scelta di distribuzioni a priori coniugate limita di molto le possibili scelte del ricercatore. Inoltre, non è sempre sensato, dal punto di vista teorico, utilizzare tali distribuzioni per la stima dei parametri di interesse. Il mancato ricorso all'impiego delle distribuzioni a priori coniugate richiede necessariamente il computo dell'espressione a denominatore della formula di Bayes che solo in rare occasioni può essere ottenuta per via analitica. In altre parole, è possibile ottenere analiticamenre la distribuzione a posteriori solo per alcune specifiche combinazioni di distribuzioni a priori e verosimiglianza, il che limita considerevolmente la flessibilità della modellizzazione.
 
-$$
-\mathbb{E}(\theta \mid y) = \frac{\int \theta p(y \mid \theta) p(\theta) \,\operatorname {d}\! \theta}{\int p(y \mid \theta) p(\theta) \,\operatorname {d}\! \theta}. 
-$$
-
-Il calcolo del valore atteso a posteriori richiede dunque il computo di due integrali, quello a denominatore e quello a numeratore dell'espressione, ciascuno dei quali non esprimibile in forma chiusa. Per questa ragione, la strada principale che viene seguita nella modellistica bayesiana è quella che porta a determinare la distribuzione a posteriori non per via analitica, ma bensì mediante metodi numerici. La simulazione fornisce dunque la strategia generale del calcolo bayesiano. A questo fine vengono principalmente usati i metodi di campionamento Monte Carlo basati su Catena di Markov (MCMC). Tali metodi costituiscono una potente e praticabile alternativa per la costruzione della distribuzione a posteriori per modelli complessi e consentono di decidere quali distribuzioni a priori e quali distribuzioni di verosimiglianza usare sulla base di considerazioni teoriche soltanto, senza dovere preoccuparsi di altri vincoli.
+Per questa ragione, la strada principale che viene seguita nella modellistica bayesiana è quella che porta a determinare la distribuzione a posteriori non per via analitica, ma bensì mediante metodi di approssimazione numerica. La simulazione fornisce dunque la strategia generale del calcolo bayesiano. A questo fine vengono principalmente usati i metodi di campionamento Monte Carlo basati su Catena di Markov (MCMC). Tali metodi costituiscono una potente e praticabile alternativa per la costruzione della distribuzione a posteriori per modelli complessi e consentono di decidere quali distribuzioni a priori e quali distribuzioni di verosimiglianza usare sulla base di considerazioni teoriche soltanto, senza dovere preoccuparsi di altri vincoli.
 
 Dato che è basata su metodi computazionalmente intensivi, la stima numerica della funzione a posteriori può essere svolta soltanto mediante software. In anni recenti i metodi Bayesiani di analisi dei dati sono diventati sempre più popolari proprio perché la potenza di calcolo necessaria per svolgere tali calcoli è ora alla portata di tutti. Questo non era vero solo pochi decenni fa.
 
-In questo Capitolo verranno presentati due metodi di simulazione iterativa che consentono di generare dalle distribuzioni a posteriori campioni dei parametri del modello:
+In questo capitolo descriviamo due metodi che possono essere usati come mezzo per calcolare la distribuzione a posteriori quando la distribuzione a priori coniugata non è applicabile.
 
 -   *metodi basati su griglia:* dove, sebbene non sia disponibile alcuna formula algebrica in forma chiusa, le proprietà della distribuzione a posteriori possono essere calcolate con una precisione arbitraria;
 -   *metodi Monte Carlo:* dove, utilizzando appropriate funzioni di numeri casuali, viene generato un grande campione di osservazioni della distribuzione a posteriori per poi stimare empiricamente la proprietà di interesse in base al campione così ottenuto.
@@ -151,8 +147,6 @@ Abbiamo fornito qui alcuni accenni relativi all'integrazione di Monte Carlo perc
 
 Poniamoci ora il problema di approssimare la distribuzione a posteriori con una simulazione. Consideriamo nuovamente i dati di @zetschefuture2019 (ovvero, 23 "successi" in 30 prove Bernoulliane) e, come in precedenza, assumiamo per $\theta$ una distribuzione a priori $\mbox{Beta}(2, 10)$.
 
-<!-- usare l'algoritmo di Metropolis per calcolare la distribuzione a posteriori di una proporzione $\theta$. Usiamo nuovamente i dati di @zetschefuture2019 (ovvero, 23 "successi" in 30 prove Bernoulliane) e, per rendere il problema più interessante, assumiamo per $\theta$ una distribuzione a priori $\mbox{Beta}(2, 10)$.  -->
-
 In tali circostanze, la distribuzione a posteriori può essere ottenuta analiticamente tramite lo schema beta-binomiale ed è una $\mbox{Beta}(25, 17)$. Se vogliamo conoscere il valore della media a posteriori di $\theta$, il risultato esatto è
 
 $$
@@ -188,43 +182,50 @@ $$
 
 Una tale distribuzione non è implementata in $\textsf{R}$; dunque non possiamo usare $\textsf{R}$ per ottenere campioni casuali da una tale distribuzione.
 
-In tali circostanze, però, è possibile ottenere ottenere un campione causale dalla distribuzione a posteriori procedendo in un altro modo. Questo risultato si ottiene utilizzando i metodi Monte Carlo basati su Catena di Markov (MCMC). I metodi MCMC, di cui l'algoritmo di Metropolis è un caso particolare e ne rappresenta il primo esempio, sono una classe di algoritmi che consentono di ottenere campioni casuali da una distribuzione a posteriori *senza dovere conoscere la rappresentazione analitica di una tale distribuzione*.[^036_posterior_sim-3] Le tecniche MCMC sono il metodo computazionale maggiormente usato per risolvere i problemi dell'inferenza bayesiana.
+In tali circostanze, però, è possibile ottenere ottenere un campione causale dalla distribuzione a posteriori procedendo in un altro modo. Questo risultato si ottiene utilizzando i metodi Monte Carlo basati su Catena di Markov (MCMC). I metodi MCMC, di cui l'algoritmo Metropolis è un caso particolare e ne rappresenta il primo esempio, sono una classe di algoritmi che consentono di ottenere campioni casuali da una distribuzione a posteriori *senza dovere conoscere la rappresentazione analitica di una tale distribuzione*.[^036_posterior_sim-3] Le tecniche MCMC sono il metodo computazionale maggiormente usato per risolvere i problemi dell'inferenza bayesiana.
 
 [^036_posterior_sim-3]: In termini più formali, si può dire che i metodi MCMC consentono di costruire sequenze di punti (detti catene di Markov) nello spazio dei parametri le cui densità sono proporzionali alla distribuzione a posteriori. In altre parole, dopo aver simulato un grande numero di passi della catena si possono usare i valori così generati come se fossero un campione casuale della distribuzione a posteriori. Un'introduzione alle catene di Markov è fornita in Appendice.
 
 ## L'algoritmo di Metropolis
 
-L'algoritmo di @metropolist_etal_1953[^036_posterior_sim-4] produce una sequenza di valori (chiamata "catena di Markov") nella quale ciascun valore successivo della catena viene trovato utilizzando solamente le informazioni fornite dal valore precedente della catena. Ad ogni passo della catena, sulla base delle informazioni fornite dal valore corrente, selezioniamo un valore "candidato". In base ad una certa regola, decidiamo poi se accettare il valore candidato, e muovere la catena al nuovo valore, oppure se rifiutarlo, ripetendo, nel passo successivo della catena, il valore corrente. Ci fermiamo dopo una serie predefinita di passi.
+L'idea di base dell'algoritmo @metropolist_etal_1953\[\^036_posterior_sim-4\] è campionare dalla distribuzione a posteriori combinando una "ricerca casuale" (l'aspetto Monte Carlo) con un meccanismo per "saltare" in modo intelligente, ma in un modo che alla fine non dipende da dove siamo partiti (una proprietà della Catena di Markov). Quindi i metodi Markov Chain Monte Carlo sono ricerche senza memoria eseguite con salti intelligenti.
 
-[^036_posterior_sim-4]: Un'illustrazione visiva di come si svolge il processo di "esplorazione" dell'algoritmo di Metropolis è fornita in questo post: https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/.
+L'algoritmo Metropolis segue il seguente schema.
 
-Nell'algoritmo di Metropolis possiamo distinguere le seguenti fasi.
+1.  Iniziare l'algoritmo nella posizione corrente nello spazio dei parametri.
+2.  Proporre un "salto" in una nuova posizione nello spazio dei parametri.
+3.  Accettare o rifiutare il salto in modo probabilistico, utilizzando le informazioni precedenti e i dati disponibili.
+4.  Se il salto viene accettato, spostarsi nella nuova posizione e tornare al passaggio 1.
+5.  Se il salto viene rifiutato, restare nell'attuale posizione e tornare al passaggio 1.
+6.  Dopo che si è verificato un determinato numero di salti, restituire tutte le posizioni accettate.
+
+Un'illustrazione visiva di come si svolge il processo di "esplorazione" dello spazio dei parametri dell'algoritmo Metropolis è fornita in questo post: https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/. La principale differenza tra i vari algoritmi MCMC risiede nel modo in cui si salta e nel modo in cui decide se saltare.
+
+Esaminiamo più in dettagli l'algoritmo Metropolis.
 
 1.  Si inizia con un punto arbitrario $\theta^{(1)}$; quindi il primo valore $\theta^{(1)}$ della catena di Markov può corrispondere semplicemente ad un valore a caso tra i valori possibili del parametro.
 
+```{=html}
 <!-- -->
-
+```
 (b) Per ogni passo successivo della catena, $m + 1$, si estrae un valore candidato $\theta'$ da una distribuzione proposta: $\theta' \sim \Pi(\theta)$. La distribuzione proposta può essere qualunque distribuzione, anche se, idealmente, è meglio che sia simile alla distribuzione a posteriori. In pratica, però, la distribuzione a posteriori è sconosciuta e quindi il valore $\theta'$ viene estratto a caso da una qualche distribuzione simmetrica centrata sul valore corrente $\theta^{(m)}$ del parametro. Nell'esempio presente useremo la gaussiana quale distribuzione proposta. La distribuzione proposta gaussiana sarà centrata sul valore corrente della catena e avrà una deviazione standard appropriata: $\theta' \sim \mathcal{N}(\theta^{(m)}, \sigma)$. In pratica, questo significa che, se $\sigma$ è piccola, il valore candidato $\theta'$ sarà simile al valore corrente $\theta^{(m)}$.
 
-(c) Si calcola il rapporto $r$ tra la densità della distribuzione a posteriori non normalizzata calcolata nel punto $\theta'$ e nel punto $\theta^{(m)}$. Si noti che, essendo un rapporto, l'@eq-ratio-metropolis cancella la costante di normalizzazione. Al numeratore dell'@eq-ratio-metropolis abbiamo solo il prodotto tra la verosimiglianza $p(y \mid \theta')$ e la densità a priori di $\theta$, entrambe calcolate nel punto $\theta'$; il denominatore contiene invece il prodotto tra la verosimiglianza $p(y \mid \theta^{(m)})$ e la densità a priori di $\theta$, entrambe calcolate nel punto $\theta^{(m)}$.
+(c) Si calcola il rapporto $r$ tra il posteriore del parametro proposto $\theta'$ e il posteriore del parametro corrente $\theta^{(m)}$.
 
 $$
-r = \frac{p(y \mid \theta') p(\theta')}{p(y \mid \theta^{(m)}) p(\theta^{(m)})}.
+r = \frac{p(\theta' \mid y)}{p(\theta^{(m)} \mid y)} = \frac{\frac{p(y \mid \theta') p(\theta')}{p(Y)}}{\frac{p(y \mid \theta^{(m)}) p(\theta^{(m)})}{p(Y)}} 
+= \frac{p(y \mid \theta') p(\theta')}{p(y \mid \theta^{(m)}) p(\theta^{(m)})}.
 $$ {#eq-ratio-metropolis}
 
-(d) Si decide se accettare il candidato $\theta'$ oppure se rigettarlo e estrarre un nuovo valore dalla distribuzione proposta. Possiamo pensare al rapporto $r$ come alla risposta alla seguente domanda: alla luce dei dati, quale stima di $\theta$ è più credibile, il valore candidato o il valore corrente? Se $r$ è maggiore di 1, ciò significa che il candidato è più credibile del valore corrente; dunque se $r$ è maggiore di 1 il candidato viene sempre accettato. Altrimenti, si decide di accettare il candidato con una probabilità minore di 1, ovvero non sempre, ma soltanto con una probabilità uguale ad $r$. Se $r$ è uguale a 0.10, ad esempio, questo significa che la credibilità a posteriori del valore candidato è 10 volte più piccola della credibilità a posteriori del valore corrente. Dunque, il valore candidato verrà accettato solo nel 10% dei casi. Come conseguenza di questa strategia di scelta, l'algoritmo di Metropolis ottiene un campione casuale dalla distribuzione a posteriori, dato che la probabilità di accettare il valore candidato sarà proporzionale alla densità del candidato nella distribuzione a posteriori. Dal punto di vista algoritmico, la procedura descritta sopra viene implementata confrontando il rapporto $r$ con un valore estratto a caso da una distribuzione uniforme $\mbox{Unif}(0, 1)$. Se $r > u \sim \mbox{Unif}(0, 1)$, allora il candidato $\theta'$ viene accettato e la catena si muove in quella nuova posizione, ovvero $\theta^{(m+1)} = \theta'$. Altrimenti $\theta^{(m+1)} = \theta^{(m)}$ e si estrae un nuovo candidato dalla distribuzione proposta.
+Si noti che, utilizzando la regola di Bayes, l'@eq-ratio-metropolis cancella la costante di normalizzazione, $p(Y)$, dal rapporto. Il lato destro di quest'ultima uguaglianza contiene solo le verosimiglianze e i priori, entrambi facilmente calcolabili.
+
+(d) Si decide se accettare il candidato $\theta'$ oppure se rigettarlo e estrarre un nuovo valore dalla distribuzione proposta. Possiamo pensare al rapporto $r$ come alla risposta alla seguente domanda: alla luce dei dati, quale stima di $\theta$ è più credibile, il valore candidato o il valore corrente? Se $r$ è maggiore di 1, ciò significa che il candidato è più credibile del valore corrente; dunque se $r$ è maggiore di 1 il candidato viene sempre accettato. Altrimenti, si decide di accettare il candidato con una probabilità minore di 1, ovvero non sempre, ma soltanto con una probabilità uguale ad $r$. Se $r$ è uguale a 0.10, ad esempio, questo significa che la credibilità a posteriori del valore candidato è 10 volte più piccola della credibilità a posteriori del valore corrente. Dunque, il valore candidato verrà accettato solo nel 10% dei casi. Come conseguenza di questa strategia di scelta, l'algoritmo Metropolis ottiene un campione casuale dalla distribuzione a posteriori, dato che la probabilità di accettare il valore candidato è proporzionale alla densità del candidato nella distribuzione a posteriori. Dal punto di vista algoritmico, tale procedura viene implementata confrontando il rapporto $r$ con un valore estratto a caso da una distribuzione uniforme $\mbox{Unif}(0, 1)$. Se $r > u \sim \mbox{Unif}(0, 1)$, allora il candidato $\theta'$ viene accettato e la catena si muove in quella nuova posizione, ovvero $\theta^{(m+1)} = \theta'$. Altrimenti $\theta^{(m+1)} = \theta^{(m)}$ e si estrae un nuovo candidato dalla distribuzione proposta.
 
 (e) Il passaggio finale dell'algoritmo calcola l'*accettanza* in una specifica esecuzione dell'algoritmo, ovvero la proporzione di candidati $\theta'$ che sono stati accettati quali valori successivi della catena.
 
-L'algoritmo di Metropolis prende come input il numero $T$ di passi da simulare, la deviazione standard $\sigma$ della distribuzione proposta e la densità a priori, e ritorna come output la sequenza $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(T)}$. La chiave del successo dell'algoritmo di Metropolis è il numero di passi fino a che la catena approssima la stazionarietà. Tipicamente i primi da 1000 a 5000 elementi sono scartati. Dopo un certo periodo $k$ (detto di *burn-in*), la catena di Markov converge ad una variabile casuale che è distribuita secondo la distribuzione a posteriori (stazionarietà). In altre parole, i campioni del vettore $\left(\theta^{(k+1)}, \theta^{(k+2)}, \dots, \theta^{(T)}\right)$ diventano campioni di $p(\theta \mid y)$.
+L'algoritmo Metropolis prende come input il numero $T$ di passi da simulare, la deviazione standard $\sigma$ della distribuzione proposta e la densità a priori, e ritorna come output la sequenza $\theta^{(1)}, \theta^{(2)}, \dots, \theta^{(T)}$. La chiave del successo dell'algoritmo Metropolis è il numero di passi fino a che la catena approssima la stazionarietà. Tipicamente i primi da 1000 a 5000 elementi sono scartati. Dopo un certo periodo $k$ (detto di *burn-in*), la catena di Markov converge ad una variabile casuale che è distribuita secondo la distribuzione a posteriori (stazionarietà). In altre parole, i campioni del vettore $\left(\theta^{(k+1)}, \theta^{(k+2)}, \dots, \theta^{(T)}\right)$ diventano campioni di $p(\theta \mid y)$.
 
 ### Un'applicazione empirica
-
-Usiamo ora l'algoritmo di Metropolis per trovare la distribuzione a posteriori di $\theta$ per i dati di @zetschefuture2019 (23 successi in 30 prove Bernoulliane), imponendo su $\theta$ una $\mbox{Beta}(2, 10)$.
-
-L'algoritmo di Metropolis richiede l'uso delle seguenti funzioni.
-
-**Verosimiglianza.** Usiamo una funzione di verosimiglianza binomiale.
 
 ```{python}
 import numpy as np
@@ -237,14 +238,20 @@ from scipy.stats import binom
 from scipy.stats import beta
 
 np.random.seed(2023)
+```
 
+Implementiamo ora l'algoritmo Metropolis per trovare la distribuzione a posteriori di $\theta$ per i dati di @zetschefuture2019 (23 successi in 30 prove Bernoulliane), imponendo su $\theta$ una $\mbox{Beta}(2, 10)$. Nell'implementazione che verrà qui presentata, l'algoritmo Metropolis richiede l'uso delle seguenti funzioni.
+
+**Verosimiglianza.** Useremo una funzione di verosimiglianza binomiale.
+
+```{python}
 def get_likelihood(p):
     k = 23
     n = 30
     return binom.pmf(k, n, p)
 ```
 
-**Distribuzione a priori.** La distribuzione a priori è una $\mbox{Beta}(2, 10)$.
+**Distribuzione a priori.** In questo esempio, la distribuzione a priori (che è scelta solo per motivi didattici ed è priva di qualsiasi motivazione di altra natura) è una $\mbox{Beta}(2, 10)$.
 
 ```{python}
 def get_prior(p):
@@ -260,11 +267,11 @@ def get_posterior(p):
     return get_likelihood(p) * get_prior(p)
 ```
 
-**Distribuzione proposta.** Per implementare l'algoritmo di Metropolis utilizzeremo una distribuzione proposta gaussiana. Il valore candidato sarà dunque un valore selezionato a caso da una gaussiana di parametri $\mu$ uguale al valore corrente nella catena e $\sigma = 0.9$. In questo esempio, la deviazione standard $\sigma$ è stata scelta empiricamente in modo tale da ottenere una accettanza adeguata. L'accettanza ottimale è pari a circa 0.20/0.30 --- se l'accettanza è troppo grande, l'algoritmo esplora uno spazio troppo ristretto della distribuzione a posteriori.[^036_posterior_sim-5] Ho anche inserito un controllo che impone al valore candidato di essere incluso nell'intervallo \[0, 1\], com'è necessario per il valore di una proporzione.[^036_posterior_sim-6]
+**Distribuzione proposta.** Per implementare l'algoritmo Metropolis utilizzeremo una distribuzione proposta gaussiana. Il valore candidato sarà dunque un valore selezionato a caso da una gaussiana di parametri $\mu$ uguale al valore corrente nella catena e $\sigma = 0.9$. In questo esempio, la deviazione standard $\sigma$ è stata scelta empiricamente in modo tale da ottenere una accettanza adeguata. L'accettanza ottimale è pari a circa 0.20/0.30 --- se l'accettanza è troppo grande, l'algoritmo esplora uno spazio troppo ristretto della distribuzione a posteriori.[^036_posterior_sim-4] Nella funzione ho anche inserito un controllo che impone al valore candidato di essere incluso nell'intervallo \[0, 1\], com'è necessario per il valore di una proporzione.[^036_posterior_sim-5]
 
-[^036_posterior_sim-5]: L'accettanza dipende dalla distribuzione proposta: in generale, tanto più la distribuzione proposta è simile alla distribuzione target, tanto più alta diventa l'accettanza.
+[^036_posterior_sim-4]: L'accettanza dipende dalla distribuzione proposta: in generale, tanto più la distribuzione proposta è simile alla distribuzione target, tanto più alta diventa l'accettanza.
 
-[^036_posterior_sim-6]: Si possono trovare implementazioni più eleganti di quella presentata qui. Il presente esercizio ha solo lo scopo di illustrare la logica soggiacente all'algoritmo di Metropolis; non ci preoccupiamo di trovare un'implementazione efficente dell'algoritmo.
+[^036_posterior_sim-5]: Si possono trovare implementazioni più eleganti di quella presentata qui. Il presente esercizio ha solo lo scopo di illustrare la logica soggiacente all'algoritmo Metropolis; non ci preoccupiamo di trovare un'implementazione efficente dell'algoritmo.
 
 ```{python}
 def get_proposal(p_current, proposal_width):
@@ -275,7 +282,7 @@ def get_proposal(p_current, proposal_width):
     return proposal
 ```
 
-L'algoritmo di Metropolis viene implementato nella funzione seguente.
+L'algoritmo Metropolis viene implementato nella funzione seguente.
 
 ```{python}
 def sampler(samples=100, p_init=.5, proposal_width=.1):
@@ -296,13 +303,11 @@ def sampler(samples=100, p_init=.5, proposal_width=.1):
     return acceptance/samples, np.array(posterior)
 ```
 
-Mediante la funzione `sampler()`, genero una sequenza (catena) di valori $\theta$.
+Utilizzo ora il campionatore `sampler()`, per generare una sequenza (catena) di valori $\theta$.
 
 ```{python}
 acceptance, posterior = sampler(samples=5000, p_init=.5, proposal_width=.9)
 ```
-
-In questo modo, ottengo una catena di Markov costituita da 5,000 valori.
 
 Esamino l'accettanza.
 
@@ -312,7 +317,7 @@ acceptance
 
 Il valore trovato conferma la bontà della deviazione standard ($\sigma$ = 0.9) scelta per la distribuzione proposta.
 
-Escludo i primi 1000 valori considerati come burn-in. Considero i restanti 4,000 valori come un campione casuale estratto dalla distribuzione a posteriori $p(\theta \mid y)$.
+La lista `posterior` contiene 5,000 valori di una catena di Markov. Escludo i primi 1000 valori considerati come burn-in e considero i restanti 4,000 valori come un campione casuale estratto dalla distribuzione a posteriori $p(\theta \mid y)$.
 
 Mediante i valori della catena così ottenuta è facile trovare una stima a posteriori del parametro $\theta$. Per esempio, posso trovare la stima della media a posteriori.
 
@@ -334,7 +339,7 @@ ax.plot(posterior)
 _ = ax.set(xlabel='sample', ylabel='theta');
 ```
 
-Nella @fig-markov-chain-zetsche-hist, l'istogramma descrive i valori $\theta$ prodotti dall'algoritmo di Metropolis mentre la linea continua descrive la distribuzione a posteriori ottenuta per via analitica, ovvero una $\mbox{Beta}(25, 17)$. La figura indica che la catena converge alla corretta distribuzione a posteriori.
+Nella @fig-markov-chain-zetsche-hist, l'istogramma descrive i valori $\theta$ prodotti dall'algoritmo Metropolis mentre la linea continua descrive la distribuzione a posteriori ottenuta per via analitica, ovvero una $\mbox{Beta}(25, 17)$. La figura indica che la catena converge alla corretta distribuzione a posteriori.
 
 ```{python, fig-markov-chain-zetsche-hist, fig.cap="Stima della distribuzione a posteriori della probabilità di una aspettativa futura distorta negativamente per i dati di Zetsche et al. (2019)."}
 plt.hist(posterior, label='estimated posterior', density= True)
@@ -347,255 +352,9 @@ plt.plot(x, stats.beta.pdf(x, a, b),
        'r--', lw=3, alpha=0.75, label='Beta(25, 17)')
 ```
 
-<!-- #### Pacchetto `ProbBayes` -->
-
-<!-- I calcoli precedenti possono essere svolti anche mediante la funzione `metropolis()` del pacchetto `ProbBayes`. -->
-
-<!-- ```{r} -->
-
-<!-- set.seed(123) -->
-
-<!-- lpost <- function(theta, s){ -->
-
-<!--   dbeta(theta, 2, 10,log = TRUE) + -->
-
-<!--   dbinom(23, 30, theta, log = TRUE) -->
-
-<!-- } -->
-
-<!-- post <- ProbBayes::metropolis(lpost, 0.5, 0.2, 10000) -->
-
-<!-- tibble( -->
-
-<!--   x = post$S[5001:10000] -->
-
-<!-- ) %>% -->
-
-<!--   ggplot(aes(x)) + -->
-
-<!--   geom_histogram(fill = "darkgray") + -->
-
-<!--   labs( -->
-
-<!--     x = expression(theta), -->
-
-<!--     y = "Frequenza", -->
-
-<!--     title = "Distribuzione a posteriori" -->
-
-<!--   ) -->
-
-<!-- ``` -->
-
-<!-- Si ottiene una stima a posteriori ragionevole di $\theta$. -->
-
-<!-- ```{r} -->
-
-<!-- mean(post$S[5001:10000]) -->
-
-<!-- ``` -->
-
-<!-- L'accettanza però non è ottimale. -->
-
-<!-- ```{r} -->
-
-<!-- post$accept_rate -->
-
-<!-- ``` -->
-
-<!-- ### Gibb's sampling -->
-
-<!-- Il campionamento di Gibbs è un algoritmo MCMC per ottenere una sequenza di campioni casuali da una distribuzione di probabilità congiunta di due o più variabili casuali quando il campionamento diretto si dimostra difficoltoso. Questa sequenza può essere usata per approssimare la distribuzione congiunta. -->
-
-<!-- Consideriamo, quale esempio, la seguente distribuzione di probabilità congiunta $p(x, y)$ delle due variabili casuali $X$ e $Y$ [lo script $\textsf{R}$ è ricavato da @albert2019probability]: -->
-
-<!-- ```{r} -->
-
-<!-- p <- matrix(c( -->
-
-<!--   4, 3, 2, 1, -->
-
-<!--   3, 4, 3, 2, -->
-
-<!--   2, 3, 4, 3, -->
-
-<!--   1, 2, 3, 4 -->
-
-<!-- ) / 40, 4, 4, byrow = TRUE) -->
-
-<!-- dimnames(p)[[1]] <- 1:4 -->
-
-<!-- dimnames(p)[[2]] <- 1:4 -->
-
-<!-- p -->
-
-<!-- ``` -->
-
-<!-- Supponiamo che sia difficile campionare direttamente da $p(x, y)$; supponiamo, tuttavia, di poter facilmente campionare dalle distribuzioni condizionate $p(x \mid y)$ e $p(y \mid x)$. Poniamo che l'algoritmo inizi con il valore $X = 1$. -->
-
-<!-- -   *Passo 1*. Si simula $Y$ dalla distribuzione condizionata $f(y \mid X = 1)$. Questa distribuzione condizionata è contenuta nella prima colonna della matrice $p(x, y)$, ovvero -->
-
-<!-- ```{r} -->
-
-<!-- p[, 1] -->
-
-<!-- ``` -->
-
-<!-- Supponiamo di avere ottenuto il valore $Y = 2$. -->
-
-<!-- -   *Passo 2*. Ora estraiamo un valore a caso $X$ dalla distribuzione condizionata $f(x \mid Y = 2)$. Questa distribuzione condizionata è contenuta nella seconda riga della matrice $p(x, y)$, ovvero -->
-
-<!-- ```{r} -->
-
-<!-- p[2, ] -->
-
-<!-- ``` -->
-
-<!-- Supponiamo di avere ottenuto il valore $X = 3$. -->
-
-<!-- Implementando i passi 1 e 2, si ottiene un'iterazione del campionamento di Gibbs, ovvero la coppia simulata $(X, Y) = (3, 2)$. Il campionamento di Gibbs si realizza ripetendo i passaggi 1 e 2 molte volte, laddove in ogni passo condizioniamo i valori simulati ai valori $X$ o $Y$ più recenti. -->
-
-<!-- Le seguenti istruzioni generano 100,000 iterazioni dell'algorimo di Gibbs per l'esempio in considerazione: -->
-
-<!-- ```{r} -->
-
-<!-- n_iter <- 1e5 -->
-
-<!-- gibbs_discrete <- function(p, i = 1, iter = n_iter){ -->
-
-<!--   x <- matrix(0, iter, 2) -->
-
-<!--   n_x <- dim(p)[1] -->
-
-<!--   n_y <- dim(p)[2] -->
-
-<!--   for(k in 1:n_iter){ -->
-
-<!--     j <- sample(1:n_y, 1, prob = p[i, ]) -->
-
-<!--     i <- sample(1:n_x, 1, prob = p[, j]) -->
-
-<!--     x[k, ] <- c(i, j) -->
-
-<!--   } -->
-
-<!--   x -->
-
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- Esaminando i risultati ottenuti, notiamo che il campionamento di Gibbs produce una buona approssimazione della distribuzione di probabilità congiunta di partenza: -->
-
-<!-- ```{r} -->
-
-<!-- sp <- data.frame(gibbs_discrete(p)) -->
-
-<!-- names(sp) <- c("X", "Y") -->
-
-<!-- round(table(sp) / n_iter, 3) -->
-
-<!-- ``` -->
-
-<!-- #### Campionamento beta-binomiale -->
-
-<!-- L'esempio precedente ha dimostrato il campionamento di Gibbs per una distribuzione discreta a due parametri, ma il campionamento di Gibbs funziona per qualsiasi distribuzione a due parametri. Per illustrare questo, consideriamo nuovamente lo schema beta-binomiale. -->
-
-<!-- $$ -->
-
-<!-- \begin{split} -->
-
-<!-- Y \mid p &\sim \mbox{Binom}(n, p),\\ -->
-
-<!-- p &\sim \mbox{Beta}(a, b). -->
-
-<!-- \end{split} -->
-
-<!-- $$ -->
-
-<!-- Per implementare il campionamento Gibbs per questa situazione, è necessario identificare le due distribuzioni condizionate $Y \mid P$ e $p \mid Y$. A questo fine, calcoliamo prima la distribuzione congiunta $f(Y, p)$: -->
-
-<!-- $$ -->
-
-<!-- \begin{split} -->
-
-<!-- f(Y, p) &= f(p) f(y \mid p)\\ -->
-
-<!-- &= \left[ \frac{1}{B(a, b)}p^{a-1} (1-p)^{b-1} \right] \left[ \binom{n}{y}p^y (1-p)^{n-y}\right]. -->
-
-<!-- \end{split} -->
-
-<!-- $$ -->
-
-<!-- Per trovare le distribuzioni marginali, sopprimiamo la dipendenza di $f(Y, p)$ dalle costanti irrilevanti. Se teniamo fisso $p$, l'unica variabile casuale è $y$. Dunque, tutto il contenuto della prima parentesi quadra diventa una costante che può essere ignorata. Per cui $f(y \mid p)$ è $\mbox{Binom}(n, p)$. D'altra parte, se teniamo fisso $y$, ignorando le costanti, la densità congiunta risulta proporzionale a -->
-
-<!-- $$ -->
-
-<!-- p^{y+a-1} (1-p)^{n-y+b-1} -->
-
-<!-- $$ -->
-
-<!-- che è il kernel della distribuzione Beta con parametri di forma $y+a$ e $n-y+b$. Quindi abbiamo $f(p \mid y) = \mbox{Beta}(y+a, n-y+b)$. -->
-
-<!-- Una volta trovate le due distribuzioni condizionate è facile modificare l'algoritmo di Gibbs visto sopra per adattarlo alla situazione presente: -->
-
-<!-- ```{r} -->
-
-<!-- gibbs_betabin <- function(n, a, b, p = 0.5, iter = n_iter){ -->
-
-<!--   x <- matrix(0, iter, 2) -->
-
-<!--   for(k in 1:iter){ -->
-
-<!--     y <- rbinom(1, size = n, prob = p) -->
-
-<!--     p <- rbeta(1, y + a, n - y + b) -->
-
-<!--     x[k, ] <- c(y, p) -->
-
-<!--   } -->
-
-<!--   x -->
-
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- Di seguito eseguiamo il campionamento Gibbs per questo modello Beta-Binomiale con $n=20$, $a = 5$ e $b=5$. Dopo aver eseguito 100,000 iterazioni, possiamo considerare la matrice $sp$ come un campione casuale tratto dalla distribuzione congiunta $f(Y, p)$. -->
-
-<!-- Se dalla sequenza di coppie $(Y, p)$ generate dall'algoritmo di Gibbs consideriamo solo i valori $Y$, possiamo ottenere un'approssimazione della distribuzione marginale $f(y)$ di $Y$. -->
-
-<!-- ```{r} -->
-
-<!-- set.seed(123) -->
-
-<!-- sp <- data.frame(gibbs_betabin(20, 5, 5)) -->
-
-<!-- ggplot(data.frame(Y = sp$X1), aes(Y)) + -->
-
-<!--   geom_bar(width = 0.5, fill = "darkgray") + -->
-
-<!--   ylab("Frequency")  -->
-
-<!-- ``` -->
-
-<!-- La figura seguente mostra invece l'approssimazione della distribuzione congiunta $f(Y, p)$ che è stata ottenuta: -->
-
-<!-- ```{r} -->
-
-<!-- ggplot(sp, aes(X1, X2)) + -->
-
-<!--   geom_point(size = 0.5, color = "black", alpha = 0.05) + -->
-
-<!--   xlab("Y") + -->
-
-<!--   ylab("p") -->
-
-<!-- ``` -->
-
 ## Diagnostiche della soluzione MCMC
 
-In questo Capitolo abbiamo illustrato l'esecuzione di una singola catena di Markov in cui si parte un unico valore iniziale e si raccolgono i valori simulati da molte iterazioni. È possibile però che i valori di una catena siano influenzati dalla scelta del valore iniziale. Quindi una raccomandazione generale è di eseguire l'algoritmo di Metropolis più volte utilizzando diversi valori di partenza. In questo caso, si avranno più catene di Markov. Confrontando le proprietà delle diverse catene si esplora la sensibilità dell'inferenza alla scelta del valore di partenza. I software MCMC consentono sempre all'utente di specificare diversi valori di partenza e di generare molteplici catene di Markov.
+In questo capitolo abbiamo illustrato l'esecuzione di una singola catena di Markov in cui si parte un unico valore iniziale e si raccolgono i valori simulati da molte iterazioni. È possibile però che i valori di una catena siano influenzati dalla scelta del valore iniziale. Quindi una raccomandazione generale è di eseguire l'algoritmo Metropolis più volte utilizzando diversi valori di partenza. In questo caso, si avranno più catene di Markov. Confrontando le proprietà delle diverse catene si esplora la sensibilità dell'inferenza alla scelta del valore di partenza. I software MCMC consentono sempre all'utente di specificare diversi valori di partenza e di generare molteplici catene di Markov.
 
 ### Stazionarietà
 
